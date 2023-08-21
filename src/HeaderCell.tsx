@@ -1,13 +1,14 @@
-import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
+import Sort from '@rsuite/icons/Sort';
+import SortDown from '@rsuite/icons/SortDown';
+import SortUp from '@rsuite/icons/SortUp';
 import classNames from 'classnames';
 import isNil from 'lodash/isNil';
-import Sort from '@rsuite/icons/Sort';
-import SortUp from '@rsuite/icons/SortUp';
-import SortDown from '@rsuite/icons/SortDown';
-import ColumnResizeHandler, { FixedType } from './ColumnResizeHandler';
-import { useUpdateEffect, useClassNames } from './utils';
+import PropTypes from 'prop-types';
+import React, { useCallback, useState } from 'react';
+
 import Cell, { InnerCellProps } from './Cell';
+import ColumnResizeHandler, { FixedType } from './ColumnResizeHandler';
+import { useClassNames, useUpdateEffect } from './utils';
 
 export interface HeaderCellProps extends InnerCellProps {
   index?: number;
@@ -20,7 +21,7 @@ export interface HeaderCellProps extends InnerCellProps {
   flexGrow?: number;
   fixed?: boolean | 'left' | 'right';
   children: React.ReactNode;
-  onResize?: (columnWidth?: number, dataKey?: string) => void;
+  onResize?: (columnWidth?: any, dataKey?: string) => void;
   onSortColumn?: (dataKey?: string) => void;
   onColumnResizeStart?: (columnWidth?: number, left?: number, fixed?: boolean) => void;
   onColumnResizeMove?: (columnWidth?: number, columnLeft?: number, columnFixed?: FixedType) => void;

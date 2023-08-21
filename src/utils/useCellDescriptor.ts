@@ -1,20 +1,21 @@
-import React, { useState, useCallback, useRef } from 'react';
-import addStyle from 'dom-lib/addStyle';
 import addClass from 'dom-lib/addClass';
+import addStyle from 'dom-lib/addStyle';
 import removeClass from 'dom-lib/removeClass';
-import omit from 'lodash/omit';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
+import React, { useCallback, useRef, useState } from 'react';
+
+import { RowDataType, SortType } from '../@types/common';
+import { CellProps } from '../Cell';
+import { ColumnProps } from '../Column';
 import { SCROLLBAR_WIDTH, SORT_TYPE } from '../constants';
-import { SortType, RowDataType } from '../@types/common';
-import useControlled from './useControlled';
+import flushSync from './flushSync';
+import getColumnProps from './getColumnProps';
 import getTableColumns from './getTableColumns';
 import getTotalByColumns from './getTotalByColumns';
-import getColumnProps from './getColumnProps';
-import useUpdateEffect from './useUpdateEffect';
-import { ColumnProps } from '../Column';
-import { CellProps } from '../Cell';
-import flushSync from './flushSync';
+import useControlled from './useControlled';
 import useMount from './useMount';
+import useUpdateEffect from './useUpdateEffect';
 
 interface CellDescriptorProps<Row> {
   children: React.ReactNode;
@@ -109,7 +110,7 @@ const useCellDescriptor = <Row extends RowDataType>(
   }, [children, sortColumn, sortType, tableWidth.current, scrollX.current, minScrollX.current]);
 
   const handleColumnResizeEnd = useCallback(
-    (columnWidth: number, _cursorDelta: number, dataKey: any, index: number) => {
+    (columnWidth: any, _cursorDelta: number, dataKey: any, index: number) => {
       columnWidths.current[`${dataKey}_${index}_width`] = columnWidth;
 
       setColumnResizing(false);
@@ -289,10 +290,12 @@ const useCellDescriptor = <Row extends RowDataType>(
           });
         }
 
-        headerCells.push(React.cloneElement(headerCell, { ...cellProps, ...headerCellProps }));
+        headerCells.push(
+          React.cloneElement(headerCell, { ...(cellProps as CellProps), ...headerCellProps })
+        );
       }
 
-      bodyCells.push(React.cloneElement(cell, cellProps));
+      bodyCells.push(React.cloneElement(cell, cellProps as CellProps));
 
       left += cellWidth;
     }
