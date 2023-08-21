@@ -1,4 +1,4 @@
-# rsuite-table
+# qbs-react-table
 
 A React table component.
 
@@ -220,16 +220,9 @@ const NameCell = ({ rowData, ...props }) => (
 </Column>
 ```
 
-(For nested data read this: https://github.com/rsuite/rsuite-table/issues/158)
 
 ## Methods
 
 - scrollTop(top:number = 0)
 - scrollLeft(left:number = 0)
 
-[npm-badge]: https://img.shields.io/npm/v/rsuite-table.svg?style=flat-square
-[npm]: https://www.npmjs.com/package/rsuite-table
-[coverage-badge]: https://img.shields.io/coveralls/rsuite/rsuite-table.svg?style=flat-square
-[coverage]: https://coveralls.io/github/rsuite/rsuite-table
-[actions-svg]: https://github.com/rsuite/rsuite-table/workflows/Node.js%20CI/badge.svg?branch=main
-[actions-home]: https://github.com/rsuite/rsuite-table/actions?query=branch%3Amain+workflow%3A%22Node.js+CI%22
