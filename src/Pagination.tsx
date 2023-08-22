@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 type PageProps = {
   paginationProps: {
     total?: number;
@@ -6,36 +6,92 @@ type PageProps = {
     dropOptions?: number[];
     currentPage?: number;
     maxPage?: number;
-    onRowsPerPage?: (value: number) => void;
+    onRowsPerPage?: (row: number, page: number) => void;
+    onPagination?: (row: number, page: number) => void;
   };
 };
 const Pagination: FC<PageProps> = ({ paginationProps }) => {
-  //   const { prefix, merge, withClassPrefix } = useClassNames(classPrefix);
-  //   const classes = merge(className, withClassPrefix());
-  const { dropOptions, currentPage, total, onRowsPerPage, rowsPerPage } = paginationProps;
+  const { dropOptions, currentPage, total, onRowsPerPage, rowsPerPage, onPagination } =
+    paginationProps;
   const [rowsPage, seRowsPage] = useState<number>(rowsPerPage ?? 10);
+  const [currentIndex, setCurrenIndex] = useState<number>(currentPage ?? 1);
+
   const dropData = dropOptions ?? [10, 20, 50, 100, 200];
+  const [count, setCount] = useState(1);
   const handleRowsPerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = parseInt(e.target.value);
     seRowsPage(value);
-    onRowsPerPage && onRowsPerPage(value);
+    onRowsPerPage && onRowsPerPage(value, currentIndex);
   };
-  const handleFirst = () => {
-    seRowsPage(1);
-    onRowsPerPage && onRowsPerPage(1);
+  const handleFirst = (index: number) => {
+    setCurrenIndex(index);
+    onPagination && onPagination(index, currentIndex);
   };
   const handlePageIndex = () => {
     if (total) {
       const pageindex = Math.ceil(total / rowsPage);
-      return pageindex;
-    } else return 0;
+      setCount(pageindex);
+    }
   };
   const handleLast = () => {
-    const value = handlePageIndex() ?? 0;
-    seRowsPage(value);
-    onRowsPerPage && onRowsPerPage(value);
+    const value = count ?? 0;
+    setCurrenIndex(value);
+    onPagination && onPagination(value, currentIndex);
   };
-  console.log(handlePageIndex());
+
+  useEffect(() => {
+    handlePageIndex();
+  }, []);
+  const PageIndex = () => {
+    const renderPageNumbers = () => {
+      const pageNumbers: any = [];
+
+      // Add ellipsis if necessary
+      if (currentIndex > 3) {
+        pageNumbers.push('...');
+      }
+
+      for (let i = Math.max(1, currentIndex - 2); i <= Math.min(count, currentIndex + 2); i++) {
+        pageNumbers.push(i);
+      }
+
+      // Add ellipsis if necessary
+      if (currentIndex < count - 2) {
+        pageNumbers.push('...');
+      }
+
+      return pageNumbers.map((pageNumber: any, index: number) => (
+        <>
+          {pageNumber !== '...' ? (
+            <span
+              key={index}
+              onClick={() => handleFirst(pageNumber)}
+              className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
+            >
+              {pageNumber}
+            </span>
+          ) : (
+            <span
+              key={index}
+              className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
+            >
+              {pageNumber}
+            </span>
+          )}
+        </>
+      ));
+    };
+
+    return <>{renderPageNumbers()}</>;
+  };
+  const handlePrevious = () => {
+    setCurrenIndex(currentIndex - 1);
+    onPagination && onPagination(currentIndex - 1, currentIndex);
+  };
+  const handleNext = () => {
+    setCurrenIndex(currentIndex + 1);
+    onPagination && onPagination(currentIndex + 1, currentIndex);
+  };
   return (
     <div
       className={'custom-pagination'}
@@ -51,14 +107,18 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         </select>
       </div>
       <div className="right-block">
-        <span className="icon-container" onClick={() => handleFirst()}>
+        <button
+          className="icon-container"
+          disabled={currentIndex == 1}
+          onClick={() => handleFirst(1)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            width="15"
+            width="18"
           >
             <path
               stroke-linecap="round"
@@ -66,51 +126,54 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
               d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
             />
           </svg>
-        </span>
-        <span className="icon-container">
+        </button>
+        <button
+          className="icon-container"
+          disabled={currentIndex < 2}
+          onClick={() => handlePrevious()}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            width="15"
+            width="18"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
-        </span>
+        </button>
         <div className="block-container">
-          {[...Array(10)].map((_, index) => (
-            <span key={index} className="block-item">
-              {index + 1}
-            </span>
-          ))}
-          <span className="block-item">1</span>
-          <span className="block-item">2</span>
-          <span className="block-item">3</span>
-          <span className="block-item">4</span>
-          <span className="block-item">5</span>
+          <PageIndex />
         </div>
-        <span className="icon-container">
+        <button
+          className="icon-container"
+          disabled={currentIndex >= count - 1}
+          onClick={() => handleNext()}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            width="15"
+            width="18"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
-        </span>
-        <span className="icon-container" onClick={() => handleLast()}>
+        </button>
+        <button
+          className="icon-container"
+          disabled={currentIndex == count}
+          onClick={() => handleLast()}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            width="15"
+            width="18"
           >
             <path
               stroke-linecap="round"
@@ -118,7 +181,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
               d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
             />
           </svg>
-        </span>
+        </button>
       </div>
     </div>
   );

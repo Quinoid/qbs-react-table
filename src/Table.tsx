@@ -166,7 +166,8 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
     dropOptions: number[];
     currentPage: number;
     maxPage?: number;
-    onRowsPerPage: (value: number) => void;
+    onRowsPerPage: (row: number, page: number) => void;
+    onPagination: (row: number, page: number) => void;
   };
   /** Sort Column Name */
   sortColumn?: string;
@@ -1132,7 +1133,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           />
         )}
       </div>
-      {pagination && <Pagination paginationProps={{ total: 200, rowsPerPage: 20 }} />}
+      {pagination && <Pagination paginationProps={paginationProps} />}
     </TableContext.Provider>
   );
 });
