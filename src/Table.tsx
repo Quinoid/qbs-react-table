@@ -6,6 +6,7 @@ import flatten from 'lodash/flatten';
 import debounce from 'lodash/debounce';
 import Row, { RowProps } from './Row';
 import CellGroup from './CellGroup';
+import Pagination from './Pagination';
 import Scrollbar, { ScrollbarInstance } from './Scrollbar';
 import MouseArea from './MouseArea';
 import Loader from './Loader';
@@ -157,6 +158,16 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
   /** Whether to display the header of the table */
   showHeader?: boolean;
 
+  pagination?: boolean;
+
+  paginationProps?: {
+    total: number;
+    rowsPerPage: number;
+    dropOptions: number[];
+    currentPage: number;
+    maxPage?: number;
+    onRowsPerPage: (value: number) => void;
+  };
   /** Sort Column Name */
   sortColumn?: string;
 
@@ -281,6 +292,8 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       loading: 'Loading...'
     },
     showHeader = true,
+    pagination = true,
+    paginationProps = {},
     sortColumn,
     rowHeight = ROW_HEIGHT,
     sortType: sortTypeProp,
@@ -1119,6 +1132,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           />
         )}
       </div>
+      {pagination && <Pagination paginationProps={{ total: 200, rowsPerPage: 20 }} />}
     </TableContext.Provider>
   );
 });
@@ -1161,6 +1175,8 @@ Table.propTypes = {
   sortColumn: PropTypes.string,
   sortType: PropTypes.any,
   showHeader: PropTypes.bool,
+  pagination: PropTypes.bool,
+  // paginationProps: PropTypes.object,
   shouldUpdateScroll: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   translate3d: PropTypes.bool,
   wordWrap: PropTypes.any,

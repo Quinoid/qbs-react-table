@@ -14,6 +14,7 @@ const MouseArea = React.forwardRef((props: MouseAreaProps, ref: React.Ref<HTMLDi
   return (
     <div ref={ref} className={addPrefix('mouse-area')} style={styles}>
       <span style={spanStyles} />
+      <input />
     </div>
   );
 });
