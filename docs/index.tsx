@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
   Popover,
@@ -18,7 +18,8 @@ import isFunction from 'lodash/isFunction';
 import get from 'lodash/get';
 import without from 'lodash/without';
 import App from './App';
-import { Table, Column, Cell, HeaderCell, ColumnGroup } from '../src';
+import { Table, Column, Cell, HeaderCell, ColumnGroup ,QbsTable} from '../src';
+
 import fakeDataForColSpan from './data/usersForColSpan';
 import fakeDataForRowSpan from './data/usersForRowSpan';
 import { createUser, mockUsers, mockTreeData } from './data/mock';
@@ -76,7 +77,8 @@ const dependencies = {
   ArrowDownIcon,
   ArrowUpIcon,
   SortIcon,
-  Placeholder
+  Placeholder,
+  QbsTable
 };
 
 const examples = [
@@ -100,6 +102,10 @@ const examples = [
   {
     title: 'Affix Header',
     content: require('./examples/AffixTable.md')
+  },
+  {
+    title: 'Custom Table',
+    content: require('./examples/CustomTable.md')
   },
 
   {
@@ -203,7 +209,7 @@ const examples = [
 const root = ReactDOM.createRoot(document.getElementById('app') as HTMLDivElement);
 
 root.render(
-  <StrictMode>
+  <React.StrictMode>
     <App dependencies={dependencies} examples={examples} />
-  </StrictMode>
+  </React.StrictMode>
 );

@@ -1,7 +1,8 @@
-import React from 'react';
-import isFunction from 'lodash/isFunction';
 import get from 'lodash/get';
+import isFunction from 'lodash/isFunction';
 import isNil from 'lodash/isNil';
+import React from 'react';
+
 import ColumnGroup from '../ColumnGroup';
 import HeaderCell from '../HeaderCell';
 

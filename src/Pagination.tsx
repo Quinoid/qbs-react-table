@@ -1,4 +1,5 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+
 type PageProps = {
   paginationProps: {
     total?: number;
@@ -10,87 +11,91 @@ type PageProps = {
     onPagination?: (row: number, page: number) => void;
   };
 };
+const PageIndex = ({ currentIndex, handleFirst, pageCount }) => {
+  const renderPageNumbers = () => {
+    const pageNumbers: any = [];
+
+    // Add ellipsis if necessary
+    if (currentIndex > 3) {
+      pageNumbers.push('...');
+    }
+
+    for (let i = Math.max(1, currentIndex - 2); i <= Math.min(pageCount, currentIndex + 2); i++) {
+      pageNumbers.push(i);
+    }
+
+    // Add ellipsis if necessary
+    if (currentIndex < pageCount - 2) {
+      pageNumbers.push('...');
+    }
+
+    return pageNumbers.map((pageNumber: any) => (
+      <>
+        {pageNumber !== '...' ? (
+          <span
+            key={pageNumber}
+            onClick={() => handleFirst(pageNumber)}
+            className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
+          >
+            {pageNumber}
+          </span>
+        ) : (
+          <span
+            key={pageNumber}
+            className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
+          >
+            {pageNumber}
+          </span>
+        )}
+      </>
+    ));
+  };
+
+  return <>{renderPageNumbers()}</>;
+};
 const Pagination: FC<PageProps> = ({ paginationProps }) => {
-  const { dropOptions, currentPage, total, onRowsPerPage, rowsPerPage, onPagination } =
-    paginationProps;
-  const [rowsPage, seRowsPage] = useState<number>(rowsPerPage ?? 10);
+  const {
+    dropOptions = [10, 20, 50, 100, 200],
+    currentPage = 1,
+    total = 100,
+    onRowsPerPage,
+    rowsPerPage = 10,
+    onPagination
+  } = paginationProps;
+
   const [currentIndex, setCurrenIndex] = useState<number>(currentPage ?? 1);
+  const [rowsPerPageState, setRowsPerPageState] = useState(rowsPerPage);
 
   const dropData = dropOptions ?? [10, 20, 50, 100, 200];
-  const [count, setCount] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
   const handleRowsPerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = parseInt(e.target.value);
-    seRowsPage(value);
-    onRowsPerPage && onRowsPerPage(value, currentIndex);
+    setRowsPerPageState(value);
+    onRowsPerPage?.(value, currentIndex);
   };
   const handleFirst = (index: number) => {
     setCurrenIndex(index);
-    onPagination && onPagination(index, currentIndex);
+    onPagination?.(index, currentIndex);
   };
-  const handlePageIndex = () => {
-    if (total) {
-      const pageindex = Math.ceil(total / rowsPage);
-      setCount(pageindex);
-    }
-  };
+
   const handleLast = () => {
-    const value = count ?? 0;
+    const value = pageCount ?? 0;
     setCurrenIndex(value);
-    onPagination && onPagination(value, currentIndex);
+    onPagination?.(value, currentIndex);
   };
 
   useEffect(() => {
-    handlePageIndex();
-  }, []);
-  const PageIndex = () => {
-    const renderPageNumbers = () => {
-      const pageNumbers: any = [];
+    const calculatedPageCount = Math.ceil(total / rowsPerPageState);
+    setPageCount(calculatedPageCount);
+  }, [total, rowsPerPageState]);
 
-      // Add ellipsis if necessary
-      if (currentIndex > 3) {
-        pageNumbers.push('...');
-      }
-
-      for (let i = Math.max(1, currentIndex - 2); i <= Math.min(count, currentIndex + 2); i++) {
-        pageNumbers.push(i);
-      }
-
-      // Add ellipsis if necessary
-      if (currentIndex < count - 2) {
-        pageNumbers.push('...');
-      }
-
-      return pageNumbers.map((pageNumber: any, index: number) => (
-        <>
-          {pageNumber !== '...' ? (
-            <span
-              key={index}
-              onClick={() => handleFirst(pageNumber)}
-              className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
-            >
-              {pageNumber}
-            </span>
-          ) : (
-            <span
-              key={index}
-              className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
-            >
-              {pageNumber}
-            </span>
-          )}
-        </>
-      ));
-    };
-
-    return <>{renderPageNumbers()}</>;
-  };
   const handlePrevious = () => {
     setCurrenIndex(currentIndex - 1);
-    onPagination && onPagination(currentIndex - 1, currentIndex);
+    onPagination?.(currentIndex - 1, currentIndex);
   };
   const handleNext = () => {
     setCurrenIndex(currentIndex + 1);
-    onPagination && onPagination(currentIndex + 1, currentIndex);
+    onPagination?.(currentIndex + 1, currentIndex);
   };
   return (
     <div
@@ -98,7 +103,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
       <div>
-        <select onChange={e => handleRowsPerPage(e)} className="dropdown" value={rowsPage}>
+        <select onChange={e => handleRowsPerPage(e)} className="dropdown" value={rowsPerPageState}>
           {dropData?.map(item => (
             <option value={item} key={item}>
               {item}
@@ -144,11 +149,11 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           </svg>
         </button>
         <div className="block-container">
-          <PageIndex />
+          <PageIndex currentIndex={currentIndex} handleFirst={handleFirst} pageCount={pageCount} />
         </div>
         <button
           className="icon-container"
-          disabled={currentIndex >= count - 1}
+          disabled={currentIndex >= pageCount - 1}
           onClick={() => handleNext()}
         >
           <svg
@@ -164,7 +169,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         </button>
         <button
           className="icon-container"
-          disabled={currentIndex == count}
+          disabled={currentIndex == pageCount}
           onClick={() => handleLast()}
         >
           <svg
