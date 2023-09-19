@@ -102,7 +102,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
       className={'custom-pagination'}
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-      <div>
+      <div >
         <select onChange={e => handleRowsPerPage(e)} className="dropdown" value={rowsPerPageState}>
           {dropData?.map(item => (
             <option value={item} key={item}>

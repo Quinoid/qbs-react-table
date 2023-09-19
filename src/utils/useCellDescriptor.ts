@@ -207,7 +207,7 @@ const useCellDescriptor = <Row extends RowDataType>(
         hasCustomTreeCol = true;
       }
 
-      if (columnChildren.length !== 2) {
+      if (columnChildren?.length !== 2) {
         throw new Error(`Component <HeaderCell> and <Cell> is required, column index: ${index} `);
       }
 

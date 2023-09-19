@@ -33,6 +33,7 @@ export interface InnerCellProps extends Omit<CellProps, 'children'> {
   style?: React.CSSProperties;
   fullText?: boolean;
   firstColumn?: boolean;
+  dataTheme?: string;
   lastColumn?: boolean;
   hasChildren?: boolean;
   children?: React.ReactNode | ((rowData: RowDataType, rowIndex?: number) => React.ReactNode);
@@ -100,6 +101,7 @@ const Cell = React.forwardRef((props: InnerCellProps, ref: React.Ref<HTMLDivElem
     renderTreeToggle,
     onClick,
     onTreeToggle,
+    dataTheme,
     ...rest
   } = props;
 
@@ -111,6 +113,7 @@ const Cell = React.forwardRef((props: InnerCellProps, ref: React.Ref<HTMLDivElem
   if (isTreeCol && !isHeaderCell && !rowData) {
     throw new Error('[Table.Cell]: `rowData` is required for tree column');
   }
+  console.log(dataTheme);
 
   const handleTreeToggle = useCallback(
     (event: React.MouseEvent) => {
@@ -209,8 +212,9 @@ const Cell = React.forwardRef((props: InnerCellProps, ref: React.Ref<HTMLDivElem
       onClick={onClick}
       className={classes}
       style={styles}
+      data-theme={dataTheme}
     >
-      <div className={prefix('content')} style={contentStyles}>
+      <div className={prefix('content')} style={contentStyles} data-theme={dataTheme}>
         {content}
       </div>
     </div>
@@ -245,7 +249,8 @@ Cell.propTypes = {
   removed: PropTypes.bool,
   treeCol: PropTypes.bool,
   expanded: PropTypes.bool,
-  fullText: PropTypes.bool
+  fullText: PropTypes.bool,
+  dataTheme: PropTypes.string
 };
 
 export default Cell;

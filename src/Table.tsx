@@ -6,7 +6,6 @@ import flatten from 'lodash/flatten';
 import debounce from 'lodash/debounce';
 import Row, { RowProps } from './Row';
 import CellGroup from './CellGroup';
-import Pagination from './Pagination';
 import Scrollbar, { ScrollbarInstance } from './Scrollbar';
 import MouseArea from './MouseArea';
 import Loader from './Loader';
@@ -204,6 +203,9 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
   /** Effectively render large tabular data */
   virtualized?: boolean;
 
+  /**Theme Change */
+  dataTheme?: string;
+
   /** Tree table, the callback function in the expanded node */
   renderTreeToggle?: (
     expandButton: React.ReactNode,
@@ -326,6 +328,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     onTouchStart,
     onTouchMove,
     onTouchEnd,
+    dataTheme,
     ...rest
   } = props;
 
@@ -337,7 +340,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
   // Use `forceUpdate` to force the component to re-render after manipulating the DOM.
   const [, forceUpdate] = useReducer(x => x + 1, 0);
-
+  console.log(dataTheme);
   const [expandedRowKeys, setExpandedRowKeys] = useControlled(
     expandedRowKeysProp,
     defaultExpandAllRows
@@ -691,7 +694,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
               style={
                 rtl
                   ? { right: 0 - rowRight }
-                  : { left: tableWidth.current - fixedRightCellGroupWidth }
+                  : { left: tableWidth.current - fixedRightCellGroupWidth ,}
               }
               height={props.isHeaderRow ? props.headerHeight : props.height}
               width={fixedRightCellGroupWidth}
@@ -1133,7 +1136,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           />
         )}
       </div>
-      {pagination && <Pagination paginationProps={paginationProps} />}
+      {/* {pagination && <Pagination paginationProps={paginationProps} />} */}
     </TableContext.Provider>
   );
 });
@@ -1177,6 +1180,7 @@ Table.propTypes = {
   sortType: PropTypes.any,
   showHeader: PropTypes.bool,
   pagination: PropTypes.bool,
+  dataTheme: PropTypes.string,
   // paginationProps: PropTypes.object,
   shouldUpdateScroll: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   translate3d: PropTypes.bool,
