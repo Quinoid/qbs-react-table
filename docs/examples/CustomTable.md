@@ -10,14 +10,14 @@ const App = () => {
     <div>
       <QbsTable
         columns={[
-          { title: 'Name', field: 'name' },
-          { title: 'Email', field: 'email' },
+          { title: 'Name', field: 'name', resizable: true },
+          { title: 'Email', field: 'email', resizable: true },
 
-          { title: 'Name', field: 'city' },
+          { title: 'Name', field: 'city', resizable: true },
 
-          { title: 'Country', field: 'country' },
-          { title: 'Date of Birth', field: 'date_of_birth' },
-          { title: 'Age', field: 'age' }
+          { title: 'Country', field: 'country', resizable: true },
+          { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
+          { title: 'Age', field: 'age', resizable: true }
         ]}
         data={[
           {

@@ -637,7 +637,13 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     let rowNode: React.ReactNode = null;
 
     // IF there are fixed columns, add a fixed group
-    if (shouldFixedColumn && contentWidth.current > tableWidth.current) {
+    console.log(
+      contentWidth.current > tableWidth.current,
+      contentWidth.current,
+      tableWidth.current
+    );
+    // if (shouldFixedColumn && contentWidth.current > tableWidth.current) {
+    if (shouldFixedColumn){
       const fixedLeftCells: React.ReactNode[] = [];
       const fixedRightCells: React.ReactNode[] = [];
       const scrollCells: React.ReactNode[] = [];
@@ -670,7 +676,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       if (hasVerticalScrollbar && fixedRightCellGroupWidth) {
         fixedRightCellGroupWidth += SCROLLBAR_WIDTH;
       }
-
+      console.log(fixedRightCellGroupWidth, 'tableComponent', tableWidth, rtl);
       rowNode = (
         <>
           {fixedLeftCellGroupWidth ? (
@@ -694,7 +700,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
               style={
                 rtl
                   ? { right: 0 - rowRight }
-                  : { left: tableWidth.current - fixedRightCellGroupWidth ,}
+                  : { left: tableWidth.current - fixedRightCellGroupWidth }
               }
               height={props.isHeaderRow ? props.headerHeight : props.height}
               width={fixedRightCellGroupWidth}

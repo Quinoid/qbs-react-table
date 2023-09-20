@@ -9,7 +9,6 @@ type Props = {
 
 const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions }) => {
   const [openMenu, setOpenMenu] = useState(false);
-  const [menuOrigin, setMenuOrigin] = useState<'top' | 'bottom'>('top');
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -29,25 +28,13 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions }) =>
 
   const toggleMenu = () => {
     setOpenMenu(!openMenu);
-    console.log('menu', openMenu);
   };
 
   const handleMenuItemClick = (slug: actionProps) => {
     handleMenuActions?.(slug);
     setOpenMenu(false);
   };
-  useEffect(() => {
-    if (menuButtonRef.current) {
-      const buttonRect = menuButtonRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
 
-      if (buttonRect.bottom > windowHeight - buttonRect.top) {
-        setMenuOrigin('top');
-      } else {
-        setMenuOrigin('bottom');
-      }
-    }
-  }, [openMenu]);
 
   return (
     <div className="dropdown" ref={menuRef}>
