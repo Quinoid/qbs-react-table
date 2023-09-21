@@ -8,6 +8,7 @@ import ToolBar from './Toolbar';
 import Pagination from '../Pagination';
 import MenuDropDown from './utilities/menuDropDown';
 import { ThreeDotIcon } from './utilities/icons';
+import ColumnGroup from '../../es/ColumnGroup';
 const CHECKBOX_LINE_HEIGHT = '46px';
 const COLUMN_WIDTH = 250;
 
@@ -30,6 +31,16 @@ const CheckCell: React.FC<any> = ({
     </div>
   </Cell>
 );
+const ActionCell: React.FC<any> = ({ rowData, handleMenuActions, dataTheme, actionProps }) => (
+  <div>
+    <MenuDropDown
+      actionDropDown={actionProps}
+      rowData={rowData}
+      dataTheme={dataTheme}
+      handleMenuActions={handleMenuActions}
+    />
+  </div>
+);
 
 const QbsTable: React.FC<QbsTableProps> = ({
   handleColumnSort,
@@ -37,23 +48,34 @@ const QbsTable: React.FC<QbsTableProps> = ({
   columns,
   sortColumn,
   sortType,
-  selection = true,
+  selection = false,
   onSelect,
   title = 'My Table',
-  search = true,
+  search = false,
   asyncSearch,
   searchValue,
   onSearch,
   handleSearchValue,
   paginationProps,
-  pagination = true,
+  pagination = false,
+  cellBordered = false,
+  bordered = false,
+  minHeight,
+  height,
+  onExpandChange,
+  wordWrap,
+  rowKey,
+  defaultExpandAllRows,
   actionProps = [
     { title: 'name', icon: <ThreeDotIcon /> },
     { title: 'name', icon: <ThreeDotIcon /> },
     { title: 'name', icon: <ThreeDotIcon /> },
     { title: 'name', icon: <ThreeDotIcon /> }
   ],
-  theme
+    theme,
+  handleMenuActions,
+  onRowClick,
+  expandedRowKeys
 }) => {
   const [loading, setLoading] = useState(false);
   const [checkedKeys, setCheckedKeys] = useState<number[]>([]);
@@ -125,20 +147,25 @@ const QbsTable: React.FC<QbsTableProps> = ({
       </label>
       <ToolBar {...toolbarProps} />
       <Table
-        height={750}
+        height={height}
         data={data}
         dataTheme={dataTheme}
+        wordWrap={wordWrap}
         sortColumn={sortColumn}
         sortType={sortType}
         onSortColumn={handleSortColumn}
+        onRowClick={onRowClick}
+        cellBordered={cellBordered}
+        bordered={bordered}
+        minHeight={minHeight}
         loading={loading}
-        pagination
         renderRowExpanded={() => <div>Hi Expansion</div>}
         showHeader
         defaultChecked
-        expandedRowKeys={[1, 2, 3]}
-        onExpandChange={(value, objecAt) => console.log(value, objecAt)}
-        rowKey={'name'}
+        expandedRowKeys={expandedRowKeys}
+        onExpandChange={onExpandChange}
+        rowKey={rowKey ?? 'id'}
+        defaultExpandAllRows={defaultExpandAllRows}
       >
         {selection && (
           <Column width={50} align="center" fixed="left">
@@ -159,30 +186,76 @@ const QbsTable: React.FC<QbsTableProps> = ({
             />
           </Column>
         )}
-        {columns?.map(({ title, field, resizable, colWidth }: any) => (
-          <Column key={title} sortable width={colWidth ?? COLUMN_WIDTH} resizable={resizable}>
-            <HeaderCell dataTheme={dataTheme} className="w-full">
-              {title}
-            </HeaderCell>
-            <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
-          </Column>
-        ))}
+        {columns?.map(
+          ({
+            title,
+            field,
+            resizable,
+            sortable,
+            colWidth,
+            align,
+            grouped,
+            groupheader,
+            fixed,
+            children
+          }) => (
+            <>
+              {grouped ? (
+                <ColumnGroup
+                  header={groupheader}
+                  fixed={fixed}
+                  align={align}
+                  verticalAlign="middle"
+                  groupHeaderHeight={40}
+                >
+                  {children?.map(
+                    ({ title, field, resizable, sortable, colWidth, align, fixed }) => (
+                      <Column
+                        key={title}
+                        sortable={sortable}
+                        width={colWidth ?? COLUMN_WIDTH}
+                        resizable={resizable}
+                        align={align}
+                        fixed={fixed}
+                      >
+                        <HeaderCell dataTheme={dataTheme} className="w-full">
+                          {title}
+                        </HeaderCell>
+                        <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+                      </Column>
+                    )
+                  )}
+                </ColumnGroup>
+              ) : (
+                <Column
+                  key={title}
+                  sortable={sortable}
+                  width={colWidth ?? COLUMN_WIDTH}
+                  resizable={resizable}
+                  align={align}
+                  fixed={fixed}
+                >
+                  <HeaderCell dataTheme={dataTheme} className="w-full">
+                    {title}
+                  </HeaderCell>
+                  <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+                </Column>
+              )}
+            </>
+          )
+        )}
         {actionProps && actionProps?.length > 0 && (
           <Column width={40} fixed="right">
             <HeaderCell dataTheme={dataTheme}>{'Action'}</HeaderCell>
-            {/* <Cell dataTheme={dataTheme}> */}
-            <div>
-              <MenuDropDown actionDropDown={actionProps} />
-            </div>
-            {/* </Cell> */}
+            <ActionCell
+              actionProps={actionProps}
+              handleMenuActions={handleMenuActions}
+              dataTheme={dataTheme}
+            />
           </Column>
         )}
       </Table>
-      <div>
-        {pagination && (
-          <Pagination paginationProps={{ total: 100, currentPage: 1, rowsPerPage: 10 }} />
-        )}
-      </div>
+      <div>{pagination && <Pagination paginationProps={paginationProps} />}</div>
     </div>
   );
 };

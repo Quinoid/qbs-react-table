@@ -4,10 +4,12 @@ import { ThreeDotIcon } from './icons';
 import { actionProps } from '../commontypes';
 type Props = {
   actionDropDown: actionProps[];
-  handleMenuActions?: (slug: actionProps) => void;
+  handleMenuActions?: (slug: actionProps, rowData?: any) => void;
+  rowData?: any;
+  dataTheme?: string;
 };
 
-const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions }) => {
+const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowData }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -31,10 +33,9 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions }) =>
   };
 
   const handleMenuItemClick = (slug: actionProps) => {
-    handleMenuActions?.(slug);
+    handleMenuActions?.(slug, rowData);
     setOpenMenu(false);
   };
-
 
   return (
     <div className="dropdown" ref={menuRef}>

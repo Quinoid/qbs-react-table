@@ -6,6 +6,19 @@ export type QbsColumnProps = {
   sortable?: boolean;
   resizable?: boolean;
   fixed?: boolean;
+  align?: 'center' | 'left' | 'right';
+  colWidth?: number;
+  grouped?: boolean;
+  groupheader?: string;
+  children?: {
+    title: string;
+    field: string;
+    sortable?: boolean;
+    resizable?: boolean;
+    fixed?: boolean;
+    align?: 'center' | 'left' | 'right';
+    colWidth?: number;
+  }[];
 };
 export type PaginationProps = {
   total: number;
@@ -27,7 +40,7 @@ export type QbsTableProps = {
   data: any[];
   isTree?: boolean;
   pagination?: boolean;
-  paginationProps?: PaginationProps;
+  paginationProps: PaginationProps;
   handleColumnSort?: (sortColumn: string, sortType: string) => void;
   sortType?: 'desc' | 'asc';
   sortColumn?: string;
@@ -35,17 +48,29 @@ export type QbsTableProps = {
   onSelect?: (keys: any[]) => void;
   title?: string;
   search?: boolean;
-  onSearch: (key?: string) => void;
+  onSearch?: (key?: string) => void;
   asyncSearch?: boolean;
   searchValue?: string;
   handleSearchValue?: (value?: string) => void;
   theme?: string;
   actionProps?: actionProps[];
+  onRowClick?: (data: any) => void;
+  cellBordered?: boolean;
+  bordered?: boolean;
+  height?: number;
+  minHeight?: number;
+  maxHeight?: number | string;
+  wordWrap: boolean | 'break-all' | 'break-word' | 'keep-all' | undefined;
+  rowKey?: string;
+  onExpandChange?: (expanded: boolean, rowData: any) => void;
+  defaultExpandAllRows?: boolean;
+  expandedRowKeys: readonly number[];
+  handleMenuActions?: (actions: actionProps, rowData: any) => void;
 };
 export type QbsTableToolbarProps = {
   title?: string;
   search?: boolean;
-  onSearch: (key?: string) => void;
+  onSearch?: (key?: string) => void;
   asyncSearch?: boolean;
   searchValue?: string;
   handleSearchValue?: (value?: string) => void;
