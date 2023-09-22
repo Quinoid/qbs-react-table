@@ -1,43 +1,48 @@
 import React from 'react';
 
-export type QbsColumnProps = {
+enum Align {
+  Center = 'center',
+  Left = 'left',
+  Right = 'right'
+}
+
+export interface ColumnBase {
   title: string;
   field: string;
   sortable?: boolean;
   resizable?: boolean;
   fixed?: boolean;
-  align?: 'center' | 'left' | 'right';
+  align?: Align;
   colWidth?: number;
+}
+
+export interface QbsColumnProps extends ColumnBase {
   grouped?: boolean;
   groupheader?: string;
-  children?: {
-    title: string;
-    field: string;
-    sortable?: boolean;
-    resizable?: boolean;
-    fixed?: boolean;
-    align?: 'center' | 'left' | 'right';
-    colWidth?: number;
-  }[];
-};
-export type PaginationProps = {
-  total: number;
-  rowsPerPage: number;
-  dropOptions: number[];
-  currentPage: number;
+  children?: readonly ColumnBase[];
+}
+
+export interface PaginationProps {
+  total?: number;
+  rowsPerPage?: number;
+  dropOptions?: number[];
+  currentPage?: number;
   maxPage?: number;
-  onRowsPerPage: (row: number, page: number) => void;
-  onPagination: (row: number, page: number) => void;
-};
-export type actionProps = {
+  onRowsPerPage?: (row: number, page: number) => void;
+  onPagination?: (row: number, page: number) => void;
+}
+
+export interface ActionProps {
   title?: string;
   action?: (row: any) => void;
   icon: React.ReactNode;
   toolTip?: string;
-};
-export type QbsTableProps = {
-  columns: QbsColumnProps[];
-  data: any[];
+}
+
+export interface QbsTableProps {
+  columns: readonly QbsColumnProps[];
+  data: readonly any[];
+  actionProps?: readonly ActionProps[];
   isTree?: boolean;
   pagination?: boolean;
   paginationProps: PaginationProps;
@@ -53,7 +58,6 @@ export type QbsTableProps = {
   searchValue?: string;
   handleSearchValue?: (value?: string) => void;
   theme?: string;
-  actionProps?: actionProps[];
   onRowClick?: (data: any) => void;
   cellBordered?: boolean;
   bordered?: boolean;
@@ -61,13 +65,18 @@ export type QbsTableProps = {
   minHeight?: number;
   maxHeight?: number | string;
   wordWrap: boolean | 'break-all' | 'break-word' | 'keep-all' | undefined;
-  rowKey?: string;
+  dataRowKey?: string;
   onExpandChange?: (expanded: boolean, rowData: any) => void;
   defaultExpandAllRows?: boolean;
   expandedRowKeys: readonly number[];
-  handleMenuActions?: (actions: actionProps, rowData: any) => void;
-};
-export type QbsTableToolbarProps = {
+  setExpandedRowKeys: (value: readonly number[]) => void;
+  handleMenuActions?: (actions: ActionProps, rowData: any) => void;
+  handleRowExpanded: (rowData: any) => React.ReactNode;
+  shouldUpdateScroll?: boolean;
+  rowExpand?: boolean;
+}
+
+export interface QbsTableToolbarProps {
   title?: string;
   search?: boolean;
   onSearch?: (key?: string) => void;
@@ -76,4 +85,4 @@ export type QbsTableToolbarProps = {
   handleSearchValue?: (value?: string) => void;
   pagination?: boolean;
   paginationProps?: PaginationProps;
-};
+}

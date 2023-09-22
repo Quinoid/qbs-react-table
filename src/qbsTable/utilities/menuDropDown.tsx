@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import React from 'react';
+
+import { ActionProps } from '../commontypes';
 import { ThreeDotIcon } from './icons';
-import { actionProps } from '../commontypes';
+
 type Props = {
-  actionDropDown: actionProps[];
-  handleMenuActions?: (slug: actionProps, rowData?: any) => void;
+  actionDropDown: ActionProps[];
+  handleMenuActions?: (slug: ActionProps, rowData?: any) => void;
   rowData?: any;
   dataTheme?: string;
 };
@@ -32,7 +34,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
     setOpenMenu(!openMenu);
   };
 
-  const handleMenuItemClick = (slug: actionProps) => {
+  const handleMenuItemClick = (slug: ActionProps) => {
     handleMenuActions?.(slug, rowData);
     setOpenMenu(false);
   };
@@ -56,7 +58,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
               <div className={''}>
                 <div className="tooltip">
                   <span>{item.icon}</span>
-                  <span className="tooltiptext">This is the tooltip content!</span>
+                  <span className="tooltiptext">{item.toolTip}</span>
                 </div>
               </div>
             </a>

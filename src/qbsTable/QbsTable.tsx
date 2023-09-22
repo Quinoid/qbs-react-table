@@ -1,45 +1,56 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
+import ColumnGroup from '../../es/ColumnGroup';
 import Cell from '../Cell';
 import Column from '../Column';
 import HeaderCell from '../HeaderCell';
+import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsTableProps } from './commontypes';
 import ToolBar from './Toolbar';
-import Pagination from '../Pagination';
 import MenuDropDown from './utilities/menuDropDown';
-import { ThreeDotIcon } from './utilities/icons';
-import ColumnGroup from '../../es/ColumnGroup';
+
 const CHECKBOX_LINE_HEIGHT = '46px';
 const COLUMN_WIDTH = 250;
 
-const CheckCell: React.FC<any> = ({
-  rowData,
-  onChange,
-  checkedKeys,
-  dataKey,
-  dataTheme,
-  ...props
-}) => (
-  <Cell {...props} style={{ padding: 0 }} dataTheme={dataTheme}>
-    <div style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}>
-      <input
-        type="checkbox"
-        value={rowData[dataKey]}
-        onChange={onChange}
-        checked={checkedKeys.includes(rowData[dataKey])}
+const CheckCell: React.FC<any> = React.memo(
+  ({ rowData, onChange, checkedKeys, dataKey, dataTheme, ...props }) => (
+    <Cell {...props} style={{ padding: 0 }} dataTheme={dataTheme}>
+      <div style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}>
+        <input
+          type="checkbox"
+          value={rowData[dataKey]}
+          onChange={onChange}
+          checked={checkedKeys.includes(rowData[dataKey])}
+        />
+      </div>
+    </Cell>
+  )
+);
+const ActionCell: React.FC<any> = React.memo(
+  ({ rowData, handleMenuActions, dataTheme, actionProps }) => (
+    <div>
+      <MenuDropDown
+        actionDropDown={actionProps}
+        rowData={rowData}
+        dataTheme={dataTheme}
+        handleMenuActions={handleMenuActions}
       />
     </div>
-  </Cell>
+  )
 );
-const ActionCell: React.FC<any> = ({ rowData, handleMenuActions, dataTheme, actionProps }) => (
-  <div>
-    <MenuDropDown
-      actionDropDown={actionProps}
-      rowData={rowData}
-      dataTheme={dataTheme}
-      handleMenuActions={handleMenuActions}
-    />
-  </div>
+const ExpandCell: React.FC<any> = React.memo(
+  ({ rowData, dataKey, expandedRowKeys, onChange, ...props }) => (
+    <Cell {...props}>
+      <button
+        onClick={() => {
+          onChange(rowData);
+        }}
+      >
+        {expandedRowKeys.some((key: any) => key === rowData[dataKey]) ? '-' : '+'}
+      </button>
+    </Cell>
+  )
 );
 
 const QbsTable: React.FC<QbsTableProps> = ({
@@ -56,7 +67,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   searchValue,
   onSearch,
   handleSearchValue,
-  paginationProps,
+  paginationProps = {},
   pagination = false,
   cellBordered = false,
   bordered = false,
@@ -64,30 +75,32 @@ const QbsTable: React.FC<QbsTableProps> = ({
   height,
   onExpandChange,
   wordWrap,
-  rowKey,
+  dataRowKey = 'id',
   defaultExpandAllRows,
-  actionProps = [
-    { title: 'name', icon: <ThreeDotIcon /> },
-    { title: 'name', icon: <ThreeDotIcon /> },
-    { title: 'name', icon: <ThreeDotIcon /> },
-    { title: 'name', icon: <ThreeDotIcon /> }
-  ],
-    theme,
+  handleRowExpanded,
+  shouldUpdateScroll = false,
+  rowExpand = false,
+  actionProps = [],
+  theme,
   handleMenuActions,
   onRowClick,
-  expandedRowKeys
+  expandedRowKeys,
+  setExpandedRowKeys
 }) => {
   const [loading, setLoading] = useState(false);
   const [checkedKeys, setCheckedKeys] = useState<number[]>([]);
+  const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
 
-  const handleSortColumn = (sortColumn: any, sortType: any) => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      handleColumnSort?.(sortColumn, sortType);
-    }, 500);
-  };
-
+  const handleSortColumn = useCallback(
+    (sortColumn: any, sortType: any) => {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        handleColumnSort?.(sortColumn, sortType);
+      }, 500);
+    },
+    [handleColumnSort]
+  );
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
@@ -108,7 +121,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   );
   useEffect(() => {
     onSelect?.(checkedKeys);
-  }, [checkedKeys]);
+  }, [checkedKeys, onSelect]);
 
   const toolbarProps = {
     title: title,
@@ -120,31 +133,114 @@ const QbsTable: React.FC<QbsTableProps> = ({
     asyncSearch: asyncSearch,
     paginationProps: paginationProps
   };
-  const themeToggle = document.getElementById('themeToggle') as HTMLInputElement;
-  themeToggle?.addEventListener('change', function () {
-    if (themeToggle?.checked) {
-      document.body.setAttribute('data-theme', 'dark');
-    } else {
-      document.body.removeAttribute('data-theme');
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', function () {
-    if (localStorage.getItem('theme') === 'dark') {
-      document.body.setAttribute('data-theme', 'dark');
-      if (themeToggle) {
-        themeToggle.checked = true;
+  const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
+  useEffect(() => {
+    const handleThemeToggle = () => {
+      if (themeToggle?.checked) {
+        document.body.setAttribute('data-theme', 'dark');
+      } else {
+        document.body.removeAttribute('data-theme');
       }
-    }
-  });
-  const dataTheme = localStorage.getItem('theme') ?? theme;
+    };
+
+    const handleDOMContentLoaded = () => {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        if (themeToggle) {
+          themeToggle.checked = true;
+        }
+      }
+    };
+
+    themeToggle?.addEventListener('change', handleThemeToggle);
+    document.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
+
+    return () => {
+      themeToggle?.removeEventListener('change', handleThemeToggle);
+      document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
+    };
+  }, [themeToggle]);
+
+  const handleExpanded = useCallback(
+    (rowData: any) => {
+      const keyValue = dataRowKey as string;
+      const key = rowData[keyValue];
+
+      let nextExpandedRowKeys = new Set(expandedRowKeys);
+
+      if (nextExpandedRowKeys.has(key)) {
+        nextExpandedRowKeys.delete(key);
+      } else {
+        nextExpandedRowKeys.add(key);
+      }
+
+      setExpandedRowKeys(Array.from(nextExpandedRowKeys));
+    },
+    [dataRowKey, expandedRowKeys, setExpandedRowKeys]
+  );
+  const columnsRendered: React.ReactElement[] = useMemo(
+    () =>
+      (columns ?? []).map(
+        ({
+          title,
+          field,
+          resizable,
+          sortable,
+          colWidth,
+          align,
+          grouped,
+          groupheader,
+          fixed,
+          children
+        }) => (
+          <>
+            {grouped ? (
+              <ColumnGroup
+                header={groupheader}
+                fixed={fixed}
+                align={align}
+                verticalAlign="middle"
+                groupHeaderHeight={40}
+              >
+                {children?.map(({ title, field, resizable, sortable, colWidth, align, fixed }) => (
+                  <Column
+                    key={title}
+                    sortable={sortable}
+                    width={colWidth ?? COLUMN_WIDTH}
+                    resizable={resizable}
+                    align={align}
+                    fixed={fixed}
+                  >
+                    <HeaderCell dataTheme={dataTheme} className="w-full">
+                      {title}
+                    </HeaderCell>
+                    <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+                  </Column>
+                ))}
+              </ColumnGroup>
+            ) : (
+              <Column
+                key={title}
+                sortable={sortable}
+                width={colWidth ?? COLUMN_WIDTH}
+                resizable={resizable}
+                align={align}
+                fixed={fixed}
+              >
+                <HeaderCell dataTheme={dataTheme} className="w-full">
+                  {title}
+                </HeaderCell>
+                <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+              </Column>
+            )}
+          </>
+        )
+      ),
+    [columns, dataTheme]
+  );
+
   return (
     <div className="qbs-table" data-theme={dataTheme}>
-      <label>
-        <input type="checkbox" id="themeToggle" />
-        Toggle Dark Mode
-        <MenuDropDown actionDropDown={actionProps} />
-      </label>
       <ToolBar {...toolbarProps} />
       <Table
         height={height}
@@ -159,14 +255,27 @@ const QbsTable: React.FC<QbsTableProps> = ({
         bordered={bordered}
         minHeight={minHeight}
         loading={loading}
-        renderRowExpanded={() => <div>Hi Expansion</div>}
         showHeader
         defaultChecked
         expandedRowKeys={expandedRowKeys}
         onExpandChange={onExpandChange}
-        rowKey={rowKey ?? 'id'}
+        rowKey={dataRowKey ?? 'id'}
         defaultExpandAllRows={defaultExpandAllRows}
+        shouldUpdateScroll={shouldUpdateScroll}
+        renderRowExpanded={rowData => {
+          return handleRowExpanded(rowData);
+        }}
       >
+        {rowExpand && (
+          <Column width={70} align="center" fixed="left">
+            <HeaderCell>#</HeaderCell>
+            <ExpandCell
+              dataKey={dataRowKey}
+              expandedRowKeys={expandedRowKeys}
+              onChange={handleExpanded}
+            />
+          </Column>
+        )}
         {selection && (
           <Column width={50} align="center" fixed="left">
             <HeaderCell style={{ padding: 0 }} dataTheme={dataTheme}>
@@ -186,64 +295,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
             />
           </Column>
         )}
-        {columns?.map(
-          ({
-            title,
-            field,
-            resizable,
-            sortable,
-            colWidth,
-            align,
-            grouped,
-            groupheader,
-            fixed,
-            children
-          }) => (
-            <>
-              {grouped ? (
-                <ColumnGroup
-                  header={groupheader}
-                  fixed={fixed}
-                  align={align}
-                  verticalAlign="middle"
-                  groupHeaderHeight={40}
-                >
-                  {children?.map(
-                    ({ title, field, resizable, sortable, colWidth, align, fixed }) => (
-                      <Column
-                        key={title}
-                        sortable={sortable}
-                        width={colWidth ?? COLUMN_WIDTH}
-                        resizable={resizable}
-                        align={align}
-                        fixed={fixed}
-                      >
-                        <HeaderCell dataTheme={dataTheme} className="w-full">
-                          {title}
-                        </HeaderCell>
-                        <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
-                      </Column>
-                    )
-                  )}
-                </ColumnGroup>
-              ) : (
-                <Column
-                  key={title}
-                  sortable={sortable}
-                  width={colWidth ?? COLUMN_WIDTH}
-                  resizable={resizable}
-                  align={align}
-                  fixed={fixed}
-                >
-                  <HeaderCell dataTheme={dataTheme} className="w-full">
-                    {title}
-                  </HeaderCell>
-                  <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
-                </Column>
-              )}
-            </>
-          )
-        )}
+        {columnsRendered}
+
         {actionProps && actionProps?.length > 0 && (
           <Column width={40} fixed="right">
             <HeaderCell dataTheme={dataTheme}>{'Action'}</HeaderCell>

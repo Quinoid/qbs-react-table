@@ -1,29 +1,42 @@
-import React from 'react';
+import React, { useCallback, memo } from 'react';
 export interface SearchProps {
   placeholder: string;
   handleChange: (value: string) => void;
   searchValue: string | undefined;
   handleSearch: (value?: string) => void;
 }
-export default function SearchInput({
+const SearchInput: React.FC<SearchProps> = ({
   placeholder,
   handleChange,
   searchValue,
   handleSearch
-}: SearchProps) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleSearch(searchValue);
-  };
+}) => {
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleChange(e.target.value);
+    },
+    [handleChange]
+  );
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      handleSearch(searchValue);
+    },
+    [handleSearch, searchValue]
+  );
 
+  const handleClear = useCallback(() => {
+    handleChange('');
+  }, [handleChange]);
   return (
-    <div className="search-container">
-      <form onSubmit={e => handleSubmit(e)}>
+    <div className="search-container" role="search">
+      <form onSubmit={handleSubmit}>
         <input
-          className=" input textfield relative pr-1 w-full"
+          className="input textfield relative pr-1 w-full"
           placeholder={placeholder}
-          value={searchValue}
-          onChange={e => handleChange(e.target.value)}
+          value={searchValue ?? ''}
+          onChange={handleInputChange}
+          aria-label="Search"
         />
         <button
           className="search-button absolute right-1 bottom-1.5 bg-white text-grey-dark"
@@ -47,7 +60,7 @@ export default function SearchInput({
         {searchValue && (
           <button
             className=" close-button absolute right-7 bottom-2 bg-white"
-            onClick={() => handleChange('')}
+            onClick={handleClear}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -64,4 +77,5 @@ export default function SearchInput({
       </form>
     </div>
   );
-}
+};
+export default memo(SearchInput);

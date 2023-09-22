@@ -1,15 +1,16 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import omit from 'lodash/omit';
-import isNil from 'lodash/isNil';
-import get from 'lodash/get';
-import { LAYER_WIDTH, ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
-import { useClassNames } from './utils';
-import TableContext from './TableContext';
-import ArrowRight from '@rsuite/icons/ArrowRight';
 import ArrowDown from '@rsuite/icons/ArrowDown';
-import { StandardProps, RowDataType } from './@types/common';
+import ArrowRight from '@rsuite/icons/ArrowRight';
+import get from 'lodash/get';
+import isNil from 'lodash/isNil';
+import omit from 'lodash/omit';
+import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
+
+import { RowDataType, StandardProps } from './@types/common';
 import { columnHandledProps } from './Column';
+import { LAYER_WIDTH, ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
+import TableContext from './TableContext';
+import { useClassNames } from './utils';
 
 export interface CellProps extends StandardProps {
   /** Data binding key, but also a sort of key */
@@ -113,7 +114,6 @@ const Cell = React.forwardRef((props: InnerCellProps, ref: React.Ref<HTMLDivElem
   if (isTreeCol && !isHeaderCell && !rowData) {
     throw new Error('[Table.Cell]: `rowData` is required for tree column');
   }
-  console.log(dataTheme);
 
   const handleTreeToggle = useCallback(
     (event: React.MouseEvent) => {

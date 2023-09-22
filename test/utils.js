@@ -1,19 +1,17 @@
+import { act, render as testRender } from '@testing-library/react';
+import getStyle from 'dom-lib/getStyle';
 /* eslint-disable react/no-find-dom-node */
 
 import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { findDOMNode, unmountComponentAtNode } from 'react-dom';
 import * as ReactTestUtils from 'react-dom/test-utils';
-import { render as testRender, act } from '@testing-library/react';
-import getStyle from 'dom-lib/getStyle';
 
 export { getStyle };
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const majorVersion = parseInt(React.version);
-
-console.log('React version:', React.version);
 
 /**
  * Check whether it is a DOM object?

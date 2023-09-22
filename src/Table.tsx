@@ -1,44 +1,19 @@
-import React, { useState, useRef, useCallback, useImperativeHandle, useReducer } from 'react';
 import { getTranslateDOMPositionXY } from 'dom-lib/translateDOMPositionXY';
-import PropTypes from 'prop-types';
-import isFunction from 'lodash/isFunction';
-import flatten from 'lodash/flatten';
 import debounce from 'lodash/debounce';
-import Row, { RowProps } from './Row';
+import flatten from 'lodash/flatten';
+import isFunction from 'lodash/isFunction';
+import PropTypes from 'prop-types';
+import React, { useCallback, useImperativeHandle, useReducer, useRef, useState } from 'react';
+
 import CellGroup from './CellGroup';
-import Scrollbar, { ScrollbarInstance } from './Scrollbar';
-import MouseArea from './MouseArea';
-import Loader from './Loader';
+import { CELL_PADDING_HEIGHT, EXPANDED_KEY, ROW_HEADER_HEIGHT, ROW_HEIGHT, SCROLLBAR_WIDTH, SORT_TYPE, TREE_DEPTH } from './constants';
 import EmptyMessage from './EmptyMessage';
+import Loader from './Loader';
+import MouseArea from './MouseArea';
+import Row, { RowProps } from './Row';
+import Scrollbar, { ScrollbarInstance } from './Scrollbar';
 import TableContext from './TableContext';
-import {
-  SCROLLBAR_WIDTH,
-  CELL_PADDING_HEIGHT,
-  SORT_TYPE,
-  EXPANDED_KEY,
-  TREE_DEPTH,
-  ROW_HEADER_HEIGHT,
-  ROW_HEIGHT
-} from './constants';
-import {
-  mergeCells,
-  flattenData,
-  isRTL,
-  findRowKeys,
-  findAllParents,
-  shouldShowRowByExpanded,
-  resetLeftForCells,
-  useClassNames,
-  useControlled,
-  useUpdateEffect,
-  useCellDescriptor,
-  useTableDimension,
-  useTableRows,
-  useAffix,
-  useScrollListener,
-  usePosition,
-  isSupportTouchEvent
-} from './utils';
+import { findAllParents, findRowKeys, flattenData, isRTL, isSupportTouchEvent, mergeCells, resetLeftForCells, shouldShowRowByExpanded, useAffix, useCellDescriptor, useClassNames, useControlled, usePosition, useScrollListener, useTableDimension, useTableRows, useUpdateEffect } from './utils';
 
 import type {
   StandardProps,
@@ -340,7 +315,6 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
   // Use `forceUpdate` to force the component to re-render after manipulating the DOM.
   const [, forceUpdate] = useReducer(x => x + 1, 0);
-  console.log(dataTheme);
   const [expandedRowKeys, setExpandedRowKeys] = useControlled(
     expandedRowKeysProp,
     defaultExpandAllRows
@@ -637,11 +611,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     let rowNode: React.ReactNode = null;
 
     // IF there are fixed columns, add a fixed group
-    console.log(
-      contentWidth.current > tableWidth.current,
-      contentWidth.current,
-      tableWidth.current
-    );
+
     // if (shouldFixedColumn && contentWidth.current > tableWidth.current) {
     if (shouldFixedColumn){
       const fixedLeftCells: React.ReactNode[] = [];
@@ -676,7 +646,6 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       if (hasVerticalScrollbar && fixedRightCellGroupWidth) {
         fixedRightCellGroupWidth += SCROLLBAR_WIDTH;
       }
-      console.log(fixedRightCellGroupWidth, 'tableComponent', tableWidth, rtl);
       rowNode = (
         <>
           {fixedLeftCellGroupWidth ? (
