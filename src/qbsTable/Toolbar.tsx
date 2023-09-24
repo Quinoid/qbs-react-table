@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { QbsTableToolbarProps } from './commontypes';
 import SearchInput from './SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
-import debounce from './debounce';
+import debounce from './utilities/debounce';
 
 const ToolBar: React.FC<QbsTableToolbarProps> = ({
   title,

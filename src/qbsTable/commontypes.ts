@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 enum Align {
   Center = 'center',
@@ -14,6 +14,8 @@ export interface ColumnBase {
   fixed?: boolean;
   align?: Align;
   colWidth?: number;
+  renderCell?: (rowData: any) => ReactElement;
+  customCell?: boolean;
 }
 
 export interface QbsColumnProps extends ColumnBase {

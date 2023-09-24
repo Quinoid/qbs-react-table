@@ -8,50 +8,9 @@ import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsTableProps } from './commontypes';
 import ToolBar from './Toolbar';
-import MenuDropDown from './utilities/menuDropDown';
-
+import { CustomTableCell, CheckCell, ActionCell, ExpandCell } from './CustomTableCell';
 const CHECKBOX_LINE_HEIGHT = '46px';
 const COLUMN_WIDTH = 250;
-
-const CheckCell: React.FC<any> = React.memo(
-  ({ rowData, onChange, checkedKeys, dataKey, dataTheme, ...props }) => (
-    <Cell {...props} style={{ padding: 0 }} dataTheme={dataTheme}>
-      <div style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}>
-        <input
-          type="checkbox"
-          value={rowData[dataKey]}
-          onChange={onChange}
-          checked={checkedKeys.includes(rowData[dataKey])}
-        />
-      </div>
-    </Cell>
-  )
-);
-const ActionCell: React.FC<any> = React.memo(
-  ({ rowData, handleMenuActions, dataTheme, actionProps }) => (
-    <div>
-      <MenuDropDown
-        actionDropDown={actionProps}
-        rowData={rowData}
-        dataTheme={dataTheme}
-        handleMenuActions={handleMenuActions}
-      />
-    </div>
-  )
-);
-const ExpandCell: React.FC<any> = React.memo(
-  ({ rowData, dataKey, expandedRowKeys, onChange, ...props }) => (
-    <Cell {...props}>
-      <button
-        onClick={() => {
-          onChange(rowData);
-        }}
-      >
-        {expandedRowKeys.some((key: any) => key === rowData[dataKey]) ? '-' : '+'}
-      </button>
-    </Cell>
-  )
-);
 
 const QbsTable: React.FC<QbsTableProps> = ({
   handleColumnSort,
@@ -191,7 +150,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
           grouped,
           groupheader,
           fixed,
-          children
+          children,
+          customCell,
+          renderCell
         }) => (
           <>
             {grouped ? (
@@ -202,19 +163,27 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 verticalAlign="middle"
                 groupHeaderHeight={40}
               >
-                {children?.map(({ title, field, resizable, sortable, colWidth, align, fixed }) => (
+                {children?.map(child => (
                   <Column
-                    key={title}
-                    sortable={sortable}
-                    width={colWidth ?? COLUMN_WIDTH}
-                    resizable={resizable}
-                    align={align}
-                    fixed={fixed}
+                    key={child.title}
+                    sortable={child.sortable}
+                    width={child.colWidth ?? COLUMN_WIDTH}
+                    resizable={child.resizable}
+                    align={child.align}
+                    fixed={child.fixed}
                   >
                     <HeaderCell dataTheme={dataTheme} className="w-full">
-                      {title}
+                      {child.title}
                     </HeaderCell>
-                    <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+                    {customCell ? (
+                      <CustomTableCell
+                        renderCell={child.renderCell}
+                        dataKey="id"
+                        dataTheme={dataTheme}
+                      />
+                    ) : (
+                      <Cell className="w-full" dataKey={child.field} dataTheme={dataTheme} />
+                    )}
                   </Column>
                 ))}
               </ColumnGroup>
@@ -230,7 +199,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 <HeaderCell dataTheme={dataTheme} className="w-full">
                   {title}
                 </HeaderCell>
-                <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+                {customCell ? (
+                  <CustomTableCell renderCell={renderCell} dataKey="id" dataTheme={dataTheme} />
+                ) : (
+                  <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+                )}
               </Column>
             )}
           </>
