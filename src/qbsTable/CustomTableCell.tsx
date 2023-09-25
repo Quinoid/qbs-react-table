@@ -43,7 +43,7 @@ export const ExpandCell: React.FC<any> = React.memo(
   )
 );
 export const CustomTableCell: React.FC<any> = React.memo(
-  ({ rowData, renderCell, dataKey, expandedRowKeys, onChange, ...props }) => (
+  ({ rowData, renderCell, dataKey, onChange, ...props }) => (
     <Cell {...props}>{renderCell(rowData)}</Cell>
   )
 );

@@ -1,20 +1,32 @@
 .qbs-table {
-  .toolbar {
+  .qbs-table-toolbar {
     height: 58px;
-    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px;
     .end-container {
       display: flex;
+      gap: 10px;
+
       align-items: center;
       .rows-count {
         padding: 0px 10px;
       }
     }
+    .start-container {
+      display: flex;
+      gap: 10px;
+    }
+    .qbs-table-primary-filter {
+      display: flex;
+    }
   }
-  .search-container {
+  .sub-qbs-table-toolbar {
+    display: flex;
+    gap: 10px;
+  }
+  .qbs-table-search-container {
     position: relative;
     align-items: center;
     .input {
@@ -57,13 +69,13 @@
   color: #ffffff;
 }
 /* Dropdown container */
-.dropdown {
+.qbs-table-menu-dropdown {
   position: relative;
   display: inline-block;
 }
 
-/* Button to trigger the dropdown */
-.dropbtn {
+/* Button to trigger the qbs-table-menu-dropdown */
+.qbs-table-dropbtn {
   background-color: transparent;
   color: black;
   font-size: 16px;
@@ -72,7 +84,7 @@
 }
 
 /* Dropdown content (hidden by default) */
-.dropdown-content {
+.qbs-table-qbs-table-menu-dropdown-content {
   position: absolute;
   background-color: #f1f1f1;
   min-width: 160px;
@@ -89,7 +101,7 @@
 }
 
 /* Dropdown content items */
-.dropdown-content a {
+.qbs-table-qbs-table-menu-dropdown-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
@@ -97,14 +109,14 @@
   display: block;
 }
 /* Tooltip container */
-.tooltip {
+.qbs-table-tooltip {
   position: relative;
   display: inline-block;
   cursor: pointer;
 }
 
 /* Tooltip text, hidden by default */
-.tooltip .tooltiptext {
+.qbs-table-tooltip .tooltiptext {
   visibility: hidden;
   width: 120px;
   background-color: #555;
@@ -113,18 +125,18 @@
   padding: 5px 0;
   border-radius: 6px;
 
-  /* Position the tooltip above the text */
+  /* Position the qbs-table-tooltip above the text */
   position: absolute;
   z-index: 1;
   bottom: 125%;
   left: 50%;
-  margin-left: -60px; /* Use half of the width to center the tooltip */
+  margin-left: -60px; /* Use half of the width to center the qbs-table-tooltip */
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 /* Tooltip arrow, pointing upwards */
-.tooltip .tooltiptext::after {
+.qbs-table-tooltip .tooltiptext::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -135,8 +147,8 @@
   border-color: #555 transparent transparent transparent;
 }
 
-/* Show the tooltip when hovering */
-.tooltip:hover .tooltiptext {
+/* Show the qbs-table-tooltip when hovering */
+.qbs-table-tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
 }

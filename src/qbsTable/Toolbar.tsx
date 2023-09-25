@@ -1,18 +1,20 @@
 import React, { useCallback } from 'react';
 import { QbsTableToolbarProps } from './commontypes';
-import SearchInput from './SearchInput';
+import SearchInput from './utilities/SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
 import debounce from './utilities/debounce';
 
 const ToolBar: React.FC<QbsTableToolbarProps> = ({
   title,
   pagination,
-  paginationProps,
+  paginationProps = {},
   search,
   onSearch,
   asyncSearch,
   handleSearchValue,
-  searchValue
+  searchValue,
+  primaryFilter,
+  advancefilter
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
 
@@ -37,27 +39,35 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   );
 
   return (
-    <div className="toolbar">
-      {title && <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{title}</div>}
-      <div className="end-container">
-        {pagination && paginationProps && (
-          <div className="rows-count">
-            {getRowDisplayRange(
-              paginationProps.total ?? 0,
-              paginationProps.rowsPerPage ?? 0,
-              paginationProps.currentPage ?? 0
-            )}
+    <div>
+      <div className="qbs-table-toolbar">
+        {title && (
+          <div className="start-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {title}
+            <div className="qbs-table-primary-filter">{primaryFilter}</div>
           </div>
         )}
-        {search && (
-          <SearchInput
-            placeholder="Search"
-            handleChange={handleChange}
-            handleSearch={handleSearch}
-            searchValue={searchValue}
-          />
-        )}
+        <div className="end-container">
+          {pagination && paginationProps && (
+            <div className="rows-count">
+              {getRowDisplayRange(
+                paginationProps.total ?? 0,
+                paginationProps.rowsPerPage ?? 0,
+                paginationProps.currentPage ?? 0
+              )}
+            </div>
+          )}
+          {search && (
+            <SearchInput
+              placeholder="Search"
+              handleChange={handleChange}
+              handleSearch={handleSearch}
+              searchValue={searchValue}
+            />
+          )}
+        </div>
       </div>
+      <div className="sub-qbs-table-toolbar">{advancefilter}</div>
     </div>
   );
 };

@@ -31,7 +31,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   cellBordered = false,
   bordered = false,
   minHeight,
-  height,
+  height = 550,
   onExpandChange,
   wordWrap,
   dataRowKey = 'id',
@@ -44,7 +44,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   handleMenuActions,
   onRowClick,
   expandedRowKeys,
-  setExpandedRowKeys
+  setExpandedRowKeys,
+  primaryFilter,
+  advancefilter
 }) => {
   const [loading, setLoading] = useState(false);
   const [checkedKeys, setCheckedKeys] = useState<number[]>([]);
@@ -90,7 +92,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
     onSearch: onSearch,
     handleSearchValue: handleSearchValue,
     asyncSearch: asyncSearch,
-    paginationProps: paginationProps
+    paginationProps: paginationProps,
+    primaryFilter: primaryFilter,
+    advancefilter: advancefilter
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
   useEffect(() => {

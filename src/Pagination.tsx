@@ -99,11 +99,15 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   };
   return (
     <div
-      className={'custom-pagination'}
+      className={'qbs-table-custom-pagination'}
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-      <div >
-        <select onChange={e => handleRowsPerPage(e)} className="dropdown" value={rowsPerPageState}>
+      <div>
+        <select
+          onChange={e => handleRowsPerPage(e)}
+          className="qbs-table-pagination-dropdown"
+          value={rowsPerPageState}
+        >
           {dropData?.map(item => (
             <option value={item} key={item}>
               {item}
@@ -111,9 +115,9 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           ))}
         </select>
       </div>
-      <div className="right-block">
+      <div className="qbs-table-pagination-right-block">
         <button
-          className="icon-container"
+          className="qbs-table-icon-container"
           disabled={currentIndex == 1}
           onClick={() => handleFirst(1)}
         >
@@ -133,7 +137,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           </svg>
         </button>
         <button
-          className="icon-container"
+          className="qbs-table-icon-container"
           disabled={currentIndex < 2}
           onClick={() => handlePrevious()}
         >
@@ -152,7 +156,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           <PageIndex currentIndex={currentIndex} handleFirst={handleFirst} pageCount={pageCount} />
         </div>
         <button
-          className="icon-container"
+          className="qbs-table-icon-container"
           disabled={currentIndex >= pageCount - 1}
           onClick={() => handleNext()}
         >
@@ -168,7 +172,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           </svg>
         </button>
         <button
-          className="icon-container"
+          className="qbs-table-icon-container"
           disabled={currentIndex == pageCount}
           onClick={() => handleLast()}
         >

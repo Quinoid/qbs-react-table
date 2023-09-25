@@ -40,12 +40,12 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
   };
 
   return (
-    <div className="dropdown" ref={menuRef}>
-      <button className="dropbtn" onClick={toggleMenu} ref={menuButtonRef}>
+    <div className="qbs-table-menu-dropdown" ref={menuRef}>
+      <button className="qbs-table-dropbtn" onClick={toggleMenu} ref={menuButtonRef}>
         <ThreeDotIcon />
       </button>
       {openMenu && (
-        <div className={'dropdown-content'}>
+        <div className={'qbs-table-qbs-table-menu-dropdown-content'}>
           {actionDropDown?.map(item => (
             <a
               key={item.title}
@@ -56,7 +56,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
               }}
             >
               <div className={''}>
-                <div className="tooltip">
+                <div className="qbs-table-tooltip">
                   <span>{item.icon}</span>
                   <span className="tooltiptext">{item.toolTip}</span>
                 </div>

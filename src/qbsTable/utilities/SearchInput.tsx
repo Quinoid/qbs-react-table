@@ -29,7 +29,7 @@ const SearchInput: React.FC<SearchProps> = ({
     handleChange('');
   }, [handleChange]);
   return (
-    <div className="search-container" role="search">
+    <div className="qbs-table-search-container" role="search">
       <form onSubmit={handleSubmit}>
         <input
           className="input textfield relative pr-1 w-full"

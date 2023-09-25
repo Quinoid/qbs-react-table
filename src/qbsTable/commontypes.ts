@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 
 enum Align {
   Center = 'center',
@@ -76,6 +76,8 @@ export interface QbsTableProps {
   handleRowExpanded: (rowData: any) => React.ReactNode;
   shouldUpdateScroll?: boolean;
   rowExpand?: boolean;
+  primaryFilter?: ReactElement | ReactNode;
+  advancefilter?: ReactElement | ReactNode;
 }
 
 export interface QbsTableToolbarProps {
@@ -87,4 +89,6 @@ export interface QbsTableToolbarProps {
   handleSearchValue?: (value?: string) => void;
   pagination?: boolean;
   paginationProps?: PaginationProps;
+  primaryFilter?: ReactElement | ReactNode;
+  advancefilter?: ReactElement | ReactNode;
 }
