@@ -64,7 +64,7 @@ const App = (props: ExamplesProps) => {
             eventKey="apis"
             target="_blank"
             icon={<BookIcon />}
-            href="https://github.com/rsuite/rsuite-table#api"
+            href="https://github.com/quinoid/qbs-react-table#api"
           >
             APIs
           </Nav.Item>
@@ -72,7 +72,7 @@ const App = (props: ExamplesProps) => {
             eventKey="components"
             target="_blank"
             icon={<GithubIcon />}
-            href="https://github.com/rsuite/rsuite-table"
+            href="https://github.com/quinoid/qbs-react-table"
           >
             Github
           </Nav.Item>
