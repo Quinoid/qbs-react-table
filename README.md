@@ -6,7 +6,6 @@
 
 ## Props
 
-
 ### `QbsTableProps`
 
 | Prop                 | Type                                                                | Description                                                                |
@@ -97,6 +96,119 @@
 | searchValue       | `string`                   | Current value in the search input.                           |
 | handleSearchValue | `(value?: string) => void` | Function to handle search                                    |
 |                   |
+
+### Qbs-Table Styles
+
+#### 1. **.qbs-table**
+
+- Defines the main container for the table.
+
+##### .qbs-table-toolbar
+
+- **Height:** 58px.
+- **Display:** Flex.
+- Describes the toolbar located above the table containing various controls like filters and search.
+- **Children:**
+  - **.start-container:** Container aligning child elements to the start.
+  - **.end-container:** Container aligning child elements to the end, contains `.rows-count` for displaying row count with padding 0px 10px.
+
+##### .sub-qbs-table-toolbar
+
+- **Display:** Flex.
+- Styling for sub-toolbar located beneath the main toolbar.
+
+##### .qbs-table-search-container
+
+- **Position:** Relative.
+- Container for search input and related buttons.
+- **Children:**
+  - **.input:** Minimal design search input, height: 32px, border-radius: 4px, min-width: 200px.
+  - **.search-button and .close-button:** Positioned absolute and styled with a grey color and white background.
+
+#### 2. **.qbs-table[data-theme='dark']**
+
+- Applies when the table is in dark theme mode, changing background color to #333333 and font color to #ffffff.
+
+#### 3. **.rs-table-cell-content[data-theme='dark']**
+
+- Similar to .qbs-table[data-theme='dark'], but applied to table cell content in dark theme.
+
+#### 4. **.qbs-table-menu-dropdown**
+
+- **Position:** Relative.
+- **Display:** Inline-block.
+- Contains dropdown-related elements.
+
+##### .qbs-table-dropbtn
+
+- Button to trigger the dropdown, it's styled with a transparent background, black color font, and a cursor set to pointer.
+
+##### .qbs-table-qbs-table-menu-dropdown-content
+
+- Positioned absolute, contains dropdown items styled with a light (#f1f1f1) background color and black text.
+
+#### 5. **.qbs-table-tooltip**
+
+- **Position:** Relative.
+- **Display:** Inline-block.
+- **Cursor:** Pointer.
+- Contains tooltip text which is hidden by default and visible on hover with a smooth opacity transition.
+
+#### 6. **.rs-table-row**
+
+- **Overflow:** Visible !important.
+- Ensures the rows of the table are visible.
+
+### Qbs-Table-Custom-Pagination Styles
+
+#### 1. **.qbs-table-custom-pagination**
+
+- **Display:** Flex.
+- **Justify-Content:** Space-between.
+- **Padding:** 10px.
+- **Border:** 1px solid.
+- **Min-Height:** 40px.
+- **Align-Items:** Center.
+- Describes the main container for custom pagination, ensuring items are spaced evenly and aligned centrally.
+
+##### &-header
+
+- **Border-Bottom:** 1px solid #eee.
+- **Position:** Absolute.
+- **Width:** 100%.
+- Acts as the header for the pagination container with a solid bottom border.
+  - **&-content:** Styled as a table cell, providing padding of 8px around the content.
+
+##### .qbs-table-pagination-dropdown
+
+- **Width:** Auto.
+- **Border-Radius:** 6px.
+- **Height:** 30px.
+- **Display:** Flex.
+- **Align-Items:** Center.
+- **Justify-Content:** Center.
+- Describes the dropdown within the pagination, allowing flex display with centered items.
+
+##### .qbs-table-icon-container
+
+- **Padding:** 5px.
+- **Cursor:** Pointer.
+- **Display:** Flex.
+- **Justify-Items:** Center.
+- **Align-Items:** Center.
+- **Color:** Black.
+- **Height:** 100%.
+- **Background-Color:** Transparent.
+- Stylish container for icons. It changes color to blue when hovered and to grey when disabled.
+
+##### .qbs-table-pagination-right-block
+
+- **Display:** Flex.
+- **Align-Items:** Center.
+- Acts as the right block container of the pagination section.
+  - **.block-container:** Flex container that holds block items.
+  - **.block-item:** Individual block items, stylized with a cursor pointer, centered alignment, and bordered. It changes the border and text color to blue when hovered or active.
+  - **.selected:** Representing the selected item, enhancing the border and changing the color to blue.
 
 ## Installation
 
