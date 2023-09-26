@@ -4,16 +4,13 @@
 npm install qbs-react-grid
 ```
 
-
 ```jsx
-
 import { QbsTable } from 'qbs-react-grid';
-import 'qbs-react-grid/dist/css/rsuite-table.css';
+import 'qbs-react-grid/dist/css/qbs-react-grid.css';
 
-<QbsTable data={[{ id: 1, name: 'John Doe' }]} columns={[{ title: 'Name', field: 'name' }]}
- />
-
+<QbsTable data={[{ id: 1, name: 'John Doe' }]} columns={[{ title: 'Name', field: 'name' }]} />;
 ```
+
 ## Description
 
 `QbsTable` is a versatile and customizable table component designed to display tabular data efficiently. It provides features like sorting, column grouping, and various cell customizations.
@@ -111,9 +108,7 @@ import 'qbs-react-grid/dist/css/rsuite-table.css';
 | handleSearchValue | `(value?: string) => void` | Function to handle search                                    |
 |                   |
 
-
-
-###  Props Examples
+### Props Examples
 
 #### `handleColumnSort: (sortColumn: any, sortType: any) => void`
 
@@ -469,7 +464,7 @@ The `classes` prop is an object where keys are the names of elements or parts of
 - `tableCheckBoxClass`: Class applied to the checkboxes in the rows and the header when selection is enabled.
 
 - `actionCellClass`: Class applied to the action cells in the table when actions are provided.
- 
+
 - `toolbarClass`: Class applied to table toolbar
 
 ### Example Usage
