@@ -404,8 +404,8 @@ Here is an example of how you might use the `QbsTable` component with various pr
 <QbsTable
   title="User Data"
   data={[
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Jane Doe' }
+    { id: 1, name: 'Quinoid' },
+    { id: 2, name: 'Quinoid1' }
   ]}
   columns={[{ title: 'Name', field: 'name' }]}
   sortColumn="name"
