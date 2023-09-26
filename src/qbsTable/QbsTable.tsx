@@ -48,7 +48,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   setExpandedRowKeys,
   primaryFilter,
   advancefilter,
-  classes,
+  classes = {},
   toolbar
 }) => {
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
     paginationProps: paginationProps,
     primaryFilter: primaryFilter,
     advancefilter: advancefilter,
-    className: classes.toolbarClass
+    className: classes?.toolbarClass
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
   useEffect(() => {
