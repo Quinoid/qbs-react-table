@@ -121,7 +121,7 @@ The `classes` prop is an object where keys are the names of elements or parts of
 
 - `actionCellClass`: Class applied to the action cells in the table when actions are provided.
  
-- `toolbarClass`: class applied to table toolbar
+- `toolbarClass`: Class applied to table toolbar
 
 ### Example Usage
 
