@@ -1,5 +1,19 @@
 # QbsTable Component
 
+```sh
+npm install qbs-react-grid
+```
+
+
+```jsx
+
+import { QbsTable } from 'qbs-react-grid';
+import 'qbs-react-grid/dist/css/rsuite-table.css';
+
+<QbsTable data={[{ id: 1, name: 'John Doe' }]} columns={[{ title: 'Name', field: 'name' }]}
+ />
+
+```
 ## Description
 
 `QbsTable` is a versatile and customizable table component designed to display tabular data efficiently. It provides features like sorting, column grouping, and various cell customizations.
@@ -97,16 +111,9 @@
 | handleSearchValue | `(value?: string) => void` | Function to handle search                                    |
 |                   |
 
-### Qbs-Table Styles
-
-## QbsTable Component
 
 
-# `QbsTable` Component
-
-`QbsTable` is a versatile and customizable table component designed for multiple use cases. Below are the props it accepts:
-
-### Props
+###  Props Examples
 
 #### `handleColumnSort: (sortColumn: any, sortType: any) => void`
 
