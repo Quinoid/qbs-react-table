@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import ColumnGroup from '../../es/ColumnGroup';
 import Cell from '../Cell';
 import Column from '../Column';
+import ColumnGroup from '../ColumnGroup';
 import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsTableProps } from './commontypes';
+import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTableCell';
 import ToolBar from './Toolbar';
-import { CustomTableCell, CheckCell, ActionCell, ExpandCell } from './CustomTableCell';
+
 const CHECKBOX_LINE_HEIGHT = '46px';
 const COLUMN_WIDTH = 250;
 
@@ -46,7 +47,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   expandedRowKeys,
   setExpandedRowKeys,
   primaryFilter,
-  advancefilter
+  advancefilter,
+  classes,
+  toolbar
 }) => {
   const [loading, setLoading] = useState(false);
   const [checkedKeys, setCheckedKeys] = useState<number[]>([]);
@@ -94,7 +97,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
     asyncSearch: asyncSearch,
     paginationProps: paginationProps,
     primaryFilter: primaryFilter,
-    advancefilter: advancefilter
+    advancefilter: advancefilter,
+    className: classes.toolbarClass
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
   useEffect(() => {
@@ -167,29 +171,35 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 verticalAlign="middle"
                 groupHeaderHeight={40}
               >
-                {children?.map(child => (
-                  <Column
-                    key={child.title}
-                    sortable={child.sortable}
-                    width={child.colWidth ?? COLUMN_WIDTH}
-                    resizable={child.resizable}
-                    align={child.align}
-                    fixed={child.fixed}
-                  >
-                    <HeaderCell dataTheme={dataTheme} className="w-full">
-                      {child.title}
-                    </HeaderCell>
-                    {customCell ? (
-                      <CustomTableCell
-                        renderCell={child.renderCell}
-                        dataKey="id"
-                        dataTheme={dataTheme}
-                      />
-                    ) : (
-                      <Cell className="w-full" dataKey={child.field} dataTheme={dataTheme} />
-                    )}
-                  </Column>
-                ))}
+                <>
+                  {children?.map(child => (
+                    <Column
+                      key={child.title}
+                      sortable={child.sortable}
+                      width={child.colWidth ?? COLUMN_WIDTH}
+                      resizable={child.resizable}
+                      align={child.align}
+                      fixed={child.fixed}
+                    >
+                      <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
+                        {child.title}
+                      </HeaderCell>
+                      {customCell ? (
+                        <CustomTableCell
+                          renderCell={child.renderCell}
+                          dataKey="id"
+                          dataTheme={dataTheme}
+                        />
+                      ) : (
+                        <Cell
+                          className={` ${classes.cellClass}`}
+                          dataKey={child.field}
+                          dataTheme={dataTheme}
+                        />
+                      )}
+                    </Column>
+                  ))}
+                </>
               </ColumnGroup>
             ) : (
               <Column
@@ -200,13 +210,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 align={align}
                 fixed={fixed}
               >
-                <HeaderCell dataTheme={dataTheme} className="w-full">
+                <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
                   {title}
                 </HeaderCell>
                 {customCell ? (
                   <CustomTableCell renderCell={renderCell} dataKey="id" dataTheme={dataTheme} />
                 ) : (
-                  <Cell className="w-full" dataKey={field} dataTheme={dataTheme} />
+                  <Cell dataKey={field} dataTheme={dataTheme} className={` ${classes.cellClass}`} />
                 )}
               </Column>
             )}
@@ -217,8 +227,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   );
 
   return (
-    <div className="qbs-table" data-theme={dataTheme}>
-      <ToolBar {...toolbarProps} />
+    <div className={`qbs-table ${classes.tableContainerClass}`} data-theme={dataTheme}>
+      {toolbar && <ToolBar {...toolbarProps} />}
       <Table
         height={height}
         data={data}
@@ -245,7 +255,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       >
         {rowExpand && (
           <Column width={70} align="center" fixed="left">
-            <HeaderCell>#</HeaderCell>
+            <HeaderCell className={` ${classes.headerlClass}`}>#</HeaderCell>
             <ExpandCell
               dataKey={dataRowKey}
               expandedRowKeys={expandedRowKeys}
@@ -255,11 +265,19 @@ const QbsTable: React.FC<QbsTableProps> = ({
         )}
         {selection && (
           <Column width={50} align="center" fixed="left">
-            <HeaderCell style={{ padding: 0 }} dataTheme={dataTheme}>
-              <div style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}>
+            <HeaderCell
+              style={{ padding: 0 }}
+              dataTheme={dataTheme}
+              className={` ${classes.headerlClass}`}
+            >
+              <div
+                style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}
+                className={` ${classes.selectionCell}`}
+              >
                 <input
                   type="checkbox"
                   onChange={handleCheckAll}
+                  className={`${classes.tableCheckBoxClass}`}
                   checked={checkedKeys.length === data.length}
                 />
               </div>
@@ -267,6 +285,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             <CheckCell
               dataKey="id"
               checkedKeys={checkedKeys}
+              className={`${classes.tableCheckBoxClass}`}
               onChange={handleCheck}
               dataTheme={dataTheme}
             />
@@ -276,9 +295,12 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
         {actionProps && actionProps?.length > 0 && (
           <Column width={40} fixed="right">
-            <HeaderCell dataTheme={dataTheme}>{'Action'}</HeaderCell>
+            <HeaderCell className={` ${classes.headerlClass}`} dataTheme={dataTheme}>
+              {'Action'}
+            </HeaderCell>
             <ActionCell
               actionProps={actionProps}
+              className={`${classes.cellClass} ${classes.actionCellClass}`}
               handleMenuActions={handleMenuActions}
               dataTheme={dataTheme}
             />

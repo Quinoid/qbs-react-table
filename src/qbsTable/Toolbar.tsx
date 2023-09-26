@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
+
 import { QbsTableToolbarProps } from './commontypes';
+import debounce from './utilities/debounce';
 import SearchInput from './utilities/SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
-import debounce from './utilities/debounce';
 
 const ToolBar: React.FC<QbsTableToolbarProps> = ({
   title,
@@ -14,7 +15,8 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   handleSearchValue,
   searchValue,
   primaryFilter,
-  advancefilter
+  advancefilter,
+  className
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
 
@@ -40,7 +42,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
 
   return (
     <div>
-      <div className="qbs-table-toolbar">
+      <div className={`qbs-table-toolbar ${className}`}>
         {title && (
           <div className="start-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {title}

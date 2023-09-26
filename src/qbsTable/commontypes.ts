@@ -78,6 +78,8 @@ export interface QbsTableProps {
   rowExpand?: boolean;
   primaryFilter?: ReactElement | ReactNode;
   advancefilter?: ReactElement | ReactNode;
+  classes: { [key: string]: any };
+  toolbar?: boolean;
 }
 
 export interface QbsTableToolbarProps {
@@ -90,5 +92,6 @@ export interface QbsTableToolbarProps {
   pagination?: boolean;
   paginationProps?: PaginationProps;
   primaryFilter?: ReactElement | ReactNode;
+  className: any;
   advancefilter?: ReactElement | ReactNode;
 }

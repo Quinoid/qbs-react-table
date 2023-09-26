@@ -99,6 +99,47 @@
 
 ### Qbs-Table Styles
 
+## QbsTable Component
+
+The `QbsTable` component is a customizable table component, with options for selection, searching, pagination, actions, and more. It accepts a `classes` prop which is an object used for applying custom styles to different parts of the table component.
+
+### `classes` Prop
+
+The `classes` prop is an object where keys are the names of elements or parts of the `QbsTable` component, and values are the class names you want to apply. Below is the list of keys you can use:
+
+- `headerClass`: Class applied to the header cells of the table. It affects both grouped and ungrouped headers.
+
+- `cellClass`: Class applied to the data cells of the table.
+
+- `tableContainerClass`: Class applied to the container wrapping the whole table, including the toolbar.
+
+- `headerlClass`: Class applied to the specific header cells, especially when using features like row expansion and selection.
+
+- `selectionCell`: Class applied to the container of the checkbox in the header when selection is enabled.
+
+- `tableCheckBoxClass`: Class applied to the checkboxes in the rows and the header when selection is enabled.
+
+- `actionCellClass`: Class applied to the action cells in the table when actions are provided.
+ 
+- `toolbarClass`: class applied to table toolbar
+
+### Example Usage
+
+```javascript
+<QbsTable
+  classes={{
+    headerClass: 'my-header-class',
+    cellClass: 'my-cell-class',
+    tableContainerClass: 'my-table-container-class',
+    headerlClass: 'my-headerl-class',
+    selectionCell: 'my-selection-cell-class',
+    tableCheckBoxClass: 'my-table-check-box-class',
+    actionCellClass: 'my-action-cell-class'
+  }}
+  //... other props
+/>
+```
+
 #### 1. **.qbs-table**
 
 - Defines the main container for the table.
