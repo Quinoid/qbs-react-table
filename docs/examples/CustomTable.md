@@ -6,19 +6,25 @@ Affix the table header to the specified position on the page
 
 ```js
 const App = () => {
+  const [columns, setColumns] = React.useState([
+    { title: 'Name', field: 'name', resizable: true },
+    { title: 'Email', field: 'email', resizable: true },
+
+    { title: 'Country', field: 'country', resizable: true },
+    { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
+    { title: 'Age', field: 'age', resizable: true }
+  ]);
+  const handleColumns = data => {
+    console.log(data);
+  };
   return (
     <div>
       <QbsTable
-        columns={[
-          { title: 'Name', field: 'name', resizable: true },
-          { title: 'Email', field: 'email', resizable: true },
-
-          { title: 'Name', field: 'city', resizable: true },
-
-          { title: 'Country', field: 'country', resizable: true },
-          { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
-          { title: 'Age', field: 'age', resizable: true }
-        ]}
+        selection={true}
+        dataTheme="light"
+        pagination={true}
+        columns={columns}
+        dataRowKey="id"
         data={[
           {
             name: 'John Doe',
@@ -235,6 +241,10 @@ const App = () => {
             id: 24
           }
         ]}
+        search
+        toolbar
+        columnToggle
+        handleColumnToggle={handleColumns}
       />
       <div style={{ height: 100 }}>
         <hr />

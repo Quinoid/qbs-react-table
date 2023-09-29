@@ -16,6 +16,7 @@ export interface ColumnBase {
   colWidth?: number;
   renderCell?: (rowData: any) => ReactElement;
   customCell?: boolean;
+  isVisible?: boolean;
 }
 
 export interface QbsColumnProps extends ColumnBase {
@@ -42,12 +43,12 @@ export interface ActionProps {
 }
 
 export interface QbsTableProps {
-  columns: readonly QbsColumnProps[];
+  columns: QbsColumnProps[];
   data: readonly any[];
   actionProps?: readonly ActionProps[];
   isTree?: boolean;
   pagination?: boolean;
-  paginationProps: PaginationProps;
+  paginationProps?: PaginationProps;
   handleColumnSort?: (sortColumn: string, sortType: string) => void;
   sortType?: 'desc' | 'asc';
   sortColumn?: string;
@@ -66,20 +67,22 @@ export interface QbsTableProps {
   height?: number;
   minHeight?: number;
   maxHeight?: number | string;
-  wordWrap: boolean | 'break-all' | 'break-word' | 'keep-all' | undefined;
+  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all' | undefined;
   dataRowKey?: string;
   onExpandChange?: (expanded: boolean, rowData: any) => void;
   defaultExpandAllRows?: boolean;
-  expandedRowKeys: readonly number[];
-  setExpandedRowKeys: (value: readonly number[]) => void;
+  expandedRowKeys?: readonly number[];
+  setExpandedRowKeys?: (value: readonly number[]) => void;
   handleMenuActions?: (actions: ActionProps, rowData: any) => void;
-  handleRowExpanded: (rowData: any) => React.ReactNode;
+  handleRowExpanded?: (rowData: any) => React.ReactNode;
   shouldUpdateScroll?: boolean;
   rowExpand?: boolean;
   primaryFilter?: ReactElement | ReactNode;
   advancefilter?: ReactElement | ReactNode;
   classes?: { [key: string]: any };
   toolbar?: boolean;
+  columnToggle?: boolean;
+  handleColumnToggle?: (columns: QbsColumnProps[]) => void;
 }
 
 export interface QbsTableToolbarProps {
@@ -93,6 +96,9 @@ export interface QbsTableToolbarProps {
   paginationProps?: PaginationProps;
   primaryFilter?: ReactElement | ReactNode;
   className: any;
-
+  columns: QbsColumnProps[];
+  handleToggle: (conlumnName: string) => void;
+  onReorder: (columns: QbsColumnProps[]) => void;
   advancefilter?: ReactElement | ReactNode;
+  columnToggle?: boolean;
 }

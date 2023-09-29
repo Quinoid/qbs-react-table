@@ -6,7 +6,7 @@ import ColumnGroup from '../ColumnGroup';
 import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
-import { QbsTableProps } from './commontypes';
+import { QbsTableProps, QbsColumnProps } from './commontypes';
 import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTableCell';
 import ToolBar from './Toolbar';
 
@@ -16,7 +16,7 @@ const COLUMN_WIDTH = 250;
 const QbsTable: React.FC<QbsTableProps> = ({
   handleColumnSort,
   data,
-  columns,
+  columns: propColumn,
   sortColumn,
   sortType,
   selection = false,
@@ -49,9 +49,12 @@ const QbsTable: React.FC<QbsTableProps> = ({
   primaryFilter,
   advancefilter,
   classes = {},
-  toolbar
+  toolbar,
+  columnToggle,
+  handleColumnToggle
 }) => {
   const [loading, setLoading] = useState(false);
+  const [columns, setColumns] = useState(propColumn);
   const [checkedKeys, setCheckedKeys] = useState<number[]>([]);
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
 
@@ -87,6 +90,29 @@ const QbsTable: React.FC<QbsTableProps> = ({
     onSelect?.(checkedKeys);
   }, [checkedKeys, onSelect]);
 
+  const handleToggle = useCallback((columnName: string) => {
+    setColumns(cols =>
+      cols.map(col => (col.title === columnName ? { ...col, isVisible: !col.isVisible } : col))
+    );
+  }, []);
+
+  const handleColumnWidth = useCallback((newWidth?: number, dataKey?: any) => {
+    if (newWidth === undefined || dataKey === undefined) return;
+    setColumns(prevColumns =>
+      prevColumns.map(column =>
+        column.field === dataKey ? { ...column, colWidth: newWidth } : column
+      )
+    );
+  }, []);
+
+  const onReorder = useCallback((columns: QbsColumnProps[]) => {
+    setColumns(columns);
+  }, []);
+
+  useEffect(() => {
+    handleColumnToggle?.(columns);
+  }, [columns, handleColumnToggle]);
+
   const toolbarProps = {
     title: title,
     search: search,
@@ -98,7 +124,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
     paginationProps: paginationProps,
     primaryFilter: primaryFilter,
     advancefilter: advancefilter,
-    className: classes?.toolbarClass
+    className: classes?.toolbarClass,
+    handleToggle: handleToggle,
+    onReorder: onReorder,
+    columnToggle: columnToggle,
+    columns: columns
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
   useEffect(() => {
@@ -141,10 +171,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
         nextExpandedRowKeys.add(key);
       }
 
-      setExpandedRowKeys(Array.from(nextExpandedRowKeys));
+      setExpandedRowKeys?.(Array.from(nextExpandedRowKeys));
     },
     [dataRowKey, expandedRowKeys, setExpandedRowKeys]
   );
+
   const columnsRendered: React.ReactElement[] = useMemo(
     () =>
       (columns ?? []).map(
@@ -160,72 +191,82 @@ const QbsTable: React.FC<QbsTableProps> = ({
           fixed,
           children,
           customCell,
-          renderCell
+          renderCell,
+          isVisible
         }) => (
           <>
-            {grouped ? (
-              <ColumnGroup
-                header={groupheader}
-                fixed={fixed}
-                align={align}
-                verticalAlign="middle"
-                groupHeaderHeight={40}
-              >
-                <>
-                  {children?.map(child => (
-                    <Column
-                      key={child.title}
-                      sortable={child.sortable}
-                      width={child.colWidth ?? COLUMN_WIDTH}
-                      resizable={child.resizable}
-                      align={child.align}
-                      fixed={child.fixed}
-                    >
-                      <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
-                        {child.title}
-                      </HeaderCell>
-                      {customCell ? (
-                        <CustomTableCell
-                          renderCell={child.renderCell}
-                          dataKey="id"
-                          dataTheme={dataTheme}
-                        />
-                      ) : (
-                        <Cell
-                          className={` ${classes.cellClass}`}
-                          dataKey={child.field}
-                          dataTheme={dataTheme}
-                        />
-                      )}
-                    </Column>
-                  ))}
-                </>
-              </ColumnGroup>
-            ) : (
-              <Column
-                key={title}
-                sortable={sortable}
-                width={colWidth ?? COLUMN_WIDTH}
-                resizable={resizable}
-                align={align}
-                fixed={fixed}
-              >
-                <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
-                  {title}
-                </HeaderCell>
-                {customCell ? (
-                  <CustomTableCell renderCell={renderCell} dataKey="id" dataTheme={dataTheme} />
+            {!isVisible && (
+              <>
+                {grouped ? (
+                  <ColumnGroup
+                    header={groupheader}
+                    fixed={fixed}
+                    align={align}
+                    verticalAlign="middle"
+                    groupHeaderHeight={40}
+                  >
+                    <>
+                      {children?.map(child => (
+                        <Column
+                          key={child.title}
+                          sortable={child.sortable}
+                          width={child.colWidth ?? COLUMN_WIDTH}
+                          resizable={child.resizable}
+                          align={child.align}
+                          onResize={handleColumnWidth}
+                          fixed={child.fixed}
+                        >
+                          <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
+                            {child.title}
+                          </HeaderCell>
+                          {customCell ? (
+                            <CustomTableCell
+                              renderCell={child.renderCell}
+                              dataKey="id"
+                              dataTheme={dataTheme}
+                            />
+                          ) : (
+                            <Cell
+                              className={` ${classes.cellClass}`}
+                              dataKey={child.field}
+                              dataTheme={dataTheme}
+                            />
+                          )}
+                        </Column>
+                      ))}
+                    </>
+                  </ColumnGroup>
                 ) : (
-                  <Cell dataKey={field} dataTheme={dataTheme} className={` ${classes.cellClass}`} />
+                  <Column
+                    key={title}
+                    sortable={sortable}
+                    width={colWidth ?? COLUMN_WIDTH}
+                    resizable={resizable}
+                    align={align}
+                    fixed={fixed}
+                    onResize={handleColumnWidth}
+                  >
+                    <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
+                      {title}
+                    </HeaderCell>
+                    {customCell ? (
+                      <CustomTableCell renderCell={renderCell} dataKey="id" dataTheme={dataTheme} />
+                    ) : (
+                      <Cell
+                        dataKey={field}
+                        dataTheme={dataTheme}
+                        className={` ${classes.cellClass}`}
+                      />
+                    )}
+                  </Column>
                 )}
-              </Column>
+              </>
             )}
           </>
         )
       ),
     [columns, dataTheme]
   );
-
   return (
     <div className={`qbs-table ${classes.tableContainerClass}`} data-theme={dataTheme}>
       {toolbar && <ToolBar {...toolbarProps} />}
@@ -250,7 +291,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
         defaultExpandAllRows={defaultExpandAllRows}
         shouldUpdateScroll={shouldUpdateScroll}
         renderRowExpanded={rowData => {
-          return handleRowExpanded(rowData);
+          return handleRowExpanded?.(rowData);
         }}
       >
         {rowExpand && (

@@ -21,7 +21,7 @@ export interface HeaderCellProps extends InnerCellProps {
   flexGrow?: number;
   fixed?: boolean | 'left' | 'right';
   children: React.ReactNode;
-  onResize?: (columnWidth?: any, dataKey?: string) => void;
+  onResize?: (columnWidth?: any, dataKey?: string, keyindex?: number) => void;
   dataTheme?: string;
   onSortColumn?: (dataKey?: string) => void;
   onColumnResizeStart?: (columnWidth?: number, left?: number, fixed?: boolean) => void;
@@ -104,7 +104,7 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
     (nextColumnWidth?: number, cursorDelta?: number) => {
       setColumnWidth(nextColumnWidth);
       onColumnResizeEnd?.(nextColumnWidth, cursorDelta, dataKey, index);
-      onResize?.(nextColumnWidth, dataKey);
+      onResize?.(nextColumnWidth, dataKey, index);
     },
     [dataKey, index, onColumnResizeEnd, onResize]
   );

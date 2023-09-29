@@ -4,6 +4,7 @@ import { QbsTableToolbarProps } from './commontypes';
 import debounce from './utilities/debounce';
 import SearchInput from './utilities/SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
+import ColumToggle from './utilities/ColumShowHide';
 
 const ToolBar: React.FC<QbsTableToolbarProps> = ({
   title,
@@ -16,7 +17,11 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   searchValue,
   primaryFilter,
   advancefilter,
-  className
+  className,
+  columns,
+  handleToggle,
+  onReorder,
+  columnToggle
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
 
@@ -43,13 +48,16 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   return (
     <div>
       <div className={`qbs-table-toolbar ${className}`}>
-        {title && (
-          <div className="start-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {title}
-            <div className="qbs-table-primary-filter">{primaryFilter}</div>
-          </div>
-        )}
+        <div className="start-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          {title ? title : ''}
+          <div className="qbs-table-primary-filter">{primaryFilter}</div>
+        </div>
+
         <div className="end-container">
+          {columnToggle && (
+            <ColumToggle columns={columns} onToggle={handleToggle} onReorder={onReorder} />
+          )}
+
           {pagination && paginationProps && (
             <div className="rows-count">
               {getRowDisplayRange(
@@ -59,6 +67,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
               )}
             </div>
           )}
+
           {search && (
             <SearchInput
               placeholder="Search"
