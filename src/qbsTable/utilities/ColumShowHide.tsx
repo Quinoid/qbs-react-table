@@ -11,6 +11,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({ columns, onToggle, onReorde
   const [isOpen, setIsOpen] = useState(false);
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
+  const [dragOverPosition, setDragOverPosition] = useState<number | null>();
 
   const handleToggle = useCallback(
     (columnName: string) => {
@@ -24,8 +25,9 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({ columns, onToggle, onReorde
     e.dataTransfer.effectAllowed = 'move';
   }, []);
 
-  const onDragOver = useCallback((e: React.DragEvent) => {
+  const onDragOver = useCallback((e: React.DragEvent, index: number) => {
     e.preventDefault();
+    setDragOverPosition(index);
   }, []);
 
   const onDrop = useCallback(
@@ -38,6 +40,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({ columns, onToggle, onReorde
         updatedColumns.splice(index, 0, draggedColumn);
 
         onReorder(updatedColumns);
+        setDragOverPosition(null);
       }
       setDraggedItem(null);
     },
@@ -62,44 +65,45 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({ columns, onToggle, onReorde
     <div
       key={column.title}
       draggable
-      className='qbs-table-container'
+      className="qbs-table-container"
       onDragStart={e => onDragStart(e, index)}
-      onDragOver={onDragOver}
+      onDragOver={e => onDragOver(e, index)}
       onDrop={e => onDrop(e, index)}
+      style={{ border: index == dragOverPosition ? '1px dashed blue' : '' }}
     >
-      <span className='qbs-table-columns-drag-icon'>&#x2630;</span>
-      <label className='qbs-table-columns-label'>
+      <span className="qbs-table-columns-drag-icon">&#x2630;</span>
+      <label className="qbs-table-columns-label">
         <input
           type="checkbox"
-          checked={column.isVisible}
+          checked={!column.isVisible}
           onChange={() => handleToggle(column.title)}
         />
         {column.title}
       </label>
     </div>
   );
-
+  console.log(dragOverPosition);
   return (
     <div>
       <button onClick={() => setIsOpen(!isOpen)}>Show/Hide Columns</button>
       {isOpen && (
-        <div className='qbs-table-column-popup' ref={popupRef}>
-          <div className='qbs-table-columns-container'>
+        <div className="qbs-table-column-popup" ref={popupRef}>
+          <div className="qbs-table-columns-container">
             {columns.length > 10 ? (
               <>
-                <div className='qbs-table-column'>
+                <div className="qbs-table-column">
                   {columns
                     .slice(0, columns.length / 2)
                     .map((column, index) => renderColumn(column, index))}
                 </div>
-                <div className='qbs-table-column'>
+                <div className="qbs-table-column">
                   {columns
                     .slice(columns.length / 2)
                     .map((column, index) => renderColumn(column, index + columns.length / 2))}
                 </div>
               </>
             ) : (
-              <div className='qbs-table-column'>
+              <div className="qbs-table-column">
                 {columns.map((column, index) => renderColumn(column, index))}
               </div>
             )}

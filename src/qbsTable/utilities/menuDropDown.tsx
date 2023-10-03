@@ -3,6 +3,7 @@ import React from 'react';
 
 import { ActionProps } from '../commontypes';
 import { ThreeDotIcon } from './icons';
+import TooltipComponent from './ToolTip';
 
 type Props = {
   actionDropDown: ActionProps[];
@@ -36,6 +37,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
 
   const handleMenuItemClick = (slug: ActionProps) => {
     handleMenuActions?.(slug, rowData);
+    slug.action?.(rowData);
     setOpenMenu(false);
   };
 
@@ -52,13 +54,15 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
               className={`p-2 leading-7 hover:bg-background `}
               onClick={e => {
                 e.preventDefault();
+                item.action?.(item);
                 handleMenuItemClick(item);
               }}
             >
               <div className={''}>
                 <div className="qbs-table-tooltip">
-                  <span>{item.icon}</span>
-                  <span className="tooltiptext">{item.toolTip}</span>
+                  <TooltipComponent title={item.toolTip}>
+                    <span>{item.icon}</span>
+                  </TooltipComponent>
                 </div>
               </div>
             </a>

@@ -33,7 +33,7 @@ const App = () => {
             country: 'United States',
             date_of_birth: '1990-05-15',
             age: 31,
-            id: 1
+            id: '1'
           },
           {
             name: 'David Johnson',
@@ -42,7 +42,7 @@ const App = () => {
             country: 'United Kingdom',
             date_of_birth: '1992-08-10',
             age: 29,
-            id: 2
+            id: '2'
           },
           {
             name: 'Emily Brown',
@@ -51,7 +51,7 @@ const App = () => {
             country: 'Australia',
             date_of_birth: '1988-03-28',
             age: 33,
-            id: 3
+            id: '3'
           },
           {
             name: 'Michael Garcia',
@@ -239,6 +239,14 @@ const App = () => {
             city: 'Budapest',
             country: 'Hungary',
             id: 24
+          }
+        ]}
+        actionProps={[
+          {
+            title: 'Delete',
+            action: rowData => console.log(rowData),
+            icon: <p>asd</p>,
+            toolTip: 'Tooltip'
           }
         ]}
         search

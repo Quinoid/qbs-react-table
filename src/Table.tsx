@@ -977,7 +977,8 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
             width: rowWidth,
             depth: rowData[TREE_DEPTH],
             height: nextRowHeight,
-            cellHeight
+            cellHeight,
+            index:index
           };
 
           top += nextRowHeight;
@@ -1027,7 +1028,8 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
             top: index * nextRowHeight,
             width: rowWidth,
             height: nextRowHeight,
-            cellHeight: nextRowHeight
+            cellHeight: nextRowHeight,
+            index: index
           };
           visibleRows.current.push(renderRowData(bodyCells, rowData, rowProps, false));
         }

@@ -55,7 +55,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
-  const [checkedKeys, setCheckedKeys] = useState<number[]>([]);
+  const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
 
   const handleSortColumn = useCallback(
@@ -78,7 +78,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
   const handleCheck = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = +event.target.value;
+      const value = event.target.value;
       const updatedKeys = event.target.checked
         ? [...checkedKeys, value]
         : checkedKeys.filter(key => key !== value);
@@ -175,7 +175,6 @@ const QbsTable: React.FC<QbsTableProps> = ({
     },
     [dataRowKey, expandedRowKeys, setExpandedRowKeys]
   );
-
   const columnsRendered: React.ReactElement[] = useMemo(
     () =>
       (columns ?? []).map(
@@ -319,7 +318,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                   type="checkbox"
                   onChange={handleCheckAll}
                   className={`${classes.tableCheckBoxClass}`}
-                  checked={checkedKeys.length === data.length}
+                  checked={checkedKeys?.length === data.length}
                 />
               </div>
             </HeaderCell>

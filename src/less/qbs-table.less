@@ -126,7 +126,6 @@
   cursor: pointer;
 }
 
-/* Tooltip text, hidden by default */
 .qbs-table-tooltip .tooltiptext {
   visibility: hidden;
   width: 120px;
@@ -135,34 +134,50 @@
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
-
-  /* Position the qbs-table-tooltip above the text */
   position: absolute;
   z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -60px; /* Use half of the width to center the qbs-table-tooltip */
   opacity: 0;
   transition: opacity 0.3s;
 }
 
-/* Tooltip arrow, pointing upwards */
-.qbs-table-tooltip .tooltiptext::after {
-  content: '';
-  position: absolute;
-  top: 100%;
+.qbs-table-tooltip.up .tooltiptext {
+  bottom: 125%;
   left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
+  margin-left: -60px;
 }
 
-/* Show the qbs-table-tooltip when hovering */
+.qbs-table-tooltip.down .tooltiptext {
+  top: 125%;
+  left: 50%;
+  margin-left: -60px;
+}
+
 .qbs-table-tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
 }
+
+.qbs-table-tooltip .tooltiptext::after {
+  content: '';
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+}
+
+.qbs-table-tooltip.up .tooltiptext::after {
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: #555 transparent transparent transparent;
+}
+
+.qbs-table-tooltip.down .tooltiptext::after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: transparent transparent #555 transparent;
+}
+
 .rs-table-row {
   overflow: visible !important;
 }
