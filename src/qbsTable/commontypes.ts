@@ -79,6 +79,8 @@ export interface QbsTableProps {
   rowExpand?: boolean;
   primaryFilter?: ReactElement | ReactNode;
   advancefilter?: ReactElement | ReactNode;
+  tableHeaderActions?: ReactElement | ReactNode;
+  selectedRowActions?: ReactElement | ReactNode;
   classes?: { [key: string]: any };
   toolbar?: boolean;
   columnToggle?: boolean;
@@ -101,4 +103,7 @@ export interface QbsTableToolbarProps {
   onReorder: (columns: QbsColumnProps[]) => void;
   advancefilter?: ReactElement | ReactNode;
   columnToggle?: boolean;
+  checkedKeys?: (number | string)[];
+  tableHeaderActions?: ReactElement | ReactNode;
+  selectedRowActions?: ReactElement | ReactNode;
 }

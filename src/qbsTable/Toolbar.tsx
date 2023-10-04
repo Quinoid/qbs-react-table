@@ -4,10 +4,8 @@ import { QbsTableToolbarProps } from './commontypes';
 import debounce from './utilities/debounce';
 import SearchInput from './utilities/SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
-import ColumToggle from './utilities/ColumShowHide';
 
 const ToolBar: React.FC<QbsTableToolbarProps> = ({
-  title,
   pagination,
   paginationProps = {},
   search,
@@ -18,10 +16,9 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   primaryFilter,
   advancefilter,
   className,
-  columns,
-  handleToggle,
-  onReorder,
-  columnToggle
+  tableHeaderActions,
+  selectedRowActions,
+  checkedKeys
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
 
@@ -46,28 +43,9 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   );
 
   return (
-    <div>
+    <div className="qbs-table-toolbar-container">
       <div className={`qbs-table-toolbar ${className}`}>
         <div className="start-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {title ? title : ''}
-          <div className="qbs-table-primary-filter">{primaryFilter}</div>
-        </div>
-
-        <div className="end-container">
-          {columnToggle && (
-            <ColumToggle columns={columns} onToggle={handleToggle} onReorder={onReorder} />
-          )}
-
-          {pagination && paginationProps && (
-            <div className="rows-count">
-              {getRowDisplayRange(
-                paginationProps.total ?? 0,
-                paginationProps.rowsPerPage ?? 0,
-                paginationProps.currentPage ?? 0
-              )}
-            </div>
-          )}
-
           {search && (
             <SearchInput
               placeholder="Search"
@@ -76,9 +54,36 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
               searchValue={searchValue}
             />
           )}
+          <div className="qbs-table-primary-filter">{primaryFilter}</div>
         </div>
+
+        <div className="end-container">{tableHeaderActions}</div>
       </div>
-      <div className="sub-qbs-table-toolbar">{advancefilter}</div>
+      {advancefilter && <div className="sub-qbs-table-toolbar">{advancefilter}</div>}
+      <div
+        className={`qbs-table-toolbar-sub-container ${
+          checkedKeys && checkedKeys?.length > 0 ? 'selected-row' : ''
+        }`}
+      >
+        {checkedKeys && checkedKeys?.length > 0 ? (
+          <div className="qbs-table-toolbar-sub-container-start">
+            <div className="selected-row">{`Selected Items(${checkedKeys?.length}) `}</div>
+            <div>{selectedRowActions}</div>
+          </div>
+        ) : (
+          <div>
+            {pagination && paginationProps && (
+              <div className="rows-count">
+                {getRowDisplayRange(
+                  paginationProps.total ?? 0,
+                  paginationProps.rowsPerPage ?? 0,
+                  paginationProps.currentPage ?? 0
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -6,10 +6,11 @@ import ColumnGroup from '../ColumnGroup';
 import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
-import { QbsTableProps, QbsColumnProps } from './commontypes';
+import { QbsColumnProps, QbsTableProps } from './commontypes';
 import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTableCell';
 import ToolBar from './Toolbar';
-
+import ColumToggle from './utilities/ColumShowHide';
+import { SettingsIcon } from './utilities/icons';
 const CHECKBOX_LINE_HEIGHT = '46px';
 const COLUMN_WIDTH = 250;
 
@@ -50,13 +51,16 @@ const QbsTable: React.FC<QbsTableProps> = ({
   advancefilter,
   classes = {},
   toolbar,
-  columnToggle,
-  handleColumnToggle
+  columnToggle = true,
+  handleColumnToggle,
+  tableHeaderActions,
+  selectedRowActions
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
@@ -128,7 +132,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
     handleToggle: handleToggle,
     onReorder: onReorder,
     columnToggle: columnToggle,
-    columns: columns
+    columns: columns,
+    checkedKeys: checkedKeys,
+    tableHeaderActions: tableHeaderActions,
+    selectedRowActions: selectedRowActions
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
   useEffect(() => {
@@ -336,7 +343,17 @@ const QbsTable: React.FC<QbsTableProps> = ({
         {actionProps && actionProps?.length > 0 && (
           <Column width={40} fixed="right">
             <HeaderCell className={` ${classes.headerlClass}`} dataTheme={dataTheme}>
-              {'Action'}
+              {!columnToggle ? (
+                <SettingsIcon />
+              ) : (
+                <ColumToggle
+                  columns={columns}
+                  onToggle={handleToggle}
+                  onReorder={onReorder}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                />
+              )}
             </HeaderCell>
             <ActionCell
               actionProps={actionProps}

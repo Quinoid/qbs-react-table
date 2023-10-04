@@ -1,14 +1,23 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import { QbsColumnProps } from '../commontypes';
+import { SettingsIcon } from './icons';
 
 interface ColumnToggleProps {
   columns: QbsColumnProps[];
   onToggle: (columnName: string) => void;
   onReorder: (columns: QbsColumnProps[]) => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen: boolean;
 }
 
-const ColumnToggle: React.FC<ColumnToggleProps> = ({ columns, onToggle, onReorder }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const ColumnToggle: React.FC<ColumnToggleProps> = ({
+  columns,
+  onToggle,
+  onReorder,
+  isOpen,
+  setIsOpen
+}) => {
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const [dragOverPosition, setDragOverPosition] = useState<number | null>();
@@ -82,10 +91,11 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({ columns, onToggle, onReorde
       </label>
     </div>
   );
-  console.log(dragOverPosition);
   return (
     <div>
-      <button onClick={() => setIsOpen(!isOpen)}>Show/Hide Columns</button>
+      <button onClick={() => setIsOpen(!isOpen)}>
+        <SettingsIcon />
+      </button>
       {isOpen && (
         <div className="qbs-table-column-popup" ref={popupRef}>
           <div className="qbs-table-columns-container">

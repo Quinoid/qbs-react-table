@@ -1,10 +1,17 @@
 .qbs-table {
+  border: 1px solid;
+  border-radius: 6px;
+  .qbs-table-toolbar-container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
   .qbs-table-toolbar {
-    height: 58px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+
     .end-container {
       display: flex;
       gap: 10px;
@@ -181,13 +188,24 @@
 .rs-table-row {
   overflow: visible !important;
 }
-
+.qbs-table-toolbar-sub-container {
+  display: flex;
+  gap: 10px;
+  padding: 6px;
+}
+.selected-row {
+  background: #f7e8eb;
+}
+.qbs-table-toolbar-sub-container-start {
+  display: flex;
+}
 .qbs-table-column-popup {
-  position: absolute;
+  position: fixed;
   background-color: #f9f9f9;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 10px 10px;
   z-index: 999;
+  right: 10px;
   border-radius: 6px;
 }
 
