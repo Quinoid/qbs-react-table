@@ -22,13 +22,15 @@ const BaseCell = React.forwardRef((props, ref) => {
 const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => {
   return (
     <BaseCell {...props} style={{ padding: 0 }}>
-      <div style={{ lineHeight: '46px' }}>
+      <div style={{ lineHeight: '36px' }}>
         <input
           type="checkbox"
           value={rowData[dataKey]}
+          id={`checkbox-${rowData[dataKey]}`}
           onChange={onChange}
           checked={checkedKeys.some(item => item === rowData[dataKey])}
         />
+        <label htmlFor={`checkbox-${rowData[dataKey]}`}></label>
       </div>
     </BaseCell>
   );

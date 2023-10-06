@@ -1,7 +1,8 @@
 &-table {
   position: relative;
   overflow: hidden;
-  border-top: 1px solid;
+  border-radius: 0px;
+  background-color: #F8F8F8;
   &-column-resizing {
     cursor: ew-resize;
     .user-select();
@@ -104,7 +105,11 @@
       padding: 8px;
       box-sizing: border-box;
       background-color: #ffffff;
-      color: #333333;
+      color: #222;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
       .ellipsis();
     }
 
@@ -133,13 +138,13 @@
 
   &-column-resize-spanner {
     height: 36px;
-    width: 6px;
+    width: 2px;
     z-index: 3;
     position: absolute;
     cursor: ew-resize !important;
     outline: none;
     &:hover {
-      background: @resize-mouse-color;
+      background-color: #E76458;
     }
   }
   &-cell-group {
@@ -164,11 +169,11 @@
   }
   &-mouse-area {
     display: none;
-    background: @resize-mouse-color;
+    background: #E76458;
     left: -1px;
     top: 0;
     position: absolute;
-    width: 1px;
+    width: 2px;
     z-index: 6;
   }
 

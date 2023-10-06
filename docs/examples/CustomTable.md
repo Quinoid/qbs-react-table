@@ -9,7 +9,7 @@ const App = () => {
   const [columns, setColumns] = React.useState([
     { title: 'Name', field: 'name', resizable: true },
     { title: 'Email', field: 'email', resizable: true },
-
+    { title: 'City', field: 'city', resizable: true },
     { title: 'Country', field: 'country', resizable: true },
     { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
     { title: 'Age', field: 'age', resizable: true }
