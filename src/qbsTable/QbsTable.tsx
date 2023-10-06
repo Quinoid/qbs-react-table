@@ -22,7 +22,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   sortType,
   selection = false,
   onSelect,
-  title = 'My Table',
+  title = 'My Tabl',
   search = false,
   asyncSearch,
   searchValue,
