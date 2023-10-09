@@ -41,9 +41,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
     },
     [asyncSearch, handleSearch, handleSearchValue]
   );
-  const handleSelectedRowActions = (checkedKeys: (number | string)[]) => {
-    console.log(checkedKeys);
-  };
+
   return (
     <div className="qbs-table-toolbar-container">
       <div className={`qbs-table-toolbar ${className}`}>
@@ -71,8 +69,12 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           <div className="qbs-table-toolbar-sub-container-start">
             <div className="selected-row">{`Selected Items(${checkedKeys?.length}) `}</div>
             <div className="selected-row-action">
-              {selectedRowActions?.map(actions => (
-                <button className="btn" onClick={() => actions?.action(checkedKeys)}>
+              {selectedRowActions?.map((actions, index: number) => (
+                <button
+                  key={index.toString()}
+                  className="btn"
+                  onClick={() => actions?.action(checkedKeys)}
+                >
                   {actions.actionTitle}
                 </button>
               ))}
