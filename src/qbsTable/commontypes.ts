@@ -89,6 +89,7 @@ export interface QbsTableProps {
   toolbar?: boolean;
   columnToggle?: boolean;
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
+  handleResetColumns?: () => void;
 }
 
 export interface QbsTableToolbarProps {

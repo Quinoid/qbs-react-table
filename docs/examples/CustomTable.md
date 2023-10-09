@@ -7,8 +7,8 @@ Affix the table header to the specified position on the page
 ```js
 const App = () => {
   const [columns, setColumns] = React.useState([
-    { title: 'Name', field: 'name', resizable: true },
-    { title: 'Email', field: 'email', resizable: true },
+    { title: 'Name', field: 'name', resizable: true, isVisible: true },
+    { title: 'Email', field: 'email', resizable: true, isVisible: true },
     { title: 'City', field: 'city', resizable: true },
     { title: 'Country', field: 'country', resizable: true },
     { title: 'Date of Birth', field: 'date_of_birth', resizable: true },

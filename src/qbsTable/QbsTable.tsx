@@ -11,6 +11,7 @@ import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTabl
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import { SettingsIcon } from './utilities/icons';
+
 import '../../dist/css/qbs-react-grid.css';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
@@ -55,7 +56,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   columnToggle = true,
   handleColumnToggle,
   tableHeaderActions,
-  selectedRowActions
+  selectedRowActions,
+  handleResetColumns
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -202,7 +204,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           isVisible
         }) => (
           <>
-            {!isVisible && (
+            {isVisible && (
               <>
                 {grouped ? (
                   <ColumnGroup
@@ -369,6 +371,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     onReorder={onReorder}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
+                    handleResetColumns={handleResetColumns}
                   />
                 )}
               </HeaderCell>
