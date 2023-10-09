@@ -80,7 +80,11 @@ export interface QbsTableProps {
   primaryFilter?: ReactElement | ReactNode;
   advancefilter?: ReactElement | ReactNode;
   tableHeaderActions?: ReactElement | ReactNode;
-  selectedRowActions?: ReactElement | ReactNode;
+  selectedRowActions?: {
+    actionTitle?: string;
+    action: (checked: (number | string)[]) => void;
+    disabled?: boolean;
+  }[];
   classes?: { [key: string]: any };
   toolbar?: boolean;
   columnToggle?: boolean;
@@ -105,5 +109,9 @@ export interface QbsTableToolbarProps {
   columnToggle?: boolean;
   checkedKeys?: (number | string)[];
   tableHeaderActions?: ReactElement | ReactNode;
-  selectedRowActions?: ReactElement | ReactNode;
+  selectedRowActions?: {
+    actionTitle?: string;
+    action: (checked: (number | string)[]) => void;
+    disabled?: boolean;
+  }[];
 }
