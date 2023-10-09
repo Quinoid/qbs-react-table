@@ -68,7 +68,17 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
         {checkedKeys && checkedKeys?.length > 0 ? (
           <div className="qbs-table-toolbar-sub-container-start">
             <div className="selected-row">{`Selected Items(${checkedKeys?.length}) `}</div>
-            <div>{selectedRowActions}</div>
+            <div className="selected-row-action">
+              {selectedRowActions?.map((actions, index: number) => (
+                <button
+                  key={index.toString()}
+                  className="btn"
+                  onClick={() => actions?.action(checkedKeys)}
+                >
+                  {actions.actionTitle}
+                </button>
+              ))}
+            </div>
           </div>
         ) : (
           <div>

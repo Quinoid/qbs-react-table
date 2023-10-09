@@ -44,6 +44,12 @@ module.exports = () => {
           exclude: /node_modules/
         },
         {
+          test: /\.tsx$/,
+          enforce: 'pre',
+          use: ['source-map-loader'],
+          exclude: /node_modules\/qbs-react-grid/
+        },
+        {
           test: /\.(less|css)$/,
           use: [
             MiniCssExtractPlugin.loader,

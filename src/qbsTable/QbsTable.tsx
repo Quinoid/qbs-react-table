@@ -11,9 +11,10 @@ import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTabl
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import { SettingsIcon } from './utilities/icons';
+import '../../dist/css/qbs-react-grid.css';
+
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
-
 const QbsTable: React.FC<QbsTableProps> = ({
   handleColumnSort,
   data,
