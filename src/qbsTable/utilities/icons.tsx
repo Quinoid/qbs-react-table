@@ -2,31 +2,13 @@ import React from 'react';
 
 export const ThreeDotIcon: React.FC<any> = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" fill="none" />
+    <svg width="4" height="16" viewBox="0 0 4 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
-        d="M13.3333 7.66667C13.3333 7.29848 13.0349 7 12.6667 7C12.2985 7 12 7.29848 12 7.66667C12 8.03485 12.2985 8.33333 12.6667 8.33333C13.0349 8.33333 13.3333 8.03485 13.3333 7.66667Z"
-        fill="currentColor"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13.3333 12.3334C13.3333 11.9652 13.0349 11.6667 12.6667 11.6667C12.2985 11.6667 12 11.9652 12 12.3334C12 12.7016 12.2985 13.0001 12.6667 13.0001C13.0349 13.0001 13.3333 12.7016 13.3333 12.3334Z"
-        fill="currentColor"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13.3333 17.0002C13.3333 16.632 13.0349 16.3335 12.6667 16.3335C12.2985 16.3335 12 16.632 12 17.0002C12 17.3684 12.2985 17.6668 12.6667 17.6668C13.0349 17.6668 13.3333 17.3684 13.3333 17.0002Z"
-        fill="currentColor"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M2 2.16665L2 2.17498M2 7.99998L2 8.00831M2 13.8333L2 13.8416M2 2.99998C1.53976 2.99998 1.16667 2.62688 1.16667 2.16665C1.16667 1.70641 1.53976 1.33331 2 1.33331C2.46024 1.33331 2.83333 1.70641 2.83333 2.16665C2.83333 2.62688 2.46024 2.99998 2 2.99998ZM2 8.83331C1.53976 8.83331 1.16667 8.46022 1.16667 7.99998C1.16667 7.53974 1.53976 7.16665 2 7.16665C2.46024 7.16665 2.83333 7.53974 2.83333 7.99998C2.83333 8.46022 2.46024 8.83331 2 8.83331ZM2 14.6666C1.53976 14.6666 1.16666 14.2935 1.16666 13.8333C1.16666 13.3731 1.53976 13 2 13C2.46024 13 2.83333 13.3731 2.83333 13.8333C2.83333 14.2935 2.46024 14.6666 2 14.6666Z"
+        stroke="#313131"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
     </svg>
   );

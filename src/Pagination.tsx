@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
+import { getRowDisplayRange } from './qbsTable/utilities/tablecalc';
 
 type PageProps = {
   paginationProps: {
@@ -102,18 +103,12 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
       className={'qbs-table-custom-pagination'}
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-      <div>
-        <select
-          onChange={e => handleRowsPerPage(e)}
-          className="qbs-table-pagination-dropdown"
-          value={rowsPerPageState}
-        >
-          {dropData?.map(item => (
-            <option value={item} key={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+      <div className="rows-count">
+        {getRowDisplayRange(
+          paginationProps.total ?? 0,
+          paginationProps.rowsPerPage ?? 0,
+          paginationProps.currentPage ?? 0
+        )}
       </div>
       <div className="qbs-table-pagination-right-block">
         <button
@@ -122,17 +117,18 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           onClick={() => handleFirst(1)}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            width="18"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
+              d="M9.16667 15.8333L3.33334 9.99996L9.16667 4.16663M15.8333 15.8333L10 9.99996L15.8333 4.16663"
+              stroke="#313131"
+              stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
             />
           </svg>
         </button>
@@ -142,14 +138,19 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           onClick={() => handlePrevious()}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            width="18"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            <path
+              d="M12.5 15.8334L6.66666 10L12.5 4.16669"
+              stroke="#313131"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </button>
         <div className="block-container">
@@ -161,14 +162,19 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           onClick={() => handleNext()}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            width="18"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            <path
+              d="M7.5 4.16669L13.3333 10L7.5 15.8334"
+              stroke="#313131"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </button>
         <button
@@ -177,20 +183,35 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           onClick={() => handleLast()}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
             fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            width="18"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
+              d="M10.8333 4.16663L16.6667 9.99996L10.8333 15.8333M4.16666 4.16663L10 9.99996L4.16666 15.8333"
+              stroke="#313131"
+              stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
             />
           </svg>
         </button>
+      </div>
+      <div className="qbs-table-pagination-flexBox">
+        <span className="qbs-table-pagination-text">Items per page</span>
+        <select
+          onChange={e => handleRowsPerPage(e)}
+          className="qbs-table-pagination-dropdown"
+          value={rowsPerPageState}
+        >
+          {dropData?.map(item => (
+            <option value={item} key={item}>
+              {item}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );

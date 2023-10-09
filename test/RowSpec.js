@@ -7,7 +7,7 @@ describe('Row', () => {
     const Title = 'Title';
     const instanceDom = getDOMNode(<Row>Title</Row>);
     assert.include(instanceDom.className, 'rs-row');
-    assert.equal(instanceDom.style.height, '46px');
+    assert.equal(instanceDom.style.height, '36px');
     assert.equal(instanceDom.innerText, Title);
   });
 

@@ -2,5 +2,5 @@ export function getRowDisplayRange(totalRows: number, rowsPerPage: number, pageN
   const start = (pageNumber - 1) * rowsPerPage + 1;
   const end = Math.min(pageNumber * rowsPerPage, totalRows);
 
-  return `Shows ${start ?? 0} to ${end ?? 0} of ${totalRows ?? 0}`;
+  return `Showing ${start ?? 0} to ${end ?? 0} of ${totalRows ?? 0}`;
 }

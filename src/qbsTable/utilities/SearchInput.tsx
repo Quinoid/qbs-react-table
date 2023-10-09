@@ -32,14 +32,14 @@ const SearchInput: React.FC<SearchProps> = ({
     <div className="qbs-table-search-container" role="search">
       <form onSubmit={handleSubmit}>
         <input
-          className="input textfield relative pr-1 w-full"
+          className="input textfield relative pl-1 w-full"
           placeholder={placeholder}
           value={searchValue ?? ''}
           onChange={handleInputChange}
           aria-label="Search"
         />
         <button
-          className="search-button absolute right-1 bottom-1.5 bg-white text-grey-dark"
+          className="search-button absolute left-1 bottom-1.5 bg-white text-grey-dark"
           onClick={() => handleSearch(searchValue)}
         >
           <svg

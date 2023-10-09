@@ -12,7 +12,8 @@ import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import { SettingsIcon } from './utilities/icons';
 import '../../dist/css/qbs-react-grid.css';
-const CHECKBOX_LINE_HEIGHT = '46px';
+
+const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
 const QbsTable: React.FC<QbsTableProps> = ({
   handleColumnSort,
@@ -33,7 +34,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   cellBordered = false,
   bordered = false,
   minHeight,
-  height = 550,
+  height = 630,
   onExpandChange,
   wordWrap,
   dataRowKey = 'id',
@@ -276,95 +277,112 @@ const QbsTable: React.FC<QbsTableProps> = ({
   return (
     <div className={`qbs-table ${classes.tableContainerClass}`} data-theme={dataTheme}>
       {toolbar && <ToolBar {...toolbarProps} />}
-      <Table
-        height={height}
-        data={data}
-        dataTheme={dataTheme}
-        wordWrap={wordWrap}
-        sortColumn={sortColumn}
-        sortType={sortType}
-        onSortColumn={handleSortColumn}
-        onRowClick={onRowClick}
-        cellBordered={cellBordered}
-        bordered={bordered}
-        minHeight={minHeight}
-        loading={loading}
-        showHeader
-        defaultChecked
-        expandedRowKeys={expandedRowKeys}
-        onExpandChange={onExpandChange}
-        rowKey={dataRowKey ?? 'id'}
-        defaultExpandAllRows={defaultExpandAllRows}
-        shouldUpdateScroll={shouldUpdateScroll}
-        renderRowExpanded={rowData => {
-          return handleRowExpanded?.(rowData);
-        }}
-      >
-        {rowExpand && (
-          <Column width={70} align="center" fixed="left">
-            <HeaderCell className={` ${classes.headerlClass}`}>#</HeaderCell>
-            <ExpandCell
-              dataKey={dataRowKey}
-              expandedRowKeys={expandedRowKeys}
-              onChange={handleExpanded}
-            />
-          </Column>
-        )}
-        {selection && (
-          <Column width={50} align="center" fixed="left">
-            <HeaderCell
-              style={{ padding: 0 }}
-              dataTheme={dataTheme}
-              className={` ${classes.headerlClass}`}
-            >
-              <div
-                style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}
-                className={` ${classes.selectionCell}`}
+      <div className="qbs-table-border-wrap">
+        <Table
+          height={height}
+          data={data}
+          dataTheme={dataTheme}
+          wordWrap={wordWrap}
+          sortColumn={sortColumn}
+          sortType={sortType}
+          onSortColumn={handleSortColumn}
+          onRowClick={onRowClick}
+          cellBordered={cellBordered}
+          bordered={bordered}
+          minHeight={minHeight}
+          loading={loading}
+          showHeader
+          defaultChecked
+          expandedRowKeys={expandedRowKeys}
+          onExpandChange={onExpandChange}
+          rowKey={dataRowKey ?? 'id'}
+          defaultExpandAllRows={defaultExpandAllRows}
+          shouldUpdateScroll={shouldUpdateScroll}
+          renderRowExpanded={rowData => {
+            return handleRowExpanded?.(rowData);
+          }}
+        >
+          {rowExpand && (
+            <Column width={70} align="center" fixed="left">
+              <HeaderCell className={` ${classes.headerlClass}`}>#</HeaderCell>
+              <ExpandCell
+                dataKey={dataRowKey}
+                expandedRowKeys={expandedRowKeys}
+                onChange={handleExpanded}
+              />
+            </Column>
+          )}
+          {selection && (
+            <Column width={50} align="center" fixed="left">
+              <HeaderCell
+                style={{ padding: 0 }}
+                dataTheme={dataTheme}
+                className={`qbs-checkbox-border-none ${classes.headerlClass}`}
               >
-                <input
-                  type="checkbox"
-                  onChange={handleCheckAll}
-                  className={`${classes.tableCheckBoxClass}`}
-                  checked={checkedKeys?.length === data.length}
-                />
-              </div>
-            </HeaderCell>
-            <CheckCell
-              dataKey="id"
-              checkedKeys={checkedKeys}
-              className={`${classes.tableCheckBoxClass}`}
-              onChange={handleCheck}
-              dataTheme={dataTheme}
-            />
-          </Column>
-        )}
-        {columnsRendered}
+                <div
+                  style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}
+                  className={`qbs-table-checkbox ${classes.selectionCell}`}
+                >
+                  <input
+                    type="checkbox"
+                    onChange={handleCheckAll}
+                    id={`checkbox-all`}
+                    className={`qbs-table-checkbox-input ${classes.tableCheckBoxClass}`}
+                    checked={checkedKeys?.length === data.length}
+                  />
+                  <label htmlFor={`checkbox-all`}>
+                    <svg
+                      width="8"
+                      height="6"
+                      viewBox="0 0 8 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 3.21739L2.89883 6L8 1.06994L6.89494 0L2.89883 3.86768L1.09728 2.14745L0 3.21739Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </label>
+                </div>
+              </HeaderCell>
+              <CheckCell
+                dataKey="id"
+                checkedKeys={checkedKeys}
+                className={`${classes.tableCheckBoxClass}`}
+                onChange={handleCheck}
+                dataTheme={dataTheme}
+              />
+            </Column>
+          )}
+          {columnsRendered}
 
-        {actionProps && actionProps?.length > 0 && (
-          <Column width={40} fixed="right">
-            <HeaderCell className={` ${classes.headerlClass}`} dataTheme={dataTheme}>
-              {!columnToggle ? (
-                <SettingsIcon />
-              ) : (
-                <ColumToggle
-                  columns={columns}
-                  onToggle={handleToggle}
-                  onReorder={onReorder}
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                />
-              )}
-            </HeaderCell>
-            <ActionCell
-              actionProps={actionProps}
-              className={`${classes.cellClass} ${classes.actionCellClass}`}
-              handleMenuActions={handleMenuActions}
-              dataTheme={dataTheme}
-            />
-          </Column>
-        )}
-      </Table>
-      <div>{pagination && <Pagination paginationProps={paginationProps} />}</div>
+          {actionProps && actionProps?.length > 0 && (
+            <Column width={40} fixed="right">
+              <HeaderCell className={` ${classes.headerlClass}`} dataTheme={dataTheme}>
+                {!columnToggle ? (
+                  <SettingsIcon />
+                ) : (
+                  <ColumToggle
+                    columns={columns}
+                    onToggle={handleToggle}
+                    onReorder={onReorder}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                  />
+                )}
+              </HeaderCell>
+              <ActionCell
+                actionProps={actionProps}
+                className={`${classes.cellClass} ${classes.actionCellClass}`}
+                handleMenuActions={handleMenuActions}
+                dataTheme={dataTheme}
+              />
+            </Column>
+          )}
+        </Table>
+        <div>{pagination && <Pagination paginationProps={paginationProps} />}</div>
+      </div>
     </div>
   );
 };

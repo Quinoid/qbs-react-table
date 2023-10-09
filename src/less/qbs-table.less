@@ -1,11 +1,13 @@
 .qbs-table {
-  border: 1px solid;
-  border-radius: 6px;
   .qbs-table-toolbar-container {
-    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+  }
+  .qbs-table-border-wrap {
+    border-radius: 0 0 4px 4px;
+    border: 1px solid #D6D8DC;
+    background: #FFF
   }
   .qbs-table-toolbar {
     display: flex;
@@ -37,17 +39,39 @@
     position: relative;
     align-items: center;
     .input {
-      height: 32px;
+      height: 36px;
       border-radius: 4px;
-      min-width: 200px;
+      min-width: 280px;
+      padding: 0 8px;
+      padding-left: 36px;
+      line-height: 36px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      border-radius: 6px;
+      border: 1px solid #D6D8DC;
+      background: #fff;
+      transition: all 0.2s ease;
+
+      &:hover {
+        outline: none;
+        border: 1px solid #D6D8DC;
+        background: #fff;
+      }
+      &:focus {
+        outline: none;
+        border: 1px solid #222;
+        background: #fff;
+        transition: all 0.2s ease;
+      }
     }
     .search-button {
       position: absolute;
-      right: 1px;
-      bottom: 5px;
+      left: 1px;
+      top: 7px;
       display: flex;
-      color: grey;
-      background-color: white;
+      color: #222;
+      background-color: transparent;
       .icon {
         width: 20px;
         height: 20px;
@@ -89,7 +113,11 @@
 /* Dropdown container */
 .qbs-table-menu-dropdown {
   position: relative;
-  display: inline-block;
+  display: flex;
+  width: 100%;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Button to trigger the qbs-table-menu-dropdown */
@@ -104,27 +132,51 @@
 /* Dropdown content (hidden by default) */
 .qbs-table-qbs-table-menu-dropdown-content {
   position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
+  min-width: 130px;
   z-index: 999;
-  right: 29px;
-  margin-bottom: 15px;
-  margin-top: 2px;
-  max-height: 41px;
-  top: 0;
+  right: 4px;
+  margin-bottom: 0;
+  margin-top: 0;
+  top: 3px;
   display: flex;
   box-sizing: border-box;
-  box-shadow: 2px 2px 1px 1px;
-  border-radius: 6px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid #D6D8DC;
+  background: #fff;
+  box-shadow: 0px 2px 4px 0px rgba(58, 58, 58, 0.15);
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 4px;
 }
 
 /* Dropdown content items */
 .qbs-table-qbs-table-menu-dropdown-content a {
-  color: black;
-  padding: 12px 16px;
+  padding: 0;
   text-decoration: none;
-  max-width: 20px;
   display: block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  color: #212121;
+  width: auto;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 18px;
+}
+.qbs-table-qbs-table-menu-dropdown-content a svg {
+  width: 18px;
+  height: 18px;
+}
+.qbs-table-qbs-table-menu-dropdown-content button.qbs-table-dropbtn {
+  margin-right: 8px;
+  margin-top: 2px;
+}
+.qbs-table-qbs-table-menu-dropdown-content a:hover {
+  color: #E76458;
+  background: #F4F4F4;
+  transition: all 0.2s ease;
 }
 /* Tooltip container */
 .qbs-table-tooltip {
@@ -190,11 +242,23 @@
 }
 .qbs-table-toolbar-sub-container {
   display: flex;
-  gap: 10px;
-  padding: 6px;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid #D6D8DC;
+  background: #FFF;
+  border-bottom: unset;
+
+  .rows-count {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    color: #222;
+  }
 }
-.selected-row {
-  background: #f7e8eb;
+.qbs-table-toolbar-sub-container.selected-row {
+  background: rgba(231, 100, 88, 0.08);
 }
 .qbs-table-toolbar-sub-container-start {
   display: flex;
@@ -202,19 +266,28 @@
 }
 .qbs-table-column-popup {
   position: fixed;
-  background-color: #f9f9f9;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 10px 10px;
+  padding: 8px;
   z-index: 999;
   right: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
+  background: #FFF;
+  box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+  min-width: 272px;
+  gap: 4px;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .qbs-table-container {
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
+  padding: 8px 4px;
+    white-space: nowrap;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 .qbs-table-columns-container {
@@ -229,11 +302,152 @@
 
 .qbs-table-columns-drag-icon {
   cursor: grab;
-  margin-right: 10px;
+    margin-right: 0;
 }
 
 .qbs-table-column {
   flex: 1;
+}
+
+.rs-table-cell-header .rs-table-cell-content {
+  padding: 8px;
+  border-radius: 0px;
+  border-right: 1px solid #D6D8DC;
+  background: #F4F4F4;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  color: #222;
+}
+
+.qbs-table .qbs-table-border-wrap .rs-table .rs-table-cell:hover ~ .rs-table-column-resize-spanner,
+.qbs-table .qbs-table-border-wrap .rs-table .rs-table-cell ~ .rs-table-column-resize-spanner:hover{
+  background-color: #E76458;
+
+  &:before {
+    border-color: transparent #E76458 transparent transparent;
+  }
+  &:after {
+    border-color: transparent transparent transparent #E76458;
+  }
+}
+
+.qbs-table-checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .qbs-table-checkbox-input {
+    opacity: 0;
+  }
+
+  .qbs-table-checkbox-input ~ label {
+    position: absolute;
+    border-radius: 3px;
+    border: 1px solid #999696;
+    width: 20px;
+    height: 20px;
+    top: 7px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    svg {
+      opacity: 0;
+      transition: all 0.2s ease;
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      width: 9px;
+      height: 9px;
+    }
+  }
+
+  .qbs-table-checkbox-input:checked ~ label {
+    transition: all 0.2s ease;
+    border-radius: 3px;
+    background: #E76458;
+    border-color: #E76458;
+
+    svg {
+      opacity: 1;
+      transition: all 0.2s ease;
+    }
+  }
+}
+
+.qbs-checkbox-border-none {
+  .rs-table-cell-content {
+    border-right: unset;
+  }
+}
+
+.qbs-table-popup-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qbs-table-popup-item .qbs-table-popup-label {
+  padding: 4px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  color: #585858;
+}
+
+.qbs-table-popup-item .qbs-table-popup-value {
+  padding: 8px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  color: #222;
+}
+
+.qbs-table-divider {
+  width: 100%;
+  background: #D6D8DC;
+  display: flex;
+  min-height: 1px;
+}
+
+.qbs-table-checkbox.qbs-table-custom-checkbox .qbs-table-checkbox-input ~ label {
+  top: -2px;
+}
+
+.qbs-table-container .qbs-table-popup-value {
+  padding: 0;
+  flex: 1;
+  margin-left: 8px;
+  transition: all 0.2s ease;
+}
+.qbs-table-container:hover .qbs-table-popup-value, .qbs-table-container:hover .qbs-table-popup-label {
+  transition: all 0.2s ease;
+  color: #E76458;
+}
+
+.qbs-table-container .qbs-table-popup-label {
+  padding: 0;
+  flex: 1;
+  margin-left: 8px;
+  transition: all 0.2s ease;
+}
+
+.qbs-table-reset-link {
+  padding: 8px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  color: #C63A3A;
+}
+
+.qbs-table-reset-link:hover {
+  color: #C63A3A;
+  text-decoration: none;
 }
 .selected-row-action {
   display: flex;
