@@ -6,13 +6,36 @@ Affix the table header to the specified position on the page
 
 ```js
 const App = () => {
+  const handleRow = row => {
+    const cell = <div>{row?.city}</div>;
+    const tooltip = 'Some useful string';
+    return { cell, tooltip };
+  };
   const [columns, setColumns] = React.useState([
-    { title: 'Name', field: 'name', resizable: true, isVisible: true },
+    {
+      title: 'Name',
+      field: 'name',
+      resizable: true,
+      isVisible: true,
+      fixed: 'left',
+      renderCell: row => {
+        const cell = row.city;
+        const tooltip = 'Some useful string';
+        return { cell, tooltip };
+      },
+      customCell: true
+    },
     { title: 'Email', field: 'email', resizable: true, isVisible: true },
-    { title: 'City', field: 'city', resizable: true },
-    { title: 'Country', field: 'country', resizable: true },
+    { title: 'City', field: 'city', resizable: true, isVisible: true },
+    { title: 'Country', field: 'country', resizable: true, isVisible: true },
     { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
-    { title: 'Age', field: 'age', resizable: true }
+    { title: 'Age', field: 'age', resizable: true, isVisible: true },
+    { title: 'Named', field: 'email', resizable: true, isVisible: true },
+    { title: 'Emaild', field: 'email', resizable: true, isVisible: true },
+    { title: 'Cityd', field: 'city', resizable: true, isVisible: true },
+    { title: 'Countdry', field: 'country', resizable: true, isVisible: true },
+    { title: 'Datde of Birth', field: 'date_of_birth', resizable: true, isVisible: true },
+    { title: 'Agde', field: 'age', resizable: true, isVisible: true }
   ]);
   const handleColumns = data => {
     console.log(data);
@@ -24,6 +47,7 @@ const App = () => {
         dataTheme="light"
         pagination={true}
         columns={columns}
+        wordWrap={false}
         dataRowKey="id"
         data={[
           {
@@ -38,7 +62,7 @@ const App = () => {
           {
             name: 'David Johnson',
             email: 'davidjohnson@example.com',
-            city: 'London',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'United Kingdom',
             date_of_birth: '1992-08-10',
             age: 29,
@@ -47,7 +71,7 @@ const App = () => {
           {
             name: 'Emily Brown',
             email: 'emilybrown@example.com',
-            city: 'Sydney',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'Australia',
             date_of_birth: '1988-03-28',
             age: 33,
@@ -110,7 +134,7 @@ const App = () => {
           {
             name: 'James Lee',
             email: 'jameslee@example.com',
-            city: 'Tokyo',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'Japan',
             date_of_birth: '1984-09-30',
             age: 37,
@@ -119,7 +143,7 @@ const App = () => {
           {
             name: 'Sophia Bianchi',
             email: 'sophiabianchi@example.com',
-            city: 'Rome',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'Italy',
             date_of_birth: '1996-12-03',
             age: 25,
@@ -128,7 +152,7 @@ const App = () => {
           {
             name: 'Logan Smith',
             email: 'logansmith@example.com',
-            city: 'Toronto',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'Canada',
             date_of_birth: '1999-01-18',
             age: 22,
@@ -137,7 +161,7 @@ const App = () => {
           {
             name: 'Mia Andersson',
             email: 'miaandersson@example.com',
-            city: 'Stockholm',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'Sweden',
             date_of_birth: '1994-07-06',
             age: 27,
@@ -146,7 +170,7 @@ const App = () => {
           {
             name: 'Benjamin Nguyen',
             email: 'benjaminnguyen@example.com',
-            city: 'Paris',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'France',
             date_of_birth: '1997-10-22',
             age: 24,

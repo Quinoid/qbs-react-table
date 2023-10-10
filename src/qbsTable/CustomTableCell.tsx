@@ -2,7 +2,9 @@ import React from 'react';
 
 import Cell from '../Cell';
 import MenuDropDown from './utilities/menuDropDown';
+import TooltipComponent from './utilities/ToolTip';
 const CHECKBOX_LINE_HEIGHT = '36px';
+
 export const CheckCell: React.FC<any> = React.memo(
   ({ rowData, onChange, checkedKeys, dataKey, dataTheme, ...props }) => (
     <Cell {...props} style={{ padding: 0 }} dataTheme={dataTheme}>
@@ -59,7 +61,13 @@ export const ExpandCell: React.FC<any> = React.memo(
   )
 );
 export const CustomTableCell: React.FC<any> = React.memo(
-  ({ rowData, renderCell, dataKey, onChange, ...props }) => (
-    <Cell {...props}>{renderCell(rowData)}</Cell>
-  )
+  ({ rowData, renderCell, dataKey, onChange, ...props }) => {
+    return (
+      <TooltipComponent title={renderCell(rowData)?.tooltip}>
+        <Cell {...props} dataKey={dataKey}>
+          {renderCell(rowData)?.cell}
+        </Cell>
+      </TooltipComponent>
+    );
+  }
 );

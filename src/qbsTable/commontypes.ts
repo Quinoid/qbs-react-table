@@ -5,7 +5,10 @@ enum Align {
   Left = 'left',
   Right = 'right'
 }
-
+interface Content {
+  cell: ReactNode | string;
+  tooltip: string;
+}
 export interface ColumnBase {
   title: string;
   field: string;
@@ -14,7 +17,7 @@ export interface ColumnBase {
   fixed?: boolean;
   align?: Align;
   colWidth?: number;
-  renderCell?: (rowData: any) => ReactElement;
+  renderCell?: (rowData: any) => Content;
   customCell?: boolean;
   isVisible?: boolean;
 }
@@ -67,7 +70,7 @@ export interface QbsTableProps {
   height?: number;
   minHeight?: number;
   maxHeight?: number | string;
-  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all' | undefined;
+  wordWrap: boolean | 'break-all' | 'break-word' | 'keep-all' | 'fit-content' | undefined;
   dataRowKey?: string;
   onExpandChange?: (expanded: boolean, rowData: any) => void;
   defaultExpandAllRows?: boolean;

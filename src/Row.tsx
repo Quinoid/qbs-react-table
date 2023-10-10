@@ -42,7 +42,7 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
     ...style
   };
   const INDEX = index as number;
-  const styleIndex = 1000 - INDEX;
+  const styleIndex = 200 - INDEX;
   translateDOMPositionXY?.(styles as CSSStyleDeclaration, 0, top);
 
   return (

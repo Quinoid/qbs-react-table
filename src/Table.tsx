@@ -173,7 +173,7 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
    * Whether to appear line breaks where text overflows its content box
    * https://developer.mozilla.org/en-US/docs/Web/CSS/word-break
    */
-  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all';
+  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all'| 'fit-content';
 
   /** Effectively render large tabular data */
   virtualized?: boolean;

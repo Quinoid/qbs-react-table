@@ -8,7 +8,7 @@ import defer from './defer';
 
 interface TableRowsProps<Row, Key> {
   prefix: (str: string) => string;
-  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all';
+  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all'| 'fit-content';
   data: readonly Row[];
   expandedRowKeys: readonly Key[];
 }

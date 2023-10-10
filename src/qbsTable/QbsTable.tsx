@@ -11,7 +11,6 @@ import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTabl
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import { SettingsIcon } from './utilities/icons';
-
 import '../../dist/css/qbs-react-grid.css';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
@@ -112,6 +111,16 @@ const QbsTable: React.FC<QbsTableProps> = ({
     );
   }, []);
 
+  useEffect(() => {
+    if (wordWrap === 'fit-content') {
+      setColumns(prevColumns =>
+        prevColumns.map(column =>
+          column.field ? { ...column, colWidth: calculateWidth(column.field) } : column
+        )
+      );
+    }
+  }, [wordWrap]);
+
   const onReorder = useCallback((columns: QbsColumnProps[]) => {
     setColumns(columns);
   }, []);
@@ -185,6 +194,22 @@ const QbsTable: React.FC<QbsTableProps> = ({
     },
     [dataRowKey, expandedRowKeys, setExpandedRowKeys]
   );
+
+  const calculateWidth = (str: string, fontSize = 8, characterWidth = 1) => {
+    const result = findLargestCell(str) * fontSize * characterWidth;
+    return result > 60 ? result : 60;
+  };
+
+  function findLargestCell(columnTitle: string) {
+    let largestCellLength = 0;
+    data.forEach(row => {
+      if (row[columnTitle] && String(row[columnTitle]).length > largestCellLength) {
+        largestCellLength = String(row[columnTitle]).length;
+      }
+    });
+
+    return largestCellLength;
+  }
   const columnsRendered: React.ReactElement[] = useMemo(
     () =>
       (columns ?? []).map(
@@ -231,7 +256,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                           {customCell ? (
                             <CustomTableCell
                               renderCell={child.renderCell}
-                              dataKey="id"
+                              dataKey={child.field}
                               dataTheme={dataTheme}
                             />
                           ) : (
@@ -259,7 +284,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       {title}
                     </HeaderCell>
                     {customCell ? (
-                      <CustomTableCell renderCell={renderCell} dataKey="id" dataTheme={dataTheme} />
+                      <CustomTableCell
+                        renderCell={renderCell}
+                        dataKey={field}
+                        dataTheme={dataTheme}
+                      />
                     ) : (
                       <Cell
                         dataKey={field}
