@@ -19,13 +19,15 @@ const App = () => {
       isVisible: true,
       fixed: 'left',
       renderCell: row => {
-        const cell = row.city;
+        const cell = <span>{row.city}</span>;
         const tooltip = 'Some useful string';
         return { cell, tooltip };
       },
+      link: true,
+      rowClick: rowData => console.log(rowData),
       customCell: true
     },
-    { title: 'Email', field: 'email', resizable: true, isVisible: true },
+    { title: 'Email', field: 'email', resizable: true, isVisible: true, sortable: true },
     { title: 'City', field: 'city', resizable: true, isVisible: true },
     { title: 'Country', field: 'country', resizable: true, isVisible: true },
     { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
@@ -48,6 +50,7 @@ const App = () => {
         pagination={true}
         columns={columns}
         wordWrap={false}
+        isLoading={false}
         dataRowKey="id"
         data={[
           {

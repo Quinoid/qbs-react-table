@@ -75,7 +75,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
   const renderColumn = (column: QbsColumnProps, index: number) => (
     <div
       key={column.title}
-      draggable={column.isVisible}
+      draggable={!column.isVisible || column.fixed ? false : true}
       className="qbs-table-container"
       onDragStart={e => onDragStart(e, index)}
       onDragOver={e => onDragOver(e, index)}
@@ -106,7 +106,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
         </label>
       </div>
       <div className="qbs-table-popup-value">{column.title}</div>
-      {column.isVisible && (
+      {column.isVisible && !column.fixed && (
         <span className="qbs-table-columns-drag-icon">
           <svg
             width="16"
@@ -136,19 +136,21 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
       </button>
       {isOpen && (
         <div className="qbs-table-column-popup" ref={popupRef}>
-          {/* <div className="qbs-table-popup-item">
+          <div className="qbs-table-popup-item">
             <div className="qbs-table-popup-label">FIXED COLUMNS</div>
-            {columns.map((column, index) => (
-              <div className="qbs-table-popup-value">Order ID</div>
-            ))}
-          </div> */}
+            <div className="qbs-table-columns-container">
+              <div className="qbs-table-column">
+                {columns.map((column, index) => (column.fixed ? renderColumn(column, index) : ''))}
+              </div>
+            </div>
+          </div>
           <div className="qbs-table-divider"></div>
           <div className="qbs-table-popup-item">
             <div className="qbs-table-popup-label">VISIBLE COLUMNS</div>
             <div className="qbs-table-columns-container">
               <div className="qbs-table-column">
                 {columns.map((column, index) =>
-                  column.isVisible ? renderColumn(column, index) : ''
+                  column.isVisible && !column.fixed ? renderColumn(column, index) : ''
                 )}
               </div>
             </div>
@@ -161,7 +163,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
                 <div className="qbs-table-columns-container">
                   <div className="qbs-table-column">
                     {columns.map((column, index) =>
-                      !column.isVisible ? renderColumn(column, index) : ''
+                      !column.isVisible && !column.fixed ? renderColumn(column, index) : ''
                     )}
                   </div>
                 </div>

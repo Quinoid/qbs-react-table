@@ -55,6 +55,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   columnToggle = true,
   handleColumnToggle,
   tableHeaderActions,
+  isLoading,
   selectedRowActions,
   handleResetColumns
 }) => {
@@ -74,6 +75,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
     },
     [handleColumnSort]
   );
+
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
@@ -226,7 +228,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
           children,
           customCell,
           renderCell,
-          isVisible
+          isVisible,
+          link,
+          rowClick
         }) => (
           <>
             {isVisible && (
@@ -253,11 +257,12 @@ const QbsTable: React.FC<QbsTableProps> = ({
                           <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
                             {child.title}
                           </HeaderCell>
-                          {customCell ? (
+                          {customCell || child.link ? (
                             <CustomTableCell
                               renderCell={child.renderCell}
                               dataKey={child.field}
                               dataTheme={dataTheme}
+                              link={child.link}
                             />
                           ) : (
                             <Cell
@@ -283,11 +288,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
                       {title}
                     </HeaderCell>
-                    {customCell ? (
+                    {customCell || link ? (
                       <CustomTableCell
                         renderCell={renderCell}
                         dataKey={field}
+                        rowClick={rowClick}
                         dataTheme={dataTheme}
+                        link={link}
                       />
                     ) : (
                       <Cell
@@ -321,7 +328,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           cellBordered={cellBordered}
           bordered={bordered}
           minHeight={minHeight}
-          loading={loading}
+          loading={isLoading ?? loading}
           showHeader
           defaultChecked
           expandedRowKeys={expandedRowKeys}

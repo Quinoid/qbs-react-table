@@ -20,6 +20,8 @@ export interface ColumnBase {
   renderCell?: (rowData: any) => Content;
   customCell?: boolean;
   isVisible?: boolean;
+  link?: boolean;
+  rowClick?: (rowData: any) => void;
 }
 
 export interface QbsColumnProps extends ColumnBase {
@@ -43,9 +45,11 @@ export interface ActionProps {
   action?: (row: any) => void;
   icon: React.ReactNode;
   toolTip?: string;
+  hidden?: boolean;
 }
 
 export interface QbsTableProps {
+  isLoading?: boolean;
   columns: QbsColumnProps[];
   data: readonly any[];
   actionProps?: readonly ActionProps[];
@@ -70,7 +74,7 @@ export interface QbsTableProps {
   height?: number;
   minHeight?: number;
   maxHeight?: number | string;
-  wordWrap: boolean | 'break-all' | 'break-word' | 'keep-all' | 'fit-content' | undefined;
+  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all' | 'fit-content';
   dataRowKey?: string;
   onExpandChange?: (expanded: boolean, rowData: any) => void;
   defaultExpandAllRows?: boolean;
@@ -88,6 +92,7 @@ export interface QbsTableProps {
     action: (checked: (number | string)[]) => void;
     disabled?: boolean;
   }[];
+
   classes?: { [key: string]: any };
   toolbar?: boolean;
   columnToggle?: boolean;

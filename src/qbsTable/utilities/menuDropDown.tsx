@@ -49,23 +49,27 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
       {openMenu && (
         <div className={'qbs-table-qbs-table-menu-dropdown-content'}>
           {actionDropDown?.map(item => (
-            <a
-              key={item.title}
-              className={`p-2 leading-7 hover:bg-background `}
-              onClick={e => {
-                e.preventDefault();
-                item.action?.(item);
-                handleMenuItemClick(item);
-              }}
-            >
-              <div className={''}>
-                <div className="qbs-table-tooltip">
-                  <TooltipComponent title={item.toolTip}>
-                    <span>{item.icon}</span>
-                  </TooltipComponent>
-                </div>
-              </div>
-            </a>
+            <>
+              {!item.hidden && (
+                <a
+                  key={item.title}
+                  className={`p-2 leading-7 hover:bg-background `}
+                  onClick={e => {
+                    e.preventDefault();
+                    item.action?.(item);
+                    handleMenuItemClick(item);
+                  }}
+                >
+                  <div className={''}>
+                    <div className="qbs-table-tooltip">
+                      <TooltipComponent title={item.toolTip}>
+                        <span>{item.icon}</span>
+                      </TooltipComponent>
+                    </div>
+                  </div>
+                </a>
+              )}
+            </>
           ))}
           <button className="qbs-table-dropbtn" onClick={toggleMenu} ref={menuButtonRef}>
             <ThreeDotIcon />
