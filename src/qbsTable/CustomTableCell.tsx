@@ -61,9 +61,9 @@ export const ExpandCell: React.FC<any> = React.memo(
   )
 );
 export const CustomTableCell: React.FC<any> = React.memo(
-  ({ rowData, renderCell, dataKey, onChange, rowClick, link, ...props }) => {
+  ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, link, ...props }) => {
     return (
-      <TooltipComponent title={renderCell(rowData)?.tooltip}>
+      <TooltipComponent title={renderCell ? renderCell(rowData)?.tooltip : toolTip}>
         <Cell {...props} dataKey={dataKey}>
           {link ? (
             <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
