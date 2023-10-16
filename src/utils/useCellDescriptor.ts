@@ -68,7 +68,7 @@ const useCellDescriptor = <Row extends RowDataType>(
     rowHeight,
     onSortColumn,
     onHeaderCellResize,
-    prefix
+    prefix,
   } = props;
 
   const [sortType, setSortType] = useControlled(sortTypeProp, defaultSortType);

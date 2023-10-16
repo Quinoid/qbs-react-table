@@ -33,6 +33,7 @@ export interface HeaderCellProps extends InnerCellProps {
     index?: number
   ) => void;
   renderSortIcon?: (sortType?: 'desc' | 'asc') => React.ReactNode;
+  sortkey?: string;
 }
 
 const SORTED_ICON = {
@@ -46,6 +47,7 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
     classPrefix = 'cell-header',
     width,
     dataKey,
+    sortkey,
     headerHeight,
     children,
     left,
@@ -81,7 +83,7 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
 
   let ariaSort;
 
-  if (sortColumn === dataKey) {
+  if (sortColumn === dataKey || sortColumn === sortkey) {
     ariaSort = 'other';
     if (sortType === 'asc') {
       ariaSort = 'ascending';
@@ -92,9 +94,9 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
 
   const handleClick = useCallback(() => {
     if (sortable) {
-      onSortColumn?.(dataKey);
+      onSortColumn?.(sortkey ?? dataKey);
     }
-  }, [dataKey, onSortColumn, sortable]);
+  }, [dataKey, onSortColumn, sortable, sortkey]);
 
   const handleColumnResizeStart = useCallback(() => {
     onColumnResizeStart?.(columnWidth, left, !!fixed);
