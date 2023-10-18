@@ -7,7 +7,7 @@ enum Align {
 }
 interface Content {
   cell: ReactNode | string;
-  tooltip: string;
+  toolTip?: string;
 }
 export interface ColumnBase {
   title: string;
@@ -22,6 +22,7 @@ export interface ColumnBase {
   isVisible?: boolean;
   link?: boolean;
   rowClick?: (rowData: any) => void;
+  sortKey?: string;
 }
 
 export interface QbsColumnProps extends ColumnBase {
@@ -92,7 +93,7 @@ export interface QbsTableProps {
     action: (checked: (number | string)[]) => void;
     disabled?: boolean;
   }[];
-
+  selectedRows?: (number | string)[];
   classes?: { [key: string]: any };
   toolbar?: boolean;
   columnToggle?: boolean;
@@ -118,6 +119,7 @@ export interface QbsTableToolbarProps {
   columnToggle?: boolean;
   checkedKeys?: (number | string)[];
   tableHeaderActions?: ReactElement | ReactNode;
+  onSelect?: (keys: any[]) => void;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;

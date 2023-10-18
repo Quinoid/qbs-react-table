@@ -3,6 +3,7 @@ import React from 'react';
 import Cell from '../Cell';
 import MenuDropDown from './utilities/menuDropDown';
 import TooltipComponent from './utilities/ToolTip';
+
 const CHECKBOX_LINE_HEIGHT = '36px';
 
 export const CheckCell: React.FC<any> = React.memo(
@@ -15,7 +16,7 @@ export const CheckCell: React.FC<any> = React.memo(
           value={rowData[dataKey]}
           id={`checkbox-${rowData[dataKey]}`}
           onChange={onChange}
-          checked={checkedKeys.includes(rowData[dataKey])}
+          checked={checkedKeys?.includes(rowData[dataKey])}
         />
         <label htmlFor={`checkbox-${rowData[dataKey]}`}>
           <svg
@@ -63,7 +64,7 @@ export const ExpandCell: React.FC<any> = React.memo(
 export const CustomTableCell: React.FC<any> = React.memo(
   ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, link, ...props }) => {
     return (
-      <TooltipComponent title={renderCell ? renderCell(rowData)?.tooltip : toolTip}>
+      <TooltipComponent title={renderCell ? renderCell(rowData)?.toolTip : toolTip}>
         <Cell {...props} dataKey={dataKey}>
           {link ? (
             <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">

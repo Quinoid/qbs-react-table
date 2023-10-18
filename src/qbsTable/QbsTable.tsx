@@ -11,7 +11,9 @@ import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTabl
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import { SettingsIcon } from './utilities/icons';
+
 import '../../dist/css/qbs-react-grid.css';
+import debounce from './utilities/debounce';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
@@ -57,7 +59,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   tableHeaderActions,
   isLoading,
   selectedRowActions,
-  handleResetColumns
+  handleResetColumns,
+  selectedRows
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -75,11 +78,19 @@ const QbsTable: React.FC<QbsTableProps> = ({
     },
     [handleColumnSort]
   );
+  useEffect(() => {
+    setCheckedKeys(selectedRows as (number | string)[]);
+  }, [selectedRows]);
+
+  const handleChecked = debounce((keys?: any) => {
+    onSelect?.(keys);
+  }, 500);
 
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
       setCheckedKeys(keys);
+      handleChecked(keys);
     },
     [data]
   );
@@ -91,12 +102,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
         ? [...checkedKeys, value]
         : checkedKeys.filter(key => key !== value);
       setCheckedKeys(updatedKeys);
+      handleChecked(updatedKeys);
     },
+
     [checkedKeys]
   );
-  useEffect(() => {
-    onSelect?.(checkedKeys);
-  }, [checkedKeys, onSelect]);
 
   const handleToggle = useCallback((columnName: string) => {
     setColumns(cols =>
@@ -130,7 +140,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
   useEffect(() => {
     handleColumnToggle?.(columns);
   }, [columns, handleColumnToggle]);
-
+  const handleClear = ([]) => {
+    setCheckedKeys([]);
+    handleChecked([]);
+  };
   const toolbarProps = {
     title: title,
     search: search,
@@ -149,7 +162,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
     columns: columns,
     checkedKeys: checkedKeys,
     tableHeaderActions: tableHeaderActions,
-    selectedRowActions: selectedRowActions
+    selectedRowActions: selectedRowActions,
+    onSelect: handleClear
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
   useEffect(() => {
@@ -230,7 +244,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
           renderCell,
           isVisible,
           link,
-          rowClick
+          rowClick,
+          sortKey
         }) => (
           <>
             {isVisible && (
@@ -254,7 +269,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
                           onResize={handleColumnWidth}
                           fixed={child.fixed}
                         >
-                          <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
+                          <HeaderCell
+                            dataTheme={dataTheme}
+                            className={` ${classes.headerClass}`}
+                            sortKey={child.sortKey}
+                          >
                             {child.title}
                           </HeaderCell>
                           {customCell || child.link ? (
@@ -285,7 +304,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     fixed={fixed}
                     onResize={handleColumnWidth}
                   >
-                    <HeaderCell dataTheme={dataTheme} className={` ${classes.headerClass}`}>
+                    <HeaderCell
+                      dataTheme={dataTheme}
+                      className={` ${classes.headerClass}`}
+                      sortKey={sortKey}
+                    >
                       {title}
                     </HeaderCell>
                     {customCell || link ? (
@@ -366,7 +389,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     onChange={handleCheckAll}
                     id={`checkbox-all`}
                     className={`qbs-table-checkbox-input ${classes.tableCheckBoxClass}`}
-                    checked={checkedKeys?.length === data.length}
+                    checked={data.every(item => checkedKeys.includes(item.id))}
                   />
                   <label htmlFor={`checkbox-all`}>
                     <svg

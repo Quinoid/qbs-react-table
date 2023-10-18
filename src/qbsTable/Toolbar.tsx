@@ -18,7 +18,8 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   className,
   tableHeaderActions,
   selectedRowActions,
-  checkedKeys
+  checkedKeys,
+  onSelect
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
 
@@ -69,6 +70,9 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           <div className="qbs-table-toolbar-sub-container-start">
             <div className="selected-row">{`Selected Items(${checkedKeys?.length}) `}</div>
             <div className="selected-row-action">
+              <button className="btn" onClick={() => onSelect?.([])}>
+                Clear
+              </button>
               {selectedRowActions?.map((actions, index: number) => (
                 <button
                   key={index.toString()}

@@ -33,7 +33,7 @@ export interface HeaderCellProps extends InnerCellProps {
     index?: number
   ) => void;
   renderSortIcon?: (sortType?: 'desc' | 'asc') => React.ReactNode;
-  sortkey?: string;
+  sortKey?: string;
 }
 
 const SORTED_ICON = {
@@ -47,7 +47,7 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
     classPrefix = 'cell-header',
     width,
     dataKey,
-    sortkey,
+    sortKey,
     headerHeight,
     children,
     left,
@@ -83,7 +83,7 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
 
   let ariaSort;
 
-  if (sortColumn === dataKey || sortColumn === sortkey) {
+  if (sortColumn === dataKey || sortColumn === sortKey) {
     ariaSort = 'other';
     if (sortType === 'asc') {
       ariaSort = 'ascending';
@@ -94,9 +94,9 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
 
   const handleClick = useCallback(() => {
     if (sortable) {
-      onSortColumn?.(sortkey ?? dataKey);
+      onSortColumn?.(sortKey ?? dataKey);
     }
-  }, [dataKey, onSortColumn, sortable, sortkey]);
+  }, [dataKey, onSortColumn, sortable, sortKey]);
 
   const handleColumnResizeStart = useCallback(() => {
     onColumnResizeStart?.(columnWidth, left, !!fixed);
@@ -113,13 +113,16 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
 
   const renderSortColumn = () => {
     if (sortable && !groupHeader) {
-      const SortIcon = sortColumn === dataKey && sortType ? SORTED_ICON[sortType] : Sort;
+      const SortIcon =
+        (sortColumn === dataKey || sortColumn === sortKey) && sortType
+          ? SORTED_ICON[sortType]
+          : Sort;
       const iconClasses = classNames(prefix('icon-sort'), {
-        [prefix(`icon-sort-${sortType}`)]: sortColumn === dataKey
+        [prefix(`icon-sort-${sortType}`)]: sortColumn === dataKey || sortColumn === sortKey
       });
 
       const sortIcon = renderSortIcon ? (
-        renderSortIcon(sortColumn === dataKey ? sortType : undefined)
+        renderSortIcon(sortColumn === dataKey || sortColumn === sortKey ? sortType : undefined)
       ) : (
         <SortIcon className={iconClasses} />
       );
