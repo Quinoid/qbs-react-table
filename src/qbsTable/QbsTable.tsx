@@ -10,10 +10,10 @@ import { QbsColumnProps, QbsTableProps } from './commontypes';
 import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTableCell';
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
+import debounce from './utilities/debounce';
 import { SettingsIcon } from './utilities/icons';
 
 import '../../dist/css/qbs-react-grid.css';
-import debounce from './utilities/debounce';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
@@ -89,8 +89,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
-      setCheckedKeys(keys);
-      handleChecked(keys);
+      const updatedKeys = [...checkedKeys, ...keys];
+      setCheckedKeys(updatedKeys);
+      handleChecked(updatedKeys);
     },
     [data]
   );
@@ -139,7 +140,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
   useEffect(() => {
     handleColumnToggle?.(columns);
-  }, [columns, handleColumnToggle]);
+  }, [columns]);
+
   const handleClear = ([]) => {
     setCheckedKeys([]);
     handleChecked([]);
@@ -389,7 +391,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     onChange={handleCheckAll}
                     id={`checkbox-all`}
                     className={`qbs-table-checkbox-input ${classes.tableCheckBoxClass}`}
-                    checked={data.every(item => checkedKeys.includes(item.id))}
+                    checked={data?.length > 0 && data.every(item => checkedKeys?.includes(item.id))}
                   />
                   <label htmlFor={`checkbox-all`}>
                     <svg
@@ -443,7 +445,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
             </Column>
           )}
         </Table>
-        <div>{pagination && <Pagination paginationProps={paginationProps} />}</div>
+        <div>
+          {pagination && data?.length > 0 && <Pagination paginationProps={paginationProps} />}
+        </div>
       </div>
     </div>
   );

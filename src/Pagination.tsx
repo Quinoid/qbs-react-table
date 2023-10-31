@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
+
 import { getRowDisplayRange } from './qbsTable/utilities/tablecalc';
 
 type PageProps = {
@@ -12,21 +13,21 @@ type PageProps = {
     onPagination?: (row: number, page: number) => void;
   };
 };
-const PageIndex = ({ currentIndex, handleFirst, pageCount }) => {
+const PageIndex = ({ currentPage, handleFirst, pageCount }) => {
   const renderPageNumbers = () => {
     const pageNumbers: any = [];
 
     // Add ellipsis if necessary
-    if (currentIndex > 3) {
+    if (currentPage > 3) {
       pageNumbers.push('...');
     }
 
-    for (let i = Math.max(1, currentIndex - 2); i <= Math.min(pageCount, currentIndex + 2); i++) {
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(pageCount, currentPage + 2); i++) {
       pageNumbers.push(i);
     }
 
     // Add ellipsis if necessary
-    if (currentIndex < pageCount - 2) {
+    if (currentPage < pageCount - 2) {
       pageNumbers.push('...');
     }
 
@@ -36,14 +37,14 @@ const PageIndex = ({ currentIndex, handleFirst, pageCount }) => {
           <span
             key={pageNumber}
             onClick={() => handleFirst(pageNumber)}
-            className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
+            className={`block-item ${pageNumber === currentPage ? 'selected' : ''}`}
           >
             {pageNumber}
           </span>
         ) : (
           <span
             key={pageNumber}
-            className={`block-item ${pageNumber === currentIndex ? 'selected' : ''}`}
+            className={`block-item ${pageNumber === currentPage ? 'selected' : ''}`}
           >
             {pageNumber}
           </span>
@@ -64,7 +65,6 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
     onPagination
   } = paginationProps;
 
-  const [currentIndex, setCurrenIndex] = useState<number>(currentPage ?? 1);
   const [rowsPerPageState, setRowsPerPageState] = useState(rowsPerPage);
 
   const dropData = dropOptions ?? [10, 20, 50, 100, 200];
@@ -72,18 +72,21 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   const handleRowsPerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = parseInt(e.target.value);
     setRowsPerPageState(value);
-    onRowsPerPage?.(value, currentIndex);
+    onRowsPerPage?.(value, currentPage);
   };
   const handleFirst = (index: number) => {
-    setCurrenIndex(index);
-    onPagination?.(index, currentIndex);
+    // setCurrenIndex(index);
+    onPagination?.(index, currentPage);
   };
 
   const handleLast = () => {
     const value = pageCount ?? 0;
-    setCurrenIndex(value);
-    onPagination?.(value, currentIndex);
+    // setCurrenIndex(value);
+    onPagination?.(value, currentPage);
   };
+  // useEffect(() => {
+  //   setCurrenIndex(currentPage);
+  // }, [currentPage]);
 
   useEffect(() => {
     const calculatedPageCount = Math.ceil(total / rowsPerPageState);
@@ -91,13 +94,14 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   }, [total, rowsPerPageState]);
 
   const handlePrevious = () => {
-    setCurrenIndex(currentIndex - 1);
-    onPagination?.(currentIndex - 1, currentIndex);
+    // setCurrenIndex(currentPage - 1);
+    onPagination?.(currentPage - 1, currentPage);
   };
   const handleNext = () => {
-    setCurrenIndex(currentIndex + 1);
-    onPagination?.(currentIndex + 1, currentIndex);
+    // setCurrenIndex(currentPage + 1);
+    onPagination?.(currentPage + 1, currentPage);
   };
+
   return (
     <div
       className={'qbs-table-custom-pagination'}
@@ -113,7 +117,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
       <div className="qbs-table-pagination-right-block">
         <button
           className="qbs-table-icon-container"
-          disabled={currentIndex == 1}
+          disabled={currentPage == 1}
           onClick={() => handleFirst(1)}
         >
           <svg
@@ -134,7 +138,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         </button>
         <button
           className="qbs-table-icon-container"
-          disabled={currentIndex < 2}
+          disabled={currentPage < 2}
           onClick={() => handlePrevious()}
         >
           <svg
@@ -154,11 +158,16 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
           </svg>
         </button>
         <div className="block-container">
-          <PageIndex currentIndex={currentIndex} handleFirst={handleFirst} pageCount={pageCount} />
+          <PageIndex
+            key={currentPage}
+            currentPage={currentPage}
+            handleFirst={handleFirst}
+            pageCount={pageCount}
+          />
         </div>
         <button
           className="qbs-table-icon-container"
-          disabled={currentIndex >= pageCount - 1}
+          disabled={currentPage >= pageCount - 1}
           onClick={() => handleNext()}
         >
           <svg
@@ -179,7 +188,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         </button>
         <button
           className="qbs-table-icon-container"
-          disabled={currentIndex == pageCount}
+          disabled={currentPage == pageCount}
           onClick={() => handleLast()}
         >
           <svg
