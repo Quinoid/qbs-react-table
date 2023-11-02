@@ -72,6 +72,38 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
     };
   }, [handleClickOutside]);
 
+  const renderFixedColumn = (column: QbsColumnProps, index: number) => (
+    <div
+      key={column.title}
+      className="qbs-table-container"
+      style={{ border: index == dragOverPosition ? '1px dashed blue' : '' }}
+    >
+      <div className="qbs-table-checkbox qbs-table-custom-checkbox">
+        <input
+          type="checkbox"
+          checked={column.isVisible}
+          onChange={() => handleToggle(column.title)}
+          className="qbs-table-checkbox-input"
+          id={column.title}
+        />
+        <label htmlFor={column.title}>
+          <svg
+            width="8"
+            height="6"
+            viewBox="0 0 8 6"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 3.21739L2.89883 6L8 1.06994L6.89494 0L2.89883 3.86768L1.09728 2.14745L0 3.21739Z"
+              fill="white"
+            ></path>
+          </svg>
+        </label>
+      </div>
+      <div className="qbs-table-popup-value">{column.title}</div>
+    </div>
+  );
   const renderColumn = (column: QbsColumnProps, index: number) => (
     <div
       key={column.title}
@@ -134,42 +166,47 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
       <button onClick={() => setIsOpen(!isOpen)}>
         <SettingsIcon />
       </button>
-      {isOpen && (
+      {/* {isOpen && ( */}
+      <div>
         <div className="qbs-table-column-popup" ref={popupRef}>
-          <div className="qbs-table-popup-item">
-            <div className="qbs-table-popup-label">FIXED COLUMNS</div>
-            <div className="qbs-table-columns-container">
-              <div className="qbs-table-column">
-                {columns.map((column, index) => (column.fixed ? renderColumn(column, index) : ''))}
-              </div>
-            </div>
-          </div>
-          <div className="qbs-table-divider"></div>
-          <div className="qbs-table-popup-item">
-            <div className="qbs-table-popup-label">VISIBLE COLUMNS</div>
-            <div className="qbs-table-columns-container">
-              <div className="qbs-table-column">
-                {columns.map((column, index) =>
-                  column.isVisible && !column.fixed ? renderColumn(column, index) : ''
-                )}
-              </div>
-            </div>
-          </div>
-          {handleAvailableColumns() && (
-            <>
-              <div className="qbs-table-divider"></div>
-              <div className="qbs-table-popup-item">
-                <div className="qbs-table-popup-label">AVAILABLE COLUMNS</div>
-                <div className="qbs-table-columns-container">
-                  <div className="qbs-table-column">
-                    {columns.map((column, index) =>
-                      !column.isVisible && !column.fixed ? renderColumn(column, index) : ''
-                    )}
-                  </div>
+          <div className="qbs-table-popup-container">
+            <div className="qbs-table-popup-item">
+              <div className="qbs-table-popup-label">FIXED COLUMNS</div>
+              <div className="qbs-table-columns-container">
+                <div className="qbs-table-column">
+                  {columns.map((column, index) =>
+                    column.fixed ? renderFixedColumn(column, index) : ''
+                  )}
                 </div>
               </div>
-            </>
-          )}
+            </div>
+            <div className="qbs-table-divider"></div>
+            <div className="qbs-table-popup-item">
+              <div className="qbs-table-popup-label">VISIBLE COLUMNS</div>
+              <div className="qbs-table-columns-container">
+                <div className="qbs-table-column">
+                  {columns.map((column, index) =>
+                    column.isVisible && !column.fixed ? renderColumn(column, index) : ''
+                  )}
+                </div>
+              </div>
+            </div>
+            {handleAvailableColumns() && (
+              <>
+                <div className="qbs-table-divider"></div>
+                <div className="qbs-table-popup-item">
+                  <div className="qbs-table-popup-label">AVAILABLE COLUMNS</div>
+                  <div className="qbs-table-columns-container">
+                    <div className="qbs-table-column">
+                      {columns.map((column, index) =>
+                        !column.isVisible && !column.fixed ? renderFixedColumn(column, index) : ''
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
           {handleResetColumns && (
             <>
               <div className="qbs-table-divider"></div>
@@ -181,7 +218,8 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
             </>
           )}
         </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   );
 };
