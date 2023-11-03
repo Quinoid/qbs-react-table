@@ -2,7 +2,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 0px;
-  background-color: #F8F8F8;
+  background-color: #ffffff;
   &-column-resizing {
     cursor: ew-resize;
     .user-select();
@@ -18,18 +18,19 @@
     width: 100%;
     top: 0;
     transition: none;
+    border-bottom: 1px solid #eee;
   }
 
   &-hover &-body-row-wrapper &-row:hover {
-    background: @row-hover-color;
+    background: #fff;
   }
 
   &-hover &-body-row-wrapper &-row:hover &-cell-group {
-    background: @row-hover-color;
+    background: #fff;
   }
 
   &-hover &-body-row-wrapper &-row:hover &-cell {
-    background: @row-hover-color;
+    background: #fff;
   }
 
   &-row-header {
@@ -175,6 +176,13 @@
     position: absolute;
     width: 2px;
     z-index: 6;
+
+    input {
+      display: none;
+    }
+    span {
+      background: #E76458;
+    }
   }
 
   &-cell-bordered &-cell {
