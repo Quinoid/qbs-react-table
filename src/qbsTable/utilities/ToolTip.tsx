@@ -1,5 +1,6 @@
 import React from 'react';
-import { Whisper, Tooltip } from 'rsuite';
+import { Tooltip, Whisper } from 'rsuite';
+
 const tooltip = (titleL: string) => {
   return <Tooltip>{titleL}</Tooltip>;
 };

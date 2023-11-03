@@ -166,60 +166,64 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
       <button onClick={() => setIsOpen(!isOpen)}>
         <SettingsIcon />
       </button>
-      {/* {isOpen && ( */}
-      <div>
-        <div className="qbs-table-column-popup" ref={popupRef}>
-          <div className="qbs-table-popup-container">
-            <div className="qbs-table-popup-item">
-              <div className="qbs-table-popup-label">FIXED COLUMNS</div>
-              <div className="qbs-table-columns-container">
-                <div className="qbs-table-column">
-                  {columns.map((column, index) =>
-                    column.fixed ? renderFixedColumn(column, index) : ''
-                  )}
+      {isOpen && (
+        <div>
+          <div className="qbs-table-column-popup" ref={popupRef}>
+            <div className="qbs-table-popup-container">
+              <div className="qbs-table-popup-item">
+                <div className="qbs-table-popup-label">FIXED COLUMNS</div>
+                <div className="qbs-table-columns-container">
+                  <div className="qbs-table-column">
+                    {columns.map((column, index) =>
+                      column.fixed ? renderFixedColumn(column, index) : ''
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="qbs-table-divider"></div>
-            <div className="qbs-table-popup-item">
-              <div className="qbs-table-popup-label">VISIBLE COLUMNS</div>
-              <div className="qbs-table-columns-container">
-                <div className="qbs-table-column">
-                  {columns.map((column, index) =>
-                    column.isVisible && !column.fixed ? renderColumn(column, index) : ''
-                  )}
+              <div className="qbs-table-divider"></div>
+              <div className="qbs-table-popup-item">
+                <div className="qbs-table-popup-label">VISIBLE COLUMNS</div>
+                <div className="qbs-table-columns-container">
+                  <div className="qbs-table-column">
+                    {columns.map((column, index) =>
+                      column.isVisible && !column.fixed ? renderColumn(column, index) : ''
+                    )}
+                  </div>
                 </div>
               </div>
+              {handleAvailableColumns() && (
+                <>
+                  <div className="qbs-table-divider"></div>
+                  <div className="qbs-table-popup-item">
+                    <div className="qbs-table-popup-label">AVAILABLE COLUMNS</div>
+                    <div className="qbs-table-columns-container">
+                      <div className="qbs-table-column">
+                        {columns.map((column, index) =>
+                          !column.isVisible && !column.fixed ? renderFixedColumn(column, index) : ''
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-            {handleAvailableColumns() && (
+            {handleResetColumns && (
               <>
                 <div className="qbs-table-divider"></div>
                 <div className="qbs-table-popup-item">
-                  <div className="qbs-table-popup-label">AVAILABLE COLUMNS</div>
-                  <div className="qbs-table-columns-container">
-                    <div className="qbs-table-column">
-                      {columns.map((column, index) =>
-                        !column.isVisible && !column.fixed ? renderFixedColumn(column, index) : ''
-                      )}
-                    </div>
-                  </div>
+                  <a
+                    className="qbs-table-reset-link"
+                    href="#"
+                    onClick={() => handleResetColumns?.()}
+                  >
+                    Reset to default
+                  </a>
                 </div>
               </>
             )}
           </div>
-          {handleResetColumns && (
-            <>
-              <div className="qbs-table-divider"></div>
-              <div className="qbs-table-popup-item">
-                <a className="qbs-table-reset-link" href="#" onClick={() => handleResetColumns?.()}>
-                  Reset to default
-                </a>
-              </div>
-            </>
-          )}
         </div>
-      </div>
-      {/* )} */}
+      )}
     </div>
   );
 };
