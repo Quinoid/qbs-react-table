@@ -92,6 +92,7 @@ export interface QbsTableProps {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;
     disabled?: boolean;
+    hidden?: boolean;
   }[];
   selectedRows?: (number | string)[];
   classes?: { [key: string]: any };
@@ -124,5 +125,6 @@ export interface QbsTableToolbarProps {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;
     disabled?: boolean;
+    hidden?: boolean;
   }[];
 }

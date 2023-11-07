@@ -74,13 +74,18 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
                 Clear
               </button>
               {selectedRowActions?.map((actions, index: number) => (
-                <button
-                  key={index.toString()}
-                  className="btn"
-                  onClick={() => actions?.action(checkedKeys)}
-                >
-                  {actions.actionTitle}
-                </button>
+                <>
+                  {!actions.hidden && (
+                    <button
+                      key={index.toString()}
+                      className="btn"
+                      disabled={actions.disabled}
+                      onClick={() => actions?.action(checkedKeys)}
+                    >
+                      {actions.actionTitle}
+                    </button>
+                  )}
+                </>
               ))}
             </div>
           </div>

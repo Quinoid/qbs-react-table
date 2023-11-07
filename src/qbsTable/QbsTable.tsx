@@ -79,7 +79,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
     [handleColumnSort]
   );
   useEffect(() => {
-    setCheckedKeys(selectedRows as (number | string)[]);
+    if (selectedRows) {
+      setCheckedKeys(selectedRows ?? ([] as (number | string)[]));
+    } else {
+      setCheckedKeys([]);
+    }
   }, [selectedRows]);
 
   const handleChecked = debounce((keys?: any) => {
@@ -89,7 +93,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
-      const updatedKeys = [...checkedKeys, ...keys];
+      let updatedKeys = [...keys];
+      if (checkedKeys) {
+        updatedKeys = [...checkedKeys, ...updatedKeys];
+      }
       setCheckedKeys(updatedKeys);
       handleChecked(updatedKeys);
     },
@@ -99,16 +106,17 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleCheck = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      const updatedKeys = event.target.checked
-        ? [...checkedKeys, value]
-        : checkedKeys.filter(key => key !== value);
-      setCheckedKeys(updatedKeys);
-      handleChecked(updatedKeys);
+      if (value !== undefined) {
+        let updatedKeys = event.target.checked
+          ? [...checkedKeys, value]
+          : checkedKeys.filter(key => key !== value);
+        setCheckedKeys(updatedKeys);
+        handleChecked(updatedKeys);
+      }
     },
 
     [checkedKeys]
   );
-
   const handleToggle = useCallback((columnName: string) => {
     setColumns(cols =>
       cols.map(col => (col.title === columnName ? { ...col, isVisible: !col.isVisible } : col))
