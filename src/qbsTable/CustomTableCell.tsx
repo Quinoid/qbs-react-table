@@ -2,7 +2,6 @@ import React from 'react';
 
 import Cell from '../Cell';
 import MenuDropDown from './utilities/menuDropDown';
-import TooltipComponent from './utilities/ToolTip';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 
@@ -64,17 +63,15 @@ export const ExpandCell: React.FC<any> = React.memo(
 export const CustomTableCell: React.FC<any> = React.memo(
   ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, link, ...props }) => {
     return (
-      <TooltipComponent title={renderCell ? renderCell(rowData)?.toolTip : toolTip}>
-        <Cell {...props} dataKey={dataKey}>
-          {link ? (
-            <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
-              {renderCell ? renderCell(rowData)?.cell : rowData[dataKey]}
-            </a>
-          ) : (
-            <>{renderCell(rowData)?.cell}</>
-          )}
-        </Cell>
-      </TooltipComponent>
+      <Cell {...props} dataKey={dataKey}>
+        {link ? (
+          <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
+            {renderCell ? renderCell(rowData)?.cell : rowData[dataKey]}
+          </a>
+        ) : (
+          <>{renderCell(rowData)?.cell}</>
+        )}
+      </Cell>
     );
   }
 );

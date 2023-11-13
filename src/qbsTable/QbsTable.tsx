@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import Cell from '../Cell';
 import Column from '../Column';
@@ -11,6 +11,7 @@ import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTabl
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
+import { deepEqual } from './utilities/deepEqual';
 import { SettingsIcon } from './utilities/icons';
 
 import '../../dist/css/qbs-react-grid.css';
@@ -59,7 +60,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   tableHeaderActions,
   isLoading,
   selectedRowActions,
-  handleResetColumns,
+  handleResetColumns, 
   selectedRows
 }) => {
   const [loading, setLoading] = useState(false);
@@ -67,6 +68,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
   const [isOpen, setIsOpen] = useState(false);
+  const prevColumns = useRef<any | null>();
 
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
@@ -93,10 +95,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
-      let updatedKeys = [...keys];
-      if (checkedKeys) {
-        updatedKeys = [...checkedKeys, ...updatedKeys];
-      }
+      let updatedKeys = [...checkedKeys, ...keys];
       setCheckedKeys(updatedKeys);
       handleChecked(updatedKeys);
     },
@@ -146,9 +145,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
     setColumns(columns);
   }, []);
 
-  useEffect(() => {
-    handleColumnToggle?.(columns);
-  }, [columns]);
+  // useEffect(() => {
+  // }, [columns]);
 
   const handleClear = ([]) => {
     setCheckedKeys([]);
@@ -173,9 +171,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
     checkedKeys: checkedKeys,
     tableHeaderActions: tableHeaderActions,
     selectedRowActions: selectedRowActions,
-    onSelect: handleClear
+    onSelect: handleClear,
+    handleColumnToggle: handleColumnToggle
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
+
   useEffect(() => {
     const handleThemeToggle = () => {
       if (themeToggle?.checked) {
@@ -236,6 +236,23 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
     return largestCellLength;
   }
+  const handleColumnsResizable = useCallback(() => {
+    const filteredColumns = columns?.filter(item => item.isVisible);
+    const length = filteredColumns?.length ?? 0;
+    const lastVisibleColumn = filteredColumns[length - 1];
+    const reColumns = columns?.map(item =>
+      item?.field === lastVisibleColumn?.field ? { ...item, resizable: false } : item
+    );
+    setColumns(reColumns);
+  }, [columns]);
+
+  useEffect(() => {
+    if (!deepEqual(columns, prevColumns.current)) {
+      handleColumnsResizable();
+    }
+    prevColumns.current = columns;
+  }, [columns, handleColumnsResizable]);
+
   const columnsRendered: React.ReactElement[] = useMemo(
     () =>
       (columns ?? []).map(

@@ -1,10 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
 
-enum Align {
-  Center = 'center',
-  Left = 'left',
-  Right = 'right'
-}
 interface Content {
   cell: ReactNode | string;
   toolTip?: string;
@@ -15,7 +10,7 @@ export interface ColumnBase {
   sortable?: boolean;
   resizable?: boolean;
   fixed?: boolean;
-  align?: Align;
+  align?: 'left' | 'right' | 'center';
   colWidth?: number;
   renderCell?: (rowData: any) => Content;
   customCell?: boolean;
@@ -93,6 +88,7 @@ export interface QbsTableProps {
     action: (checked: (number | string)[]) => void;
     disabled?: boolean;
     hidden?: boolean;
+    customHide?: string;
   }[];
   selectedRows?: (number | string)[];
   classes?: { [key: string]: any };
@@ -121,10 +117,12 @@ export interface QbsTableToolbarProps {
   checkedKeys?: (number | string)[];
   tableHeaderActions?: ReactElement | ReactNode;
   onSelect?: (keys: any[]) => void;
+  handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;
     disabled?: boolean;
     hidden?: boolean;
+    customHide?: string;
   }[];
 }

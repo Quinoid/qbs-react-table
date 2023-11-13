@@ -20,8 +20,8 @@ const App = () => {
       fixed: 'left',
       renderCell: row => {
         const cell = <span>{row.city}</span>;
-        const tooltip = 'Some useful string';
-        return { cell, tooltip };
+        const toolTip = 'Some useful string';
+        return { cell, toolTip };
       },
       link: true,
       rowClick: rowData => console.log(rowData),

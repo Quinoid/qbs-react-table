@@ -59,7 +59,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   const {
     dropOptions = [10, 20, 50, 100, 200],
     currentPage = 1,
-    total = 100,
+    total = 0,
     onRowsPerPage,
     rowsPerPage = 10,
     onPagination
@@ -75,18 +75,13 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
     onRowsPerPage?.(value, currentPage);
   };
   const handleFirst = (index: number) => {
-    // setCurrenIndex(index);
     onPagination?.(index, currentPage);
   };
 
   const handleLast = () => {
     const value = pageCount ?? 0;
-    // setCurrenIndex(value);
     onPagination?.(value, currentPage);
   };
-  // useEffect(() => {
-  //   setCurrenIndex(currentPage);
-  // }, [currentPage]);
 
   useEffect(() => {
     const calculatedPageCount = Math.ceil(total / rowsPerPageState);
@@ -94,11 +89,9 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   }, [total, rowsPerPageState]);
 
   const handlePrevious = () => {
-    // setCurrenIndex(currentPage - 1);
     onPagination?.(currentPage - 1, currentPage);
   };
   const handleNext = () => {
-    // setCurrenIndex(currentPage + 1);
     onPagination?.(currentPage + 1, currentPage);
   };
 
@@ -130,9 +123,9 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
             <path
               d="M9.16667 15.8333L3.33334 9.99996L9.16667 4.16663M15.8333 15.8333L10 9.99996L15.8333 4.16663"
               stroke="#313131"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>
@@ -151,9 +144,9 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
             <path
               d="M12.5 15.8334L6.66666 10L12.5 4.16669"
               stroke="#313131"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>
@@ -167,7 +160,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         </div>
         <button
           className="qbs-table-icon-container"
-          disabled={currentPage >= pageCount - 1}
+          disabled={currentPage === pageCount || pageCount === 0}
           onClick={() => handleNext()}
         >
           <svg
@@ -180,15 +173,15 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
             <path
               d="M7.5 4.16669L13.3333 10L7.5 15.8334"
               stroke="#313131"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>
         <button
           className="qbs-table-icon-container"
-          disabled={currentPage == pageCount}
+          disabled={currentPage == pageCount || pageCount === 0}
           onClick={() => handleLast()}
         >
           <svg
@@ -201,9 +194,9 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
             <path
               d="M10.8333 4.16663L16.6667 9.99996L10.8333 15.8333M4.16666 4.16663L10 9.99996L4.16666 15.8333"
               stroke="#313131"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>

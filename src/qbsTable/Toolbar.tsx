@@ -42,7 +42,15 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
     },
     [asyncSearch, handleSearch, handleSearchValue]
   );
-
+  const handleHide = (actions: any) => {
+    if (actions.hidden) {
+      return false;
+    } else if (actions.customHide == '>2') {
+      return checkedKeys && checkedKeys?.length >= 2 ? true : false;
+    } else {
+      return true;
+    }
+  };
   return (
     <div className="qbs-table-toolbar-container">
       <div className={`qbs-table-toolbar ${className}`}>
@@ -75,7 +83,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
               </button>
               {selectedRowActions?.map((actions, index: number) => (
                 <>
-                  {!actions.hidden && (
+                  {handleHide(actions) && (
                     <button
                       key={index.toString()}
                       className="btn"
