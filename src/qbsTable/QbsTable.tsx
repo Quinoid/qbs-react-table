@@ -60,7 +60,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   tableHeaderActions,
   isLoading,
   selectedRowActions,
-  handleResetColumns, 
+  handleResetColumns,
   selectedRows
 }) => {
   const [loading, setLoading] = useState(false);
@@ -172,7 +172,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
     tableHeaderActions: tableHeaderActions,
     selectedRowActions: selectedRowActions,
     onSelect: handleClear,
-    handleColumnToggle: handleColumnToggle
+    handleColumnToggle: handleColumnToggle,
+    dataLength: data?.length
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
@@ -245,6 +246,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
     );
     setColumns(reColumns);
   }, [columns]);
+
+  useEffect(() => {
+    setColumns(propColumn);
+  }, [propColumn]);
 
   useEffect(() => {
     if (!deepEqual(columns, prevColumns.current)) {

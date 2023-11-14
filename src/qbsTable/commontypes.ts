@@ -118,6 +118,7 @@ export interface QbsTableToolbarProps {
   tableHeaderActions?: ReactElement | ReactNode;
   onSelect?: (keys: any[]) => void;
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
+  dataLength: number;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;

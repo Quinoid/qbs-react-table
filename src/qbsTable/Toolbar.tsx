@@ -19,7 +19,8 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   tableHeaderActions,
   selectedRowActions,
   checkedKeys,
-  onSelect
+  onSelect,
+  dataLength
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
 
@@ -99,7 +100,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           </div>
         ) : (
           <div>
-            {pagination && paginationProps && (
+            {pagination && paginationProps && dataLength > 0 && (
               <div className="rows-count">
                 {getRowDisplayRange(
                   paginationProps.total ?? 0,

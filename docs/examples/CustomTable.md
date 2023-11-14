@@ -54,6 +54,7 @@ const App = () => {
         dataRowKey="id"
         data={[
           {
+            /* {
             name: 'John Doe',
             email: 'johndoe@example.com',
             city: 'New York',
@@ -266,6 +267,7 @@ const App = () => {
             city: 'Budapest',
             country: 'Hungary',
             id: 24
+          } */
           }
         ]}
         actionProps={[
