@@ -27,7 +27,15 @@ const App = () => {
       rowClick: rowData => console.log(rowData),
       customCell: true
     },
-    { title: 'Email', field: 'email', resizable: true, isVisible: true, sortable: true },
+    {
+      grouped: true,
+      groupHeader: 'Group Header',
+      isVisible: true,
+      children: [
+        { title: 'Sub Header', field: 'city', resizable: true, isVisible: true },
+        { title: 'Sub Header2', field: 'country', resizable: true, isVisible: true }
+      ]
+    },
     { title: 'City', field: 'city', resizable: true, isVisible: true },
     { title: 'Country', field: 'country', resizable: true, isVisible: true },
     { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
@@ -54,7 +62,6 @@ const App = () => {
         dataRowKey="id"
         data={[
           {
-            /* {
             name: 'John Doe',
             email: 'johndoe@example.com',
             city: 'New York',
@@ -267,7 +274,6 @@ const App = () => {
             city: 'Budapest',
             country: 'Hungary',
             id: 24
-          } */
           }
         ]}
         actionProps={[
