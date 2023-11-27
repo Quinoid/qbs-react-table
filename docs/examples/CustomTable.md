@@ -38,13 +38,26 @@ const App = () => {
     },
     { title: 'City', field: 'city', resizable: true, isVisible: true },
     { title: 'Country', field: 'country', resizable: true, isVisible: true },
-    { title: 'Date of Birth', field: 'date_of_birth', resizable: true },
+    {
+      title: 'Date of Birth',
+      field: 'date_of_birth',
+      resizable: true,
+      type: 'date',
+      customCell: true
+    },
     { title: 'Age', field: 'age', resizable: true, isVisible: true },
     { title: 'Named', field: 'email', resizable: true, isVisible: true },
     { title: 'Emaild', field: 'email', resizable: true, isVisible: true },
     { title: 'Cityd', field: 'city', resizable: true, isVisible: true },
     { title: 'Countdry', field: 'country', resizable: true, isVisible: true },
-    { title: 'Datde of Birth', field: 'date_of_birth', resizable: true, isVisible: true },
+    {
+      title: 'Datde of Birth',
+      field: 'date_of_birth',
+      resizable: true,
+      isVisible: true,
+      type: 'date',
+      customCell: true
+    },
     { title: 'Agde', field: 'age', resizable: true, isVisible: true }
   ]);
   const handleColumns = data => {
@@ -75,7 +88,7 @@ const App = () => {
             email: 'davidjohnson@example.com',
             city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'United Kingdom',
-            date_of_birth: '1992-08-10',
+            date_of_birth: '1/30/2021',
             age: 29,
             id: '2'
           },
@@ -84,7 +97,7 @@ const App = () => {
             email: 'emilybrown@example.com',
             city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'Australia',
-            date_of_birth: '1988-03-28',
+            date_of_birth: '30/1/2023',
             age: 33,
             id: '3'
           },
@@ -93,7 +106,7 @@ const App = () => {
             email: 'michaelgarcia@example.com',
             city: 'Madrid',
             country: 'Spain',
-            date_of_birth: '1995-09-02',
+            date_of_birth: '3/30/2023 10:30 am',
             age: 26,
             id: 4
           },

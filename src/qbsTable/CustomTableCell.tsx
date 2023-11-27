@@ -2,6 +2,7 @@ import React from 'react';
 
 import Cell from '../Cell';
 import MenuDropDown from './utilities/menuDropDown';
+import { handleCellFormat } from './utilities/handleFormatCell';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 
@@ -61,15 +62,15 @@ export const ExpandCell: React.FC<any> = React.memo(
   )
 );
 export const CustomTableCell: React.FC<any> = React.memo(
-  ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, link, ...props }) => {
+  ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, type, link, ...props }) => {
     return (
       <Cell {...props} dataKey={dataKey}>
         {link ? (
           <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
-            {renderCell ? renderCell(rowData)?.cell : rowData[dataKey]}
+            {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
           </a>
         ) : (
-          <>{renderCell(rowData)?.cell}</>
+          <>{renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}</>
         )}
       </Cell>
     );

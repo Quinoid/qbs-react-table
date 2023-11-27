@@ -18,6 +18,7 @@ export interface ColumnBase {
   link?: boolean;
   rowClick?: (rowData: any) => void;
   sortKey?: string;
+  type?: string;
 }
 
 export interface QbsColumnProps extends ColumnBase {
@@ -42,6 +43,7 @@ export interface ActionProps {
   icon: React.ReactNode;
   toolTip?: string;
   hidden?: boolean;
+  hide?: (data: any) => boolean;
 }
 
 export interface QbsTableProps {

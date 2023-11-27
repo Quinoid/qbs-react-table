@@ -1,4 +1,5 @@
-import React, { useCallback, memo } from 'react';
+import React, { memo, useCallback } from 'react';
+
 export interface SearchProps {
   placeholder: string;
   handleChange: (value: string) => void;

@@ -50,7 +50,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
         <div className={'qbs-table-qbs-table-menu-dropdown-content'}>
           {actionDropDown?.map(item => (
             <>
-              {!item.hidden && (
+              {!item?.hidden && !item?.hide?.(rowData) && (
                 <a
                   key={item.title}
                   className={`p-2 leading-7 hover:bg-background `}

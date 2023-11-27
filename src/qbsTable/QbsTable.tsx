@@ -277,7 +277,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
           isVisible,
           link,
           rowClick,
-          sortKey
+          sortKey,
+          type
         }) => (
           <>
             {isVisible && (
@@ -313,6 +314,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                               renderCell={child.renderCell}
                               dataKey={child.field}
                               dataTheme={dataTheme}
+                              type={child.type}
                               link={child.link}
                             />
                           ) : (
@@ -348,6 +350,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                         renderCell={renderCell}
                         dataKey={field}
                         rowClick={rowClick}
+                        type={type}
                         dataTheme={dataTheme}
                         link={link}
                       />
