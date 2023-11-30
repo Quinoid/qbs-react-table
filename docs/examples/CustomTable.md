@@ -79,7 +79,7 @@ const App = () => {
             email: 'johndoe@example.com',
             city: 'New York',
             country: 'United States',
-            date_of_birth: '1990-05-15',
+            date_of_birth: '11/28/2023',
             age: 31,
             id: '1'
           },

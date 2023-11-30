@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { QbsTableToolbarProps } from './commontypes';
 import debounce from './utilities/debounce';
@@ -23,7 +23,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   dataLength
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
-
+  const [searchParam, setSearchParam] = useState<string | undefined>(searchValue);
   const handleSearch = useCallback(
     (e?: string) => {
       if (debouncedOnSearch) {
@@ -35,6 +35,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
 
   const handleChange = useCallback(
     (e?: string) => {
+      setSearchParam(e);
       if (asyncSearch) {
         handleSearch(e);
       } else {
@@ -61,7 +62,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
               placeholder="Search"
               handleChange={handleChange}
               handleSearch={handleSearch}
-              searchValue={searchValue}
+              searchValue={searchParam}
             />
           )}
           <div className="qbs-table-primary-filter">{primaryFilter}</div>
