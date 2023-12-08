@@ -60,7 +60,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
                     handleMenuItemClick(item);
                   }}
                 >
-                  <div className={''}>
+                  <div className={'relative'}>
                     <div className="qbs-table-tooltip">
                       <TooltipComponent title={item.toolTip}>
                         <span>{item.icon}</span>
