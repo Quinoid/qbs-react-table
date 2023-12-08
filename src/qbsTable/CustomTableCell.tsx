@@ -1,11 +1,10 @@
 import React from 'react';
 
 import Cell from '../Cell';
-import MenuDropDown from './utilities/menuDropDown';
 import { handleCellFormat } from './utilities/handleFormatCell';
+import MenuDropDown from './utilities/menuDropDown';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
-
 export const CheckCell: React.FC<any> = React.memo(
   ({ rowData, onChange, checkedKeys, dataKey, dataTheme, ...props }) => (
     <Cell {...props} style={{ padding: 0 }} dataTheme={dataTheme}>
@@ -64,15 +63,17 @@ export const ExpandCell: React.FC<any> = React.memo(
 export const CustomTableCell: React.FC<any> = React.memo(
   ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, type, link, ...props }) => {
     return (
-      <Cell {...props} dataKey={dataKey}>
-        {link ? (
-          <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
-            {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
-          </a>
-        ) : (
-          <>{renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}</>
-        )}
-      </Cell>
+      <>
+        <Cell {...props} dataKey={dataKey}>
+          {link ? (
+            <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
+              {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
+            </a>
+          ) : (
+            <>{renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}</>
+          )}
+        </Cell>
+      </>
     );
   }
 );
