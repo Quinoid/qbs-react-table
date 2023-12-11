@@ -23,7 +23,7 @@ export interface ColumnBase {
 
 export interface QbsColumnProps extends ColumnBase {
   grouped?: boolean;
-  groupheader?: string;
+  groupHeader?: string;
   children?: readonly ColumnBase[];
 }
 
@@ -98,6 +98,8 @@ export interface QbsTableProps {
   columnToggle?: boolean;
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   handleResetColumns?: () => void;
+  headerHeight?: number;
+  tableBodyHeight?:string
 }
 
 export interface QbsTableToolbarProps {
@@ -121,6 +123,7 @@ export interface QbsTableToolbarProps {
   onSelect?: (keys: any[]) => void;
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   dataLength: number;
+  headerHeight?: number;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;

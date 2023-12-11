@@ -308,6 +308,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     if (data?.length === 0 && autoHeight) {
       return heightProp;
     }
+    console.log(heightProp, headerHeight, contentHeight.current, tableHeight.current);
 
     return autoHeight ? Math.max(headerHeight + contentHeight.current, minHeight) : heightProp;
   };

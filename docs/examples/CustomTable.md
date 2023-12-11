@@ -27,15 +27,15 @@ const App = () => {
       rowClick: rowData => console.log(rowData),
       customCell: true
     },
-    {
-      grouped: true,
-      groupHeader: 'Group Header',
-      isVisible: true,
-      children: [
-        { title: 'Sub Header', field: 'city', resizable: true, isVisible: true },
-        { title: 'Sub Header2', field: 'country', resizable: true, isVisible: true }
-      ]
-    },
+    // {
+    //   grouped: true,
+    //   groupHeader: 'Group Header',
+    //   isVisible: true,
+    //   children: [
+    //     { title: 'Sub Header', field: 'city', resizable: true, isVisible: true },
+    //     { title: 'Sub Header2', field: 'country', resizable: true, isVisible: true }
+    //   ]
+    // },
     { title: 'City', field: 'city', resizable: true, isVisible: true },
     { title: 'Country', field: 'country', resizable: true, isVisible: true },
     {
@@ -70,6 +70,8 @@ const App = () => {
         dataTheme="light"
         pagination={true}
         columns={columns}
+        headerHeight={40}
+        tableBodyHeight={`calc(100vh - 300px)`}
         wordWrap={false}
         isLoading={false}
         dataRowKey="id"

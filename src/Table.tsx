@@ -6,14 +6,40 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useImperativeHandle, useReducer, useRef, useState } from 'react';
 
 import CellGroup from './CellGroup';
-import { CELL_PADDING_HEIGHT, EXPANDED_KEY, ROW_HEADER_HEIGHT, ROW_HEIGHT, SCROLLBAR_WIDTH, SORT_TYPE, TREE_DEPTH } from './constants';
+import {
+  CELL_PADDING_HEIGHT,
+  EXPANDED_KEY,
+  ROW_HEADER_HEIGHT,
+  ROW_HEIGHT,
+  SCROLLBAR_WIDTH,
+  SORT_TYPE,
+  TREE_DEPTH
+} from './constants';
 import EmptyMessage from './EmptyMessage';
 import Loader from './Loader';
 import MouseArea from './MouseArea';
 import Row, { RowProps } from './Row';
 import Scrollbar, { ScrollbarInstance } from './Scrollbar';
 import TableContext from './TableContext';
-import { findAllParents, findRowKeys, flattenData, isRTL, isSupportTouchEvent, mergeCells, resetLeftForCells, shouldShowRowByExpanded, useAffix, useCellDescriptor, useClassNames, useControlled, usePosition, useScrollListener, useTableDimension, useTableRows, useUpdateEffect } from './utils';
+import {
+  findAllParents,
+  findRowKeys,
+  flattenData,
+  isRTL,
+  isSupportTouchEvent,
+  mergeCells,
+  resetLeftForCells,
+  shouldShowRowByExpanded,
+  useAffix,
+  useCellDescriptor,
+  useClassNames,
+  useControlled,
+  usePosition,
+  useScrollListener,
+  useTableDimension,
+  useTableRows,
+  useUpdateEffect
+} from './utils';
 
 import type {
   StandardProps,
@@ -62,6 +88,8 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
    * Cannot be used together with autoHeight.
    */
   fillHeight?: boolean;
+
+  tableBodyHeight?: string;
 
   /** Affix the table header to the specified position on the page */
   affixHeader?: boolean | number;
@@ -173,7 +201,7 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
    * Whether to appear line breaks where text overflows its content box
    * https://developer.mozilla.org/en-US/docs/Web/CSS/word-break
    */
-  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all'| 'fit-content';
+  wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all' | 'fit-content';
 
   /** Effectively render large tabular data */
   virtualized?: boolean;
@@ -304,6 +332,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     onTouchMove,
     onTouchEnd,
     dataTheme,
+    tableBodyHeight,
     ...rest
   } = props;
 
@@ -564,7 +593,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
   const styles = {
     width: widthProp || 'auto',
-    height: getTableHeight(),
+    height: tableBodyHeight ? undefined : getTableHeight(),
     ...style
   };
 
@@ -613,7 +642,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     // IF there are fixed columns, add a fixed group
 
     // if (shouldFixedColumn && contentWidth.current > tableWidth.current) {
-    if (shouldFixedColumn){
+    if (shouldFixedColumn) {
       const fixedLeftCells: React.ReactNode[] = [];
       const fixedRightCells: React.ReactNode[] = [];
       const scrollCells: React.ReactNode[] = [];
@@ -918,7 +947,8 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     const bodyHeight = height - headerHeight;
     const bodyStyles = {
       top: headerHeight,
-      height: bodyHeight
+      maxHeight: tableBodyHeight,
+      minHeight: tableBodyHeight
     };
 
     let contentHeight = 0;
@@ -978,7 +1008,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
             depth: rowData[TREE_DEPTH],
             height: nextRowHeight,
             cellHeight,
-            index:index
+            index: index
           };
 
           top += nextRowHeight;

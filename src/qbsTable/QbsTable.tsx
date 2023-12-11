@@ -61,7 +61,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   isLoading,
   selectedRowActions,
   handleResetColumns,
-  selectedRows
+  selectedRows,
+  headerHeight = 40,
+  tableBodyHeight
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -257,7 +259,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
     }
     prevColumns.current = columns;
   }, [columns, handleColumnsResizable]);
-
+  const findGrouped = () => {
+    return columns?.find(item => item.grouped) ? true : false;
+  };
   const columnsRendered: React.ReactElement[] = useMemo(
     () =>
       (columns ?? []).map(
@@ -269,7 +273,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           colWidth,
           align,
           grouped,
-          groupheader,
+          groupHeader,
           fixed,
           children,
           customCell,
@@ -285,7 +289,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
               <>
                 {grouped ? (
                   <ColumnGroup
-                    header={groupheader}
+                    header={groupHeader}
                     fixed={fixed}
                     align={align}
                     verticalAlign="middle"
@@ -304,6 +308,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                         >
                           <HeaderCell
                             dataTheme={dataTheme}
+                            verticalAlign={'middle'}
                             className={` ${classes.headerClass}`}
                             sortKey={child.sortKey}
                           >
@@ -340,6 +345,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                   >
                     <HeaderCell
                       dataTheme={dataTheme}
+                      verticalAlign={findGrouped() ? 'middle' : undefined}
                       className={` ${classes.headerClass}`}
                       sortKey={sortKey}
                     >
@@ -383,9 +389,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
           sortType={sortType}
           onSortColumn={handleSortColumn}
           onRowClick={onRowClick}
+          tableBodyHeight={tableBodyHeight}
           cellBordered={cellBordered}
           bordered={bordered}
           minHeight={minHeight}
+          headerHeight={headerHeight}
           loading={isLoading ?? loading}
           showHeader
           defaultChecked
@@ -400,7 +408,12 @@ const QbsTable: React.FC<QbsTableProps> = ({
         >
           {rowExpand && (
             <Column width={70} align="center" fixed="left">
-              <HeaderCell className={` ${classes.headerlClass}`}>#</HeaderCell>
+              <HeaderCell
+                verticalAlign={findGrouped() ? 'middle' : undefined}
+                className={` ${classes.headerlClass}`}
+              >
+                #
+              </HeaderCell>
               <ExpandCell
                 dataKey={dataRowKey}
                 expandedRowKeys={expandedRowKeys}
@@ -412,6 +425,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             <Column width={50} align="center" fixed="left">
               <HeaderCell
                 style={{ padding: 0 }}
+                verticalAlign={findGrouped() ? 'middle' : undefined}
                 dataTheme={dataTheme}
                 className={`qbs-checkbox-border-none ${classes.headerlClass}`}
               >
@@ -455,7 +469,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
           {actionProps && actionProps?.length > 0 && (
             <Column width={40} fixed="right">
-              <HeaderCell className={` ${classes.headerlClass}`} dataTheme={dataTheme}>
+              <HeaderCell
+                verticalAlign={findGrouped() ? 'middle' : undefined}
+                className={` ${classes.headerlClass}`}
+                dataTheme={dataTheme}
+              >
                 {!columnToggle ? (
                   <SettingsIcon />
                 ) : (
