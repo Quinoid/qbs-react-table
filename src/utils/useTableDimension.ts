@@ -1,14 +1,15 @@
-import React, { useRef, useCallback } from 'react';
-import getWidth from 'dom-lib/getWidth';
+import { ResizeObserver } from '@juggle/resize-observer';
 import getHeight from 'dom-lib/getHeight';
 import getOffset from 'dom-lib/getOffset';
+import getWidth from 'dom-lib/getWidth';
+import debounce from 'lodash/debounce';
+import React, { useCallback, useRef } from 'react';
+
+import { ElementOffset, RowDataType } from '../@types/common';
 import { SCROLLBAR_WIDTH } from '../constants';
-import { ResizeObserver } from '@juggle/resize-observer';
+import isNumberOrTrue from './isNumberOrTrue';
 import useMount from './useMount';
 import useUpdateLayoutEffect from './useUpdateLayoutEffect';
-import isNumberOrTrue from './isNumberOrTrue';
-import { RowDataType, ElementOffset } from '../@types/common';
-import debounce from 'lodash/debounce';
 
 interface TableDimensionProps<Row, Key> {
   data?: readonly Row[];
@@ -304,11 +305,9 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     if (fillHeight) {
       return tableHeight.current;
     }
-
     if (data?.length === 0 && autoHeight) {
       return heightProp;
     }
-    console.log(heightProp, headerHeight, contentHeight.current, tableHeight.current);
 
     return autoHeight ? Math.max(headerHeight + contentHeight.current, minHeight) : heightProp;
   };

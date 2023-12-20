@@ -19,6 +19,7 @@ export interface ColumnBase {
   rowClick?: (rowData: any) => void;
   sortKey?: string;
   type?: string;
+  getPath?: (data: any) => string;
 }
 
 export interface QbsColumnProps extends ColumnBase {
@@ -99,7 +100,7 @@ export interface QbsTableProps {
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   handleResetColumns?: () => void;
   headerHeight?: number;
-  tableBodyHeight?:string
+  tableBodyHeight?: string;
 }
 
 export interface QbsTableToolbarProps {

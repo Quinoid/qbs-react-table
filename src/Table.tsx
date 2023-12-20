@@ -127,6 +127,7 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
   /** The minimum height of the table. The height is maintained even when the content is not stretched. */
   minHeight?: number;
 
+  columns?: any;
   /** The row of the table has a mouseover effect */
   hover?: boolean;
 
@@ -333,6 +334,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     onTouchEnd,
     dataTheme,
     tableBodyHeight,
+    columns,
     ...rest
   } = props;
 
@@ -593,7 +595,9 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
   const styles = {
     width: widthProp || 'auto',
-    height: tableBodyHeight ? undefined : getTableHeight(),
+    height: getTableHeight(),
+    // height: tableBodyHeight ?? getTableHeight(),
+
     ...style
   };
 
@@ -945,9 +949,13 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
   const renderTableBody = (bodyCells: any[], rowWidth: number) => {
     const height = getTableHeight();
     const bodyHeight = height - headerHeight;
+    console.log(bodyHeight, height);
     const bodyStyles = {
       top: headerHeight,
-      maxHeight: tableBodyHeight,
+      height: bodyHeight,
+
+      //height: tableBodyHeight
+      // maxHeight: tableBodyHeight,
       minHeight: tableBodyHeight
     };
 
@@ -1068,13 +1076,13 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
     const wheelStyles: React.CSSProperties = {
       position: 'absolute',
-      height: contentHeight,
-      minHeight: height,
+      // height: contentHeight,
+      minHeight: contentHeight,
+      // maxHeight: tableBodyHeight,
       pointerEvents: isScrolling ? 'none' : undefined
     };
     const topRowStyles = { height: topHideHeight };
     const bottomRowStyles = { height: bottomHideHeight };
-
     return (
       <div
         ref={tableBodyRef}
@@ -1095,7 +1103,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           addPrefix={prefix}
           loading={!!visibleRows.current?.length || loading}
         />
-        {renderScrollbar()}
+
         <Loader
           locale={locale}
           loadAnimation={loadAnimation}
@@ -1134,6 +1142,8 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       >
         {showHeader && renderTableHeader(headerCells, rowWidth)}
         {children && renderTableBody(bodyCells, rowWidth)}
+        {renderScrollbar()}
+
         {showHeader && (
           <MouseArea
             ref={mouseAreaRef}
@@ -1143,7 +1153,6 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           />
         )}
       </div>
-      {/* {pagination && <Pagination paginationProps={paginationProps} />} */}
     </TableContext.Provider>
   );
 });

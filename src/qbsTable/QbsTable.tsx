@@ -118,11 +118,39 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
     [checkedKeys]
   );
-  const handleToggle = useCallback((columnName: string) => {
-    setColumns(cols =>
-      cols.map(col => (col.title === columnName ? { ...col, isVisible: !col.isVisible } : col))
-    );
-  }, []);
+
+  const handleToggle = useCallback(
+    (columnName: string) => {
+      let lastVisibleColumn: any = null;
+      let visibleCount = 0;
+
+      const updatedColumns = columns?.map(col => {
+        // Toggle visibility for the matched column
+        if (col.title === columnName) {
+          col = { ...col, isVisible: !col.isVisible };
+        }
+        if (col.isVisible) {
+          lastVisibleColumn = col;
+          visibleCount++;
+        }
+
+        return col;
+      });
+
+      if (visibleCount > 0 && lastVisibleColumn) {
+        updatedColumns.forEach(col => {
+          if (col.field === lastVisibleColumn?.field) {
+            col.resizable = false;
+          } else {
+            col.resizable = true;
+          }
+        });
+      }
+
+      setColumns(updatedColumns);
+    },
+    [columns]
+  );
 
   const handleColumnWidth = useCallback((newWidth?: number, dataKey?: any) => {
     if (newWidth === undefined || dataKey === undefined) return;
@@ -280,6 +308,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           renderCell,
           isVisible,
           link,
+          getPath,
           rowClick,
           sortKey,
           type
@@ -314,12 +343,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
                           >
                             {child.title}
                           </HeaderCell>
-                          {customCell || child.link ? (
+                          {child.customCell || child.link ? (
                             <CustomTableCell
                               renderCell={child.renderCell}
                               dataKey={child.field}
                               dataTheme={dataTheme}
                               type={child.type}
+                              path={child.getPath}
                               link={child.link}
                             />
                           ) : (
@@ -357,6 +387,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                         dataKey={field}
                         rowClick={rowClick}
                         type={type}
+                        path={getPath}
                         dataTheme={dataTheme}
                         link={link}
                       />
@@ -376,6 +407,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       ),
     [columns, dataTheme]
   );
+
   return (
     <div className={`qbs-table ${classes.tableContainerClass}`} data-theme={dataTheme}>
       {toolbar && <ToolBar {...toolbarProps} />}
@@ -386,12 +418,14 @@ const QbsTable: React.FC<QbsTableProps> = ({
           dataTheme={dataTheme}
           wordWrap={wordWrap}
           sortColumn={sortColumn}
+          style={{ position: 'relative' }}
           sortType={sortType}
           onSortColumn={handleSortColumn}
           onRowClick={onRowClick}
           tableBodyHeight={tableBodyHeight}
           cellBordered={cellBordered}
           bordered={bordered}
+          columns={columns}
           minHeight={minHeight}
           headerHeight={headerHeight}
           loading={isLoading ?? loading}
@@ -466,7 +500,26 @@ const QbsTable: React.FC<QbsTableProps> = ({
             </Column>
           )}
           {columnsRendered}
-
+          {!actionProps ||
+            (actionProps?.length === 0 && columnToggle && (
+              <Column width={40} fixed="right">
+                <HeaderCell
+                  verticalAlign={findGrouped() ? 'middle' : undefined}
+                  className={` ${classes.headerlClass}`}
+                  dataTheme={dataTheme}
+                >
+                  <ColumToggle
+                    columns={columns}
+                    onToggle={handleToggle}
+                    onReorder={onReorder}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    handleResetColumns={handleResetColumns}
+                  />
+                </HeaderCell>
+                <Cell />
+              </Column>
+            ))}
           {actionProps && actionProps?.length > 0 && (
             <Column width={40} fixed="right">
               <HeaderCell
@@ -496,6 +549,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             </Column>
           )}
         </Table>
+
         <div>
           {pagination && data?.length > 0 && <Pagination paginationProps={paginationProps} />}
         </div>

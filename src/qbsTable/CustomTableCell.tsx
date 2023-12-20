@@ -3,7 +3,7 @@ import React from 'react';
 import Cell from '../Cell';
 import { handleCellFormat } from './utilities/handleFormatCell';
 import MenuDropDown from './utilities/menuDropDown';
-
+import { Link } from 'react-router-dom';
 const CHECKBOX_LINE_HEIGHT = '36px';
 export const CheckCell: React.FC<any> = React.memo(
   ({ rowData, onChange, checkedKeys, dataKey, dataTheme, ...props }) => (
@@ -61,14 +61,18 @@ export const ExpandCell: React.FC<any> = React.memo(
   )
 );
 export const CustomTableCell: React.FC<any> = React.memo(
-  ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, type, link, ...props }) => {
+  ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, type, path, link, ...props }) => {
     return (
       <>
         <Cell {...props} dataKey={dataKey}>
-          {link ? (
+          {link && !path ? (
             <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
               {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
             </a>
+          ) : path ? (
+            <Link to={path?.(rowData) ?? ''} className="qbs-table-row-link">
+              {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
+            </Link>
           ) : (
             <>{renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}</>
           )}

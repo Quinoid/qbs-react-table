@@ -54,11 +54,11 @@ const App = () => {
       title: 'Datde of Birth',
       field: 'date_of_birth',
       resizable: true,
-      isVisible: true,
+      isVisible: false,
       type: 'date',
       customCell: true
     },
-    { title: 'Agde', field: 'age', resizable: true, isVisible: true }
+    { title: 'Agde', field: 'age', resizable: true, isVisible: false }
   ]);
   const handleColumns = data => {
     console.log(data);
@@ -291,14 +291,18 @@ const App = () => {
             id: 24
           }
         ]}
-        actionProps={[
-          {
+        actionProps={
+          [
+            //{
+            /* {
             title: 'Delete',
             action: rowData => console.log(rowData),
             icon: <p>asd</p>,
             toolTip: 'Tooltip'
-          }
-        ]}
+          } */
+            //}
+          ]
+        }
         search
         toolbar
         columnToggle
