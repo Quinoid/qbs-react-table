@@ -291,18 +291,42 @@ const App = () => {
             id: 24
           }
         ]}
-        actionProps={
-          [
-            //{
-            /* {
+        actionProps={[
+          {
             title: 'Delete',
             action: rowData => console.log(rowData),
             icon: <p>asd</p>,
             toolTip: 'Tooltip'
-          } */
-            //}
-          ]
-        }
+          },
+          {
+            title: 'Delete',
+            action: rowData => console.log(rowData),
+            icon: <p>asd</p>,
+            toolTip: 'Tooltip'
+          }
+        ]}
+        customRowStatus={{
+          getIcon: () => (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              class="w-4 h-4"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25a.75.75 0 0 0-1.5 0v4.69L6.03 8.22a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l2.5-2.5a.75.75 0 1 0-1.06-1.06L8.75 9.44V4.75Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          ),
+          toolTip: (
+            <div>
+              <div>sdlkfjslkdfjl skjdf ksl fksjdfsf</div>
+              <div>sdlkfjslkdfjl skjdf ksl fksjdfsf</div>
+            </div>
+          )
+        }}
         search
         toolbar
         columnToggle
@@ -320,7 +344,7 @@ ReactDOM.render(<App />);
 
 <!--end-code-->
 
-# `QbsTable` Component
+<!-- # `QbsTable` Component
 
 `QbsTable` is a versatile and customizable table component designed for multiple use cases. Below are the props it accepts:
 
@@ -661,4 +685,4 @@ Here is an example of how you might use the `QbsTable` component with various pr
 ### Notes
 
 - The `QbsTable` component should be used in accordance with the requirements of your application. Ensure that you pass the correct props for your desired functionality.
-- Please ensure that you have handled the callback functions properly for your specific use cases, as mismanagement of state and props may lead to unexpected behavior of the component.
+- Please ensure that you have handled the callback functions properly for your specific use cases, as mismanagement of state and props may lead to unexpected behavior of the component. -->

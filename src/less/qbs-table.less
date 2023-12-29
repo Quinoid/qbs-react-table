@@ -504,3 +504,27 @@
   vertical-align: center !important;
   display: table-cell;
 }
+.row-status:hover .row-status-tooltip {
+  display: block;
+}
+.row-status-tooltip {
+  display: none;
+  // bottom: 40px;
+  position: fixed;
+  width: auto;
+  height: auto;
+  max-width: 300px;
+  max-height: 200px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d6d8dc;
+  background: #fff;
+  box-shadow: 0px 2px 4px 0px rgba(58, 58, 58, 0.15);
+}
+.row-status-tooltip.bottom-position {
+  top: 100%;
+}
+
+.row-status-tooltip.top-position {
+  bottom: 100%;
+}

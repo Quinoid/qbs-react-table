@@ -101,6 +101,15 @@ export interface QbsTableProps {
   handleResetColumns?: () => void;
   headerHeight?: number;
   tableBodyHeight?: string;
+  customRowStatus?: {
+    getIcon?: (data: any) => ReactElement;
+    onClick?: (rowData: any) => void;
+    hidden?: boolean;
+    toolTip?: string | ReactElement;
+    link?: boolean;
+    field?: boolean;
+    getPath?: (data: any) => string;
+  };
 }
 
 export interface QbsTableToolbarProps {

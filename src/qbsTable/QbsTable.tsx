@@ -7,7 +7,13 @@ import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
-import { ActionCell, CheckCell, CustomTableCell, ExpandCell } from './CustomTableCell';
+import {
+  ActionCell,
+  CheckCell,
+  CustomTableCell,
+  ExpandCell,
+  CustomRowStatus
+} from './CustomTableCell';
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
@@ -63,7 +69,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   handleResetColumns,
   selectedRows,
   headerHeight = 40,
-  tableBodyHeight
+  tableBodyHeight,
+  customRowStatus
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -496,6 +503,24 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 className={`${classes.tableCheckBoxClass}`}
                 onChange={handleCheck}
                 dataTheme={dataTheme}
+              />
+            </Column>
+          )}
+          {customRowStatus && Object.keys(customRowStatus)?.length > 0 && (
+            <Column width={50} align="center" fixed="left">
+              <HeaderCell
+                verticalAlign={findGrouped() ? 'middle' : undefined}
+                className={` ${classes.headerlClass}`}
+              >
+                {' '}
+              </HeaderCell>
+              <CustomRowStatus
+                getIcon={customRowStatus.getIcon}
+                dataKey={customRowStatus.field}
+                rowClick={customRowStatus.onClick}
+                path={customRowStatus.getPath}
+                link={customRowStatus.link}
+                toolTip={customRowStatus.toolTip}
               />
             </Column>
           )}

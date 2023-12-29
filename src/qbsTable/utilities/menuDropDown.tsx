@@ -41,6 +41,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
     setOpenMenu(false);
   };
 
+  
   return (
     <div className="qbs-table-menu-dropdown" ref={menuRef}>
       <button className="qbs-table-dropbtn" onClick={toggleMenu} ref={menuButtonRef}>

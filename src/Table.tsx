@@ -724,7 +724,6 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
         </>
       );
     }
-
     return (
       <Row {...restRowProps} data-depth={depth} style={rowStyles}>
         {renderRowProp ? renderRowProp(rowNode, rowData) : rowNode}
@@ -945,11 +944,14 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
     return scrollbars;
   };
+  const [rowZIndices, setRowZIndices] = useState(Array(data?.length).fill(1));
 
+  const handleParentCallBack = (index: number) => {
+    setRowZIndices(currentZIndices => currentZIndices.map((z, idx) => (idx === index ? 10 : 1)));
+  };
   const renderTableBody = (bodyCells: any[], rowWidth: number) => {
     const height = getTableHeight();
     const bodyHeight = height - headerHeight;
-    console.log(bodyHeight, height);
     const bodyStyles = {
       top: headerHeight,
       height: bodyHeight,
@@ -1016,7 +1018,10 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
             depth: rowData[TREE_DEPTH],
             height: nextRowHeight,
             cellHeight,
-            index: index
+            index: index,
+            dataLength: data?.length,
+            handleParentCallBack: handleParentCallBack,
+            zIndexValue: rowZIndices[index]
           };
 
           top += nextRowHeight;

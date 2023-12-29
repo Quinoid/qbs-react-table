@@ -13,6 +13,9 @@ export interface RowProps extends StandardProps {
   rowRef?: any;
   rowSpan?: number;
   index?: number;
+  dataLength?: number;
+  handleParentCallBack?: (index: number) => void;
+  zIndexValue?: number;
 }
 
 const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) => {
@@ -29,6 +32,9 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
     children,
     rowSpan,
     index,
+    dataLength,
+    handleParentCallBack,
+    zIndexValue,
     ...rest
   } = props;
 
@@ -42,7 +48,6 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
     ...style
   };
   const INDEX = index as number;
-  const styleIndex = 200 - INDEX;
   translateDOMPositionXY?.(styles as CSSStyleDeclaration, 0, top);
 
   return (
@@ -50,8 +55,9 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
       role="row"
       {...rest}
       ref={mergeRefs(rowRef, ref)}
+      onMouseEnter={() => handleParentCallBack?.(INDEX)}
       className={classes}
-      style={{ ...styles, zIndex: styleIndex }}
+      style={{ ...styles, zIndex: zIndexValue }}
     >
       {children}
     </div>

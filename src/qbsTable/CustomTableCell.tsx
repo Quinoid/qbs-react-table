@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
 import Cell from '../Cell';
 import { handleCellFormat } from './utilities/handleFormatCell';
@@ -76,6 +76,65 @@ export const CustomTableCell: React.FC<any> = React.memo(
           ) : (
             <>{renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}</>
           )}
+        </Cell>
+      </>
+    );
+  }
+);
+export const CustomRowStatus: React.FC<any> = React.memo(
+  ({ rowData, toolTip, dataKey, onChange, rowClick, getIcon, path, link, ...props }) => {
+    const [dropdownPosition, setDropdownPosition] = useState('bottom-position');
+    const dropRef = useRef(null);
+    const menuButtonRef = useRef<HTMLElement>(null);
+    const adjustDropdownPosition = () => {
+      if (menuButtonRef.current && dropRef.current) {
+        const inputBoxRect = menuButtonRef.current?.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        const spaceAbove = inputBoxRect.top;
+        const spaceBelow = viewportHeight - inputBoxRect.bottom;
+        if (spaceAbove > spaceBelow) {
+          setDropdownPosition('top-position');
+        } else {
+          setDropdownPosition('bottom-position');
+        }
+      }
+    };
+
+    return (
+      <>
+        <Cell
+          {...props}
+          dataKey={dataKey}
+          style={{ padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          onMouseEnter={() => adjustDropdownPosition()}
+        >
+          <div className="row-status">
+            {!path ? (
+              <span
+                ref={menuButtonRef}
+                style={{ height: 24, width: 24, display: 'flex' }}
+                onClick={() => rowClick?.(rowData)}
+              >
+                {getIcon?.(rowData)}
+              </span>
+            ) : (
+              <Link
+                style={{ height: 24, width: 24 }}
+                to={path?.(rowData) ?? ''}
+                className="qbs-table-row-link"
+              >
+                {getIcon?.(rowData)}
+              </Link>
+            )}
+            <div
+              ref={dropRef}
+              className={`row-status-tooltip ${dropdownPosition}`}
+              style={{ position: 'fixed' }}
+            >
+              {toolTip}
+            </div>
+          </div>
         </Cell>
       </>
     );
