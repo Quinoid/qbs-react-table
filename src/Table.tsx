@@ -3,7 +3,14 @@ import debounce from 'lodash/debounce';
 import flatten from 'lodash/flatten';
 import isFunction from 'lodash/isFunction';
 import PropTypes from 'prop-types';
-import React, { useCallback, useImperativeHandle, useReducer, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useImperativeHandle,
+  useReducer,
+  useRef,
+  useState,
+  useEffect
+} from 'react';
 
 import CellGroup from './CellGroup';
 import {
@@ -935,6 +942,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           key="vertical-scrollbar"
           tableId={id}
           length={height - headerHeight}
+          length={620}
           onScroll={onScrollVertical}
           scrollLength={contentHeight.current}
           ref={scrollbarYRef}
@@ -944,10 +952,13 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
     return scrollbars;
   };
+  console.log(window.innerHeight, 'sdfsfsf');
   const [rowZIndices, setRowZIndices] = useState(Array(data?.length).fill(1));
-
+  useEffect(() => {
+    if (data?.length > 0) setRowZIndices(Array(data?.length).fill(1));
+  }, [data]);
   const handleParentCallBack = (index: number) => {
-    setRowZIndices(currentZIndices => currentZIndices.map((z, idx) => (idx === index ? 10 : 1)));
+    setRowZIndices(currentZIndices => currentZIndices.map((_, idx) => (idx === index ? 10 : 1)));
   };
   const renderTableBody = (bodyCells: any[], rowWidth: number) => {
     const height = getTableHeight();
@@ -1072,7 +1083,10 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
             width: rowWidth,
             height: nextRowHeight,
             cellHeight: nextRowHeight,
-            index: index
+            index: index,
+            dataLength: data?.length,
+            handleParentCallBack: handleParentCallBack,
+            zIndexValue: rowZIndices[index]
           };
           visibleRows.current.push(renderRowData(bodyCells, rowData, rowProps, false));
         }

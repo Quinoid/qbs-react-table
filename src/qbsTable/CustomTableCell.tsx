@@ -82,7 +82,7 @@ export const CustomTableCell: React.FC<any> = React.memo(
   }
 );
 export const CustomRowStatus: React.FC<any> = React.memo(
-  ({ rowData, toolTip, dataKey, onChange, rowClick, getIcon, path, link, ...props }) => {
+  ({ rowData, getToolTip, dataKey, onChange, rowClick, getIcon, path, link, ...props }) => {
     const [dropdownPosition, setDropdownPosition] = useState('bottom-position');
     const dropRef = useRef(null);
     const menuButtonRef = useRef<HTMLElement>(null);
@@ -93,7 +93,7 @@ export const CustomRowStatus: React.FC<any> = React.memo(
 
         const spaceAbove = inputBoxRect.top;
         const spaceBelow = viewportHeight - inputBoxRect.bottom;
-        if (spaceAbove > spaceBelow) {
+        if ((spaceAbove > 90 && spaceBelow < 90) || (spaceAbove <= spaceBelow && spaceAbove > 90)) {
           setDropdownPosition('top-position');
         } else {
           setDropdownPosition('bottom-position');
@@ -132,7 +132,7 @@ export const CustomRowStatus: React.FC<any> = React.memo(
               className={`row-status-tooltip ${dropdownPosition}`}
               style={{ position: 'fixed' }}
             >
-              {toolTip}
+              {getToolTip?.(rowData)}
             </div>
           </div>
         </Cell>

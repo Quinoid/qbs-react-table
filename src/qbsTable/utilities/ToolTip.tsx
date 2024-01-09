@@ -11,10 +11,20 @@ const TooltipComponent: React.FC<any> = ({ title, children }) => {
 
       const spaceAbove = inputBoxRect.top;
       const spaceBelow = viewportHeight - inputBoxRect.bottom;
+      console.log(spaceAbove, spaceBelow);
       if (spaceAbove > spaceBelow) {
-        setDropdownPosition('top-position');
+        if (spaceAbove > 90 && spaceBelow < 120) {
+          setDropdownPosition('top-position');
+        } else {
+          setDropdownPosition('bottom-position');
+        }
       } else {
-        setDropdownPosition('bottom-position');
+        const diff: number = spaceBelow - spaceAbove;
+        if (spaceAbove > 90 && spaceBelow > 90 && diff < 90) {
+          setDropdownPosition('top-position');
+        } else {
+          setDropdownPosition('bottom-position');
+        }
       }
     }
   };
@@ -28,7 +38,7 @@ const TooltipComponent: React.FC<any> = ({ title, children }) => {
       >
         {children}
       </span>
-      <span ref={dropRef} className={`tooltiptext`}>
+      <span ref={dropRef} className={`tooltiptext `}>
         {title}
       </span>
     </div>

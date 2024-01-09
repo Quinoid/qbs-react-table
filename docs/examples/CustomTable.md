@@ -72,7 +72,6 @@ const App = () => {
         columns={columns}
         headerHeight={40}
         tableBodyHeight={`calc(100vh - 300px)`}
-        wordWrap={false}
         isLoading={false}
         dataRowKey="id"
         data={[
@@ -295,39 +294,83 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
-            icon: <p>asd</p>,
+            icon: (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="w-4 h-4"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25a.75.75 0 0 0-1.5 0v4.69L6.03 8.22a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l2.5-2.5a.75.75 0 1 0-1.06-1.06L8.75 9.44V4.75Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            ),
             toolTip: 'Tooltip'
           },
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
-            icon: <p>asd</p>,
+            icon: (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="w-4 h-4"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25a.75.75 0 0 0-1.5 0v4.69L6.03 8.22a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l2.5-2.5a.75.75 0 1 0-1.06-1.06L8.75 9.44V4.75Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            ),
+            toolTip: 'Tooltip'
+          },
+          {
+            title: 'Delete',
+            action: rowData => console.log(rowData),
+            icon: (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="w-4 h-4"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25a.75.75 0 0 0-1.5 0v4.69L6.03 8.22a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l2.5-2.5a.75.75 0 1 0-1.06-1.06L8.75 9.44V4.75Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            ),
+            toolTip: 'Tooltip'
+          },
+
+          {
+            title: 'Delete',
+            action: rowData => console.log(rowData),
+            icon: (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="w-4 h-4"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25a.75.75 0 0 0-1.5 0v4.69L6.03 8.22a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l2.5-2.5a.75.75 0 1 0-1.06-1.06L8.75 9.44V4.75Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            ),
             toolTip: 'Tooltip'
           }
         ]}
-        customRowStatus={{
-          getIcon: () => (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              class="w-4 h-4"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25a.75.75 0 0 0-1.5 0v4.69L6.03 8.22a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l2.5-2.5a.75.75 0 1 0-1.06-1.06L8.75 9.44V4.75Z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          ),
-          toolTip: (
-            <div>
-              <div>sdlkfjslkdfjl skjdf ksl fksjdfsf</div>
-              <div>sdlkfjslkdfjl skjdf ksl fksjdfsf</div>
-            </div>
-          )
-        }}
         search
+        height={550}
         toolbar
         columnToggle
         handleColumnToggle={handleColumns}

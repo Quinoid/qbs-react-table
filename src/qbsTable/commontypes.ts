@@ -105,7 +105,7 @@ export interface QbsTableProps {
     getIcon?: (data: any) => ReactElement;
     onClick?: (rowData: any) => void;
     hidden?: boolean;
-    toolTip?: string | ReactElement;
+    getToolTip?: (rowData: any) => string | ReactElement;
     link?: boolean;
     field?: boolean;
     getPath?: (data: any) => string;

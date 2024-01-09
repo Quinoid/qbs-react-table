@@ -19,9 +19,9 @@ import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
 import { deepEqual } from './utilities/deepEqual';
 import { SettingsIcon } from './utilities/icons';
+// import 'qbs-react-table/dist/css/qbs-react-grid.css';
 
 import '../../dist/css/qbs-react-grid.css';
-
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
 const QbsTable: React.FC<QbsTableProps> = ({
@@ -520,7 +520,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 rowClick={customRowStatus.onClick}
                 path={customRowStatus.getPath}
                 link={customRowStatus.link}
-                toolTip={customRowStatus.toolTip}
+                getToolTip={customRowStatus.getToolTip}
               />
             </Column>
           )}
