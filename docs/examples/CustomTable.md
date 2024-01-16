@@ -372,6 +372,7 @@ const App = () => {
         search
         height={550}
         toolbar
+        loading={true}
         columnToggle
         handleColumnToggle={handleColumns}
       />

@@ -15,8 +15,15 @@ const Loader = React.forwardRef((props: LoaderProps, ref: React.Ref<HTMLDivEleme
   const loadingElement = (
     <div ref={ref} className={addPrefix('loader-wrapper')}>
       <div className={addPrefix('loader')}>
-        <i className={addPrefix('loader-icon')} />
-        <span className={addPrefix('loader-text')}>{locale?.loading}</span>
+        {/* <i className={addPrefix('loader-icon')} /> */}
+        <section className="dots-container">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </section>
+        <span className={addPrefix('loader-text')}>{locale?.loading ?? 'Loading...'}</span>
       </div>
     </div>
   );

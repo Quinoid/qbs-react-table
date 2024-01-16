@@ -9,6 +9,7 @@ interface ColumnToggleProps {
   onReorder: (columns: QbsColumnProps[]) => void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
+  handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   handleResetColumns?: () => void;
 }
 
@@ -18,7 +19,8 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
   onReorder,
   isOpen,
   setIsOpen,
-  handleResetColumns
+  handleResetColumns,
+  handleColumnToggle
 }) => {
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -210,13 +212,23 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
             {handleResetColumns && (
               <>
                 <div className="qbs-table-divider"></div>
-                <div className="qbs-table-popup-item">
+                <div
+                  className="qbs-table-popup-item"
+                  style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
+                >
                   <a
                     className="qbs-table-reset-link"
                     href="#"
                     onClick={() => handleResetColumns?.()}
                   >
                     Reset to default
+                  </a>
+                  <a
+                    className="qbs-table-reset-link"
+                    href="#"
+                    onClick={() => handleColumnToggle?.(columns)}
+                  >
+                    Save
                   </a>
                 </div>
               </>
