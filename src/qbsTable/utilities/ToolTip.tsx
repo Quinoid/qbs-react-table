@@ -1,30 +1,24 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
-const TooltipComponent: React.FC<any> = ({ title, children }) => {
+const TooltipComponent: React.FC<any> = ({ title, children, tableBodyRef }) => {
   const [dropdownPosition, setDropdownPosition] = useState('bottom-position');
   const dropRef = useRef(null);
   const menuButtonRef = useRef<HTMLElement>(null);
   const adjustDropdownPosition = () => {
-    if (menuButtonRef.current && dropRef.current) {
+    if (menuButtonRef.current && tableBodyRef?.current) {
       const inputBoxRect = menuButtonRef.current?.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+      const viewportHeight = tableBodyRef?.current?.offsetHeight ?? window.innerHeight;
+      const tableRect = tableBodyRef.current.getBoundingClientRect();
 
-      const spaceAbove = inputBoxRect.top;
-      const spaceBelow = viewportHeight - inputBoxRect.bottom;
-      console.log(spaceAbove, spaceBelow);
+      // Calculate positions relative to the table
+      const spaceAbove = inputBoxRect.top - tableRect.top;
+      const spaceBelow = tableRect.bottom - inputBoxRect.bottom;
+
+      console.log(viewportHeight, spaceAbove, spaceBelow);
       if (spaceAbove > spaceBelow) {
-        if (spaceAbove > 90 && spaceBelow < 120) {
-          setDropdownPosition('top-position');
-        } else {
-          setDropdownPosition('bottom-position');
-        }
+        setDropdownPosition('top-position');
       } else {
-        const diff: number = spaceBelow - spaceAbove;
-        if (spaceAbove > 90 && spaceBelow > 90 && diff < 90) {
-          setDropdownPosition('top-position');
-        } else {
-          setDropdownPosition('bottom-position');
-        }
+        setDropdownPosition('bottom-position');
       }
     }
   };

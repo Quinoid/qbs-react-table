@@ -265,11 +265,7 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
    * @deprecated use `shouldUpdateScroll` instead
    **/
   onDataUpdated?: (nextData: Row[], scrollTo: (coord: { x: number; y: number }) => void) => void;
-
-  /**
-   * A ref attached to the table body element
-   * @deprecated use `ref` instead (see `ref.current.body`)
-   **/
+  tableBodyRef: React.RefObject<HTMLDivElement>;
   bodyRef?: (ref: HTMLElement) => void;
 }
 
@@ -342,6 +338,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     dataTheme,
     tableBodyHeight,
     columns,
+    tableBodyRef,
     ...rest
   } = props;
 
@@ -408,7 +405,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
   const tableHeaderRef = useRef<HTMLDivElement>(null);
   const affixHeaderWrapperRef = useRef<HTMLDivElement>(null);
   const headerWrapperRef = useRef<HTMLDivElement>(null);
-  const tableBodyRef = useRef<HTMLDivElement>(null);
+  // const tableBodyRef = useRef<HTMLDivElement>(null);
   const wheelWrapperRef = useRef<HTMLDivElement>(null);
   const scrollbarXRef = useRef<ScrollbarInstance>(null);
   const scrollbarYRef = useRef<ScrollbarInstance>(null);

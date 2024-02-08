@@ -80,6 +80,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>();
+  const tableBodyRef = useRef<HTMLDivElement>(null);
 
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
@@ -424,6 +425,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
         <Table
           height={height}
           data={data}
+          tableBodyRef={tableBodyRef}
           dataTheme={dataTheme}
           wordWrap={wordWrap}
           sortColumn={sortColumn}
@@ -572,6 +574,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 )}
               </HeaderCell>
               <ActionCell
+                tableBodyRef={tableBodyRef}
                 actionProps={actionProps}
                 className={`${classes.cellClass} ${classes.actionCellClass}`}
                 handleMenuActions={handleMenuActions}

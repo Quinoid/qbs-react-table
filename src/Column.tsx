@@ -20,7 +20,7 @@ export interface ColumnProps {
   verticalAlign?: 'top' | 'middle' | 'bottom';
 
   /** Column width */
-  width?: number;
+  width?: number | string;
 
   /** Customizable Resize Column width */
   resizable?: boolean;

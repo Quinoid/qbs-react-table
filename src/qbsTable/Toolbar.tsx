@@ -71,48 +71,50 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
         <div className="end-container">{tableHeaderActions}</div>
       </div>
       {advancefilter && <div className="sub-qbs-table-toolbar">{advancefilter}</div>}
-      <div
-        className={`qbs-table-toolbar-sub-container ${
-          checkedKeys && checkedKeys?.length > 0 ? 'selected-row' : ''
-        }`}
-      >
-        {checkedKeys && checkedKeys?.length > 0 ? (
-          <div className="qbs-table-toolbar-sub-container-start">
-            <div className="selected-row">{`Selected Items(${checkedKeys?.length}) `}</div>
-            <div className="selected-row-action">
-              <button className="btn" onClick={() => onSelect?.([])}>
-                Clear
-              </button>
-              {selectedRowActions?.map((actions, index: number) => (
-                <>
-                  {handleHide(actions) && (
-                    <button
-                      key={index.toString()}
-                      className="btn"
-                      disabled={actions.disabled}
-                      onClick={() => actions?.action(checkedKeys)}
-                    >
-                      {actions.actionTitle}
-                    </button>
-                  )}
-                </>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div>
-            {pagination && paginationProps && dataLength > 0 && (
-              <div className="rows-count">
-                {getRowDisplayRange(
-                  paginationProps.total ?? 0,
-                  paginationProps.rowsPerPage ?? 0,
-                  paginationProps.currentPage ?? 0
-                )}
+      {(pagination || (checkedKeys && checkedKeys?.length > 0)) && (
+        <div
+          className={`qbs-table-toolbar-sub-container ${
+            checkedKeys && checkedKeys?.length > 0 ? 'selected-row' : ''
+          }`}
+        >
+          {checkedKeys && checkedKeys?.length > 0 ? (
+            <div className="qbs-table-toolbar-sub-container-start">
+              <div className="selected-row">{`Selected Items(${checkedKeys?.length}) `}</div>
+              <div className="selected-row-action">
+                <button className="btn" onClick={() => onSelect?.([])}>
+                  Clear
+                </button>
+                {selectedRowActions?.map((actions, index: number) => (
+                  <>
+                    {handleHide(actions) && (
+                      <button
+                        key={index.toString()}
+                        className="btn"
+                        disabled={actions.disabled}
+                        onClick={() => actions?.action(checkedKeys)}
+                      >
+                        {actions.actionTitle}
+                      </button>
+                    )}
+                  </>
+                ))}
               </div>
-            )}
-          </div>
-        )}
-      </div>
+            </div>
+          ) : (
+            <div>
+              {pagination && paginationProps && dataLength > 0 && (
+                <div className="rows-count">
+                  {getRowDisplayRange(
+                    paginationProps.total ?? 0,
+                    paginationProps.rowsPerPage ?? 0,
+                    paginationProps.currentPage ?? 0
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

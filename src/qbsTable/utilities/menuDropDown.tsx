@@ -10,9 +10,15 @@ type Props = {
   handleMenuActions?: (slug: ActionProps, rowData?: any) => void;
   rowData?: any;
   dataTheme?: string;
+  tableBodyRef: React.RefObject<HTMLDivElement>;
 };
 
-const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowData }) => {
+const MenuDropDown: React.FC<Props> = ({
+  actionDropDown,
+  handleMenuActions,
+  rowData,
+  tableBodyRef
+}) => {
   const [openMenu, setOpenMenu] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -41,7 +47,6 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
     setOpenMenu(false);
   };
 
-  
   return (
     <div className="qbs-table-menu-dropdown" ref={menuRef}>
       <button className="qbs-table-dropbtn" onClick={toggleMenu} ref={menuButtonRef}>
@@ -63,7 +68,7 @@ const MenuDropDown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowD
                 >
                   <div className={'relative'}>
                     <div className="qbs-table-tooltip">
-                      <TooltipComponent title={item.toolTip}>
+                      <TooltipComponent title={item.toolTip} tableBodyRef={tableBodyRef}>
                         <span>{item.icon}</span>
                       </TooltipComponent>
                     </div>

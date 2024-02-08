@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Cell from '../Cell';
 import { handleCellFormat } from './utilities/handleFormatCell';
 import MenuDropDown from './utilities/menuDropDown';
-import { Link } from 'react-router-dom';
+
 const CHECKBOX_LINE_HEIGHT = '36px';
 export const CheckCell: React.FC<any> = React.memo(
   ({ rowData, onChange, checkedKeys, dataKey, dataTheme, ...props }) => (
@@ -36,16 +37,19 @@ export const CheckCell: React.FC<any> = React.memo(
   )
 );
 export const ActionCell: React.FC<any> = React.memo(
-  ({ rowData, handleMenuActions, dataTheme, actionProps }) => (
-    <div>
-      <MenuDropDown
-        actionDropDown={actionProps}
-        rowData={rowData}
-        dataTheme={dataTheme}
-        handleMenuActions={handleMenuActions}
-      />
-    </div>
-  )
+  ({ rowData, handleMenuActions, dataTheme, actionProps, tableBodyRef }) => {
+    return (
+      <div>
+        <MenuDropDown
+          tableBodyRef={tableBodyRef}
+          actionDropDown={actionProps}
+          rowData={rowData}
+          dataTheme={dataTheme}
+          handleMenuActions={handleMenuActions}
+        />
+      </div>
+    );
+  }
 );
 export const ExpandCell: React.FC<any> = React.memo(
   ({ rowData, dataKey, expandedRowKeys, onChange, ...props }) => (
