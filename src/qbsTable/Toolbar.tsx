@@ -57,15 +57,17 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
     <div className="qbs-table-toolbar-container">
       <div className={`qbs-table-toolbar ${className}`}>
         <div className="start-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {search && (
-            <SearchInput
-              placeholder="Search"
-              handleChange={handleChange}
-              handleSearch={handleSearch}
-              searchValue={searchParam}
-            />
-          )}
-          <div className="qbs-table-primary-filter">{primaryFilter}</div>
+          <div className="qbs-table-primary-filter">
+            {search && (
+              <SearchInput
+                placeholder="Search"
+                handleChange={handleChange}
+                handleSearch={handleSearch}
+                searchValue={searchParam}
+              />
+            )}
+            {primaryFilter}
+          </div>
         </div>
 
         <div className="end-container">{tableHeaderActions}</div>
