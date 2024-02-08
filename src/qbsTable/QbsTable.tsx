@@ -7,7 +7,13 @@ import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
-import { ActionCell, CheckCell, CustomRowStatus, CustomTableCell, ExpandCell } from './CustomTableCell';
+import {
+  ActionCell,
+  CheckCell,
+  CustomRowStatus,
+  CustomTableCell,
+  ExpandCell
+} from './CustomTableCell';
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
@@ -534,8 +540,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     onToggle={handleToggle}
                     onReorder={onReorder}
                     isOpen={isOpen}
+                    tableHeight={height}
                     setIsOpen={setIsOpen}
                     handleResetColumns={handleResetColumns}
+                    handleColumnToggle={handleColumnToggle}
                   />
                 </HeaderCell>
                 <Cell />
@@ -554,6 +562,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                   <ColumToggle
                     columns={columns}
                     onToggle={handleToggle}
+                    tableHeight={height}
                     onReorder={onReorder}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}

@@ -3,17 +3,50 @@ import debounce from 'lodash/debounce';
 import flatten from 'lodash/flatten';
 import isFunction from 'lodash/isFunction';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useImperativeHandle, useReducer, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useReducer,
+  useRef,
+  useState
+} from 'react';
 
 import CellGroup from './CellGroup';
-import { CELL_PADDING_HEIGHT, EXPANDED_KEY, ROW_HEADER_HEIGHT, ROW_HEIGHT, SCROLLBAR_WIDTH, SORT_TYPE, TREE_DEPTH } from './constants';
+import {
+  CELL_PADDING_HEIGHT,
+  EXPANDED_KEY,
+  ROW_HEADER_HEIGHT,
+  ROW_HEIGHT,
+  SCROLLBAR_WIDTH,
+  SORT_TYPE,
+  TREE_DEPTH
+} from './constants';
 import EmptyMessage from './EmptyMessage';
 import Loader from './Loader';
 import MouseArea from './MouseArea';
 import Row, { RowProps } from './Row';
 import Scrollbar, { ScrollbarInstance } from './Scrollbar';
 import TableContext from './TableContext';
-import { findAllParents, findRowKeys, flattenData, isRTL, isSupportTouchEvent, mergeCells, resetLeftForCells, shouldShowRowByExpanded, useAffix, useCellDescriptor, useClassNames, useControlled, usePosition, useScrollListener, useTableDimension, useTableRows, useUpdateEffect } from './utils';
+import {
+  findAllParents,
+  findRowKeys,
+  flattenData,
+  isRTL,
+  isSupportTouchEvent,
+  mergeCells,
+  resetLeftForCells,
+  shouldShowRowByExpanded,
+  useAffix,
+  useCellDescriptor,
+  useClassNames,
+  useControlled,
+  usePosition,
+  useScrollListener,
+  useTableDimension,
+  useTableRows,
+  useUpdateEffect
+} from './utils';
 
 import type {
   StandardProps,
@@ -1076,11 +1109,13 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
         style={bodyStyles}
         onScroll={onScrollBody}
       >
-        <div style={wheelStyles} className={prefix('body-wheel-area')} ref={wheelWrapperRef}>
-          {topHideHeight ? <Row style={topRowStyles} className="virtualized" /> : null}
-          {visibleRows.current}
-          {bottomHideHeight ? <Row style={bottomRowStyles} className="virtualized" /> : null}
-        </div>
+        {!loading && (
+          <div style={wheelStyles} className={prefix('body-wheel-area')} ref={wheelWrapperRef}>
+            {topHideHeight ? <Row style={topRowStyles} className="virtualized" /> : null}
+            {visibleRows.current}
+            {bottomHideHeight ? <Row style={bottomRowStyles} className="virtualized" /> : null}
+          </div>
+        )}
 
         <EmptyMessage
           locale={locale}
@@ -1093,6 +1128,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           locale={locale}
           loadAnimation={loadAnimation}
           loading={loading}
+          colLength={columns?.filter((item: any) => item.isVisible)?.length}
           addPrefix={prefix}
           renderLoading={renderLoading}
         />

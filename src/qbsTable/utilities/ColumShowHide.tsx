@@ -11,6 +11,7 @@ interface ColumnToggleProps {
   isOpen: boolean;
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   handleResetColumns?: () => void;
+  tableHeight?: number;
 }
 
 const ColumnToggle: React.FC<ColumnToggleProps> = ({
@@ -20,7 +21,8 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
   isOpen,
   setIsOpen,
   handleResetColumns,
-  handleColumnToggle
+  handleColumnToggle,
+  tableHeight = 450
 }) => {
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -163,6 +165,10 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
   const handleAvailableColumns = () => {
     return columns.filter(item => !item.isVisible)?.length > 0 ? true : false;
   };
+  const handleColToggle = () => {
+    setIsOpen(false);
+    handleColumnToggle?.(columns);
+  };
   return (
     <div>
       <button onClick={() => setIsOpen(!isOpen)}>
@@ -170,7 +176,11 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
       </button>
       {isOpen && (
         <div>
-          <div className="qbs-table-column-popup" ref={popupRef}>
+          <div
+            className="qbs-table-column-popup"
+            style={{ maxHeight: tableHeight - 40 }}
+            ref={popupRef}
+          >
             <div className="qbs-table-popup-container">
               <div className="qbs-table-popup-item">
                 <div className="qbs-table-popup-label">FIXED COLUMNS</div>
@@ -223,11 +233,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
                   >
                     Reset to default
                   </a>
-                  <a
-                    className="qbs-table-reset-link"
-                    href="#"
-                    onClick={() => handleColumnToggle?.(columns)}
-                  >
+                  <a className="qbs-table-reset-link" href="#" onClick={() => handleColToggle()}>
                     Save
                   </a>
                 </div>
