@@ -1,5 +1,6 @@
-import React from 'react';
 import isPlainObject from 'lodash/isPlainObject';
+import React from 'react';
+
 import getColumnProps, { Column } from './getColumnProps';
 
 function getTotalByColumns(columns: Column | React.ReactNode[]) {

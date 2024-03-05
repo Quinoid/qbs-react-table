@@ -294,6 +294,7 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
+            hidden:true,
             icon: (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -313,6 +314,7 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
+            hidden:true,
             icon: (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -332,6 +334,7 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
+            hidden:true,
             icon: (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -352,6 +355,7 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
+            hide:(row) =>  false,
             icon: (
               <svg
                 xmlns="http://www.w3.org/2000/svg"

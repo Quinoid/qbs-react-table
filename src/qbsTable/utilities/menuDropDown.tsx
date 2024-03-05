@@ -46,12 +46,17 @@ const MenuDropDown: React.FC<Props> = ({
     slug.action?.(rowData);
     setOpenMenu(false);
   };
-
+  const handleShowHideMenu = () => {
+    const result = actionDropDown?.filter((item: any) => !item.hidden && !item?.hide?.(rowData));
+    return result?.length ?? 0;
+  };
   return (
     <div className="qbs-table-menu-dropdown" ref={menuRef}>
-      <button className="qbs-table-dropbtn" onClick={toggleMenu} ref={menuButtonRef}>
-        <ThreeDotIcon />
-      </button>
+      {handleShowHideMenu() > 0 && (
+        <button className="qbs-table-dropbtn" onClick={toggleMenu} ref={menuButtonRef}>
+          <ThreeDotIcon />
+        </button>
+      )}
       {openMenu && (
         <div className={'qbs-table-qbs-table-menu-dropdown-content'}>
           {actionDropDown?.map(item => (

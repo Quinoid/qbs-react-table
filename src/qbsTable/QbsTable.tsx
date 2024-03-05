@@ -7,13 +7,7 @@ import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
-import {
-  ActionCell,
-  CheckCell,
-  CustomRowStatus,
-  CustomTableCell,
-  ExpandCell
-} from './CustomTableCell';
+import { ActionCell, CheckCell, CustomRowStatus, CustomTableCell, ExpandCell } from './CustomTableCell';
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
@@ -321,7 +315,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
           getPath,
           rowClick,
           sortKey,
-          type
+          type,
+          hideLink
         }) => (
           <>
             {isVisible && (
@@ -397,6 +392,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                         dataKey={field}
                         rowClick={rowClick}
                         type={type}
+                        hideLink={hideLink}
                         path={getPath}
                         dataTheme={dataTheme}
                         link={link}

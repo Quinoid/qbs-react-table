@@ -20,6 +20,7 @@ export interface ColumnBase {
   sortKey?: string;
   type?: string;
   getPath?: (data: any) => string;
+  hideLink?:(data:any)=>boolean
 }
 
 export interface QbsColumnProps extends ColumnBase {

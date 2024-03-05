@@ -73,7 +73,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
         <div className="end-container">{tableHeaderActions}</div>
       </div>
       {advancefilter && <div className="sub-qbs-table-toolbar">{advancefilter}</div>}
-      {(pagination || (checkedKeys && checkedKeys?.length > 0)) && (
+      {((pagination && dataLength > 0) || (checkedKeys && checkedKeys?.length > 0)) && (
         <div
           className={`qbs-table-toolbar-sub-container ${
             checkedKeys && checkedKeys?.length > 0 ? 'selected-row' : ''

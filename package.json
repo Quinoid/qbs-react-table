@@ -1,6 +1,6 @@
 {
   "name": "qbs-react-grid",
-  "version": "1.1.34",
+  "version": "1.1.38",
   "description": "A React table component",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

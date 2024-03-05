@@ -65,15 +65,27 @@ export const ExpandCell: React.FC<any> = React.memo(
   )
 );
 export const CustomTableCell: React.FC<any> = React.memo(
-  ({ rowData, renderCell, toolTip, dataKey, onChange, rowClick, type, path, link, ...props }) => {
+  ({
+    rowData,
+    renderCell,
+    toolTip,
+    hideLink,
+    dataKey,
+    onChange,
+    rowClick,
+    type,
+    path,
+    link,
+    ...props
+  }) => {
     return (
       <>
         <Cell {...props} dataKey={dataKey}>
-          {link && !path ? (
+          {link && !path && !hideLink?.(rowData) ? (
             <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
               {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
             </a>
-          ) : path ? (
+          ) : path && !hideLink?.(rowData) ? (
             <Link to={path?.(rowData) ?? ''} className="qbs-table-row-link">
               {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
             </Link>
