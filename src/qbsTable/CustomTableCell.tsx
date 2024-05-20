@@ -37,7 +37,7 @@ export const CheckCell: React.FC<any> = React.memo(
   )
 );
 export const ActionCell: React.FC<any> = React.memo(
-  ({ rowData, handleMenuActions, dataTheme, actionProps, tableBodyRef }) => {
+  ({ rowData, handleMenuActions, dataTheme, actionProps, tableBodyRef, rowIndex }) => {
     return (
       <div>
         <MenuDropDown
@@ -45,6 +45,7 @@ export const ActionCell: React.FC<any> = React.memo(
           actionDropDown={actionProps}
           rowData={rowData}
           dataTheme={dataTheme}
+          rowIndex={rowIndex}
           handleMenuActions={handleMenuActions}
         />
       </div>

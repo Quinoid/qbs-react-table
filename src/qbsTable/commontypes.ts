@@ -20,7 +20,7 @@ export interface ColumnBase {
   sortKey?: string;
   type?: string;
   getPath?: (data: any) => string;
-  hideLink?:(data:any)=>boolean
+  hideLink?: (data: any) => boolean;
 }
 
 export interface QbsColumnProps extends ColumnBase {
@@ -45,7 +45,7 @@ export interface ActionProps {
   icon: React.ReactNode;
   toolTip?: string;
   hidden?: boolean;
-  hide?: (data: any) => boolean;
+  hide?: (data: any,index?:number) => boolean;
 }
 
 export interface QbsTableProps {
@@ -87,6 +87,7 @@ export interface QbsTableProps {
   primaryFilter?: ReactElement | ReactNode;
   advancefilter?: ReactElement | ReactNode;
   tableHeaderActions?: ReactElement | ReactNode;
+  searchPlaceholder?:string
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;
@@ -135,6 +136,7 @@ export interface QbsTableToolbarProps {
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   dataLength: number;
   headerHeight?: number;
+  searchPlaceholder?: string;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;

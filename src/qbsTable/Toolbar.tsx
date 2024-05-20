@@ -20,7 +20,8 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   selectedRowActions,
   checkedKeys,
   onSelect,
-  dataLength
+  dataLength,
+  searchPlaceholder
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
   const [searchParam, setSearchParam] = useState<string | undefined>(searchValue);
@@ -60,7 +61,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           <div className="qbs-table-primary-filter">
             {search && (
               <SearchInput
-                placeholder="Search"
+                placeholder={searchPlaceholder ?? 'Search'}
                 handleChange={handleChange}
                 handleSearch={handleSearch}
                 searchValue={searchParam}

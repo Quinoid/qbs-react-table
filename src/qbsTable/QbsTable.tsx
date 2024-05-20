@@ -7,7 +7,13 @@ import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
-import { ActionCell, CheckCell, CustomRowStatus, CustomTableCell, ExpandCell } from './CustomTableCell';
+import {
+  ActionCell,
+  CheckCell,
+  CustomRowStatus,
+  CustomTableCell,
+  ExpandCell
+} from './CustomTableCell';
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
@@ -66,7 +72,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   selectedRows,
   headerHeight = 40,
   tableBodyHeight,
-  customRowStatus
+  customRowStatus,
+  searchPlaceholder
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -101,7 +108,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
-      let updatedKeys = [...checkedKeys, ...keys];
+      let updatedKeys = [...keys];
       setCheckedKeys(updatedKeys);
       handleChecked(updatedKeys);
     },
@@ -143,7 +150,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
       if (visibleCount > 0 && lastVisibleColumn) {
         updatedColumns.forEach(col => {
-          if (col.field === lastVisibleColumn?.field) {
+          if (col.field === lastVisibleColumn?.field && col.title === lastVisibleColumn.title) {
             col.resizable = false;
           } else {
             col.resizable = true;
@@ -207,7 +214,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
     selectedRowActions: selectedRowActions,
     onSelect: handleClear,
     handleColumnToggle: handleColumnToggle,
-    dataLength: data?.length
+    dataLength: data?.length,
+    searchPlaceholder: searchPlaceholder
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
@@ -237,9 +245,28 @@ const QbsTable: React.FC<QbsTableProps> = ({
       document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
     };
   }, [themeToggle]);
+  // const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
 
+  // const handleExpanded = (rowData: any, dataKey: string) => {
+  //   let open = false;
+  //   const nextExpandedRowKeys: any = [];
+
+  //   expandedRowKeys?.forEach(key => {
+  //     if (key === rowData[dataKey as string]) {
+  //       open = true;
+  //     } else {
+  //       nextExpandedRowKeys.push(key);
+  //     }
+  //   });
+
+  //   if (!open) {
+  //     nextExpandedRowKeys.push(rowData[dataKey]);
+  //   }
+  //   if (nextExpandedRowKeys) setExpandedRowKeys(nextExpandedRowKeys as any);
+  // };
   const handleExpanded = useCallback(
     (rowData: any) => {
+      console.log(rowData);
       const keyValue = dataRowKey as string;
       const key = rowData[keyValue];
 
