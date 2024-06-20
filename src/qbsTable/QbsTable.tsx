@@ -73,7 +73,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   headerHeight = 40,
   tableBodyHeight,
   customRowStatus,
-  searchPlaceholder
+  searchPlaceholder,
+  rowExpandedHeight=517,
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -245,25 +246,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
     };
   }, [themeToggle]);
-  // const [expandedRowKeys, setExpandedRowKeys] = React.useState([]);
 
-  // const handleExpanded = (rowData: any, dataKey: string) => {
-  //   let open = false;
-  //   const nextExpandedRowKeys: any = [];
-
-  //   expandedRowKeys?.forEach(key => {
-  //     if (key === rowData[dataKey as string]) {
-  //       open = true;
-  //     } else {
-  //       nextExpandedRowKeys.push(key);
-  //     }
-  //   });
-
-  //   if (!open) {
-  //     nextExpandedRowKeys.push(rowData[dataKey]);
-  //   }
-  //   if (nextExpandedRowKeys) setExpandedRowKeys(nextExpandedRowKeys as any);
-  // };
   const handleExpanded = useCallback(
     (rowData: any) => {
       console.log(rowData);
@@ -462,6 +445,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           columns={columns}
           minHeight={minHeight}
           headerHeight={headerHeight}
+          rowExpandedHeight={rowExpandedHeight}
           loading={isLoading ?? loading}
           showHeader
           defaultChecked

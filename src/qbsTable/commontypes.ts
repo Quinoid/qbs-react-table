@@ -45,7 +45,7 @@ export interface ActionProps {
   icon: React.ReactNode;
   toolTip?: string;
   hidden?: boolean;
-  hide?: (data: any,index?:number) => boolean;
+  hide?: (data: any, index?: number) => boolean;
 }
 
 export interface QbsTableProps {
@@ -87,7 +87,7 @@ export interface QbsTableProps {
   primaryFilter?: ReactElement | ReactNode;
   advancefilter?: ReactElement | ReactNode;
   tableHeaderActions?: ReactElement | ReactNode;
-  searchPlaceholder?:string
+  searchPlaceholder?: string;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;
@@ -112,6 +112,7 @@ export interface QbsTableProps {
     field?: boolean;
     getPath?: (data: any) => string;
   };
+  rowExpandedHeight?: number;
 }
 
 export interface QbsTableToolbarProps {

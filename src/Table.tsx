@@ -607,7 +607,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
   const renderRowExpanded = useCallback(
     (rowData?: Row) => {
-      const styles = { height: rowExpandedHeight };
+      const styles = { height: rowExpandedHeight, maxWidth: tableRef?.current?.clientWidth };
 
       if (typeof renderRowExpandedProp === 'function') {
         return (
@@ -656,9 +656,8 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       const scrollCells: React.ReactNode[] = [];
       let fixedLeftCellGroupWidth = 0;
       let fixedRightCellGroupWidth = 0;
-
-      for (let i = 0; i < cells.length; i++) {
-        const cell = cells[i];
+      cells?.forEach(cell => {
+        // const cell = cells[i];
         const { fixed, width } = cell.props;
 
         let isFixedStart = fixed === 'left' || fixed === true;
@@ -678,7 +677,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
         } else {
           scrollCells.push(cell);
         }
-      }
+      });
 
       if (hasVerticalScrollbar && fixedRightCellGroupWidth) {
         fixedRightCellGroupWidth += SCROLLBAR_WIDTH;
@@ -729,7 +728,16 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       );
     }
     return (
-      <Row {...restRowProps} data-depth={depth} style={rowStyles}>
+      <Row
+        {...restRowProps}
+        data-depth={depth}
+        style={{
+          ...rowStyles
+          // minHeight: shouldRenderExpandedRow ? 556 : 36
+        }}
+        // zIndexValue={shouldRenderExpandedRow ? 100 : props.zIndexValue}
+        // height={shouldRenderExpandedRow ? 556 : 36}
+      >
         {renderRowProp ? renderRowProp(rowNode, rowData) : rowNode}
       </Row>
     );
