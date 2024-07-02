@@ -223,7 +223,7 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
     rowData?: Row,
     expanded?: boolean
   ) => React.ReactNode;
-
+  tableKey?: string;
   /** Customize what you can do to expand a zone */
   renderRowExpanded?: (rowData?: Row) => React.ReactNode;
 
@@ -339,6 +339,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     tableBodyHeight,
     columns,
     tableBodyRef,
+    tableKey,
     ...rest
   } = props;
 
@@ -347,6 +348,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     merge: mergeCls,
     prefix
   } = useClassNames(classPrefix, typeof classPrefix !== 'undefined');
+  const childTableRef = useRef<HTMLDivElement>(null);
 
   // Use `forceUpdate` to force the component to re-render after manipulating the DOM.
   const [, forceUpdate] = useReducer(x => x + 1, 0);
@@ -494,12 +496,14 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
   const {
     isScrolling,
+    isChildFocused,
     onScrollHorizontal,
     onScrollVertical,
     onScrollBody,
     onScrollTop,
     onScrollLeft,
-    onScrollTo
+    onScrollTo,
+    setIsChildFocused
   } = useScrollListener({
     rtl,
     data: dataProp,
@@ -521,6 +525,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     minScrollY,
     minScrollX,
     scrollX,
+    tableKey,
     setScrollX,
     setScrollY,
     forceUpdatePosition,
@@ -605,13 +610,27 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     ...style
   };
 
+  const handleChildFocus = useCallback(() => {
+    setIsChildFocused(true);
+  }, []);
+
+  const handleChildBlur = useCallback(() => {
+    setIsChildFocused(false);
+  }, []);
+
   const renderRowExpanded = useCallback(
     (rowData?: Row) => {
       const styles = { height: rowExpandedHeight, maxWidth: tableRef?.current?.clientWidth };
 
       if (typeof renderRowExpandedProp === 'function') {
         return (
-          <div className={prefix('row-expanded')} style={styles}>
+          <div
+            ref={childTableRef}
+            className={prefix('row-expanded')}
+            style={styles}
+            onMouseEnter={handleChildFocus}
+            onMouseLeave={handleChildBlur}
+          >
             {renderRowExpandedProp(rowData)}
           </div>
         );
@@ -729,6 +748,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     }
     return (
       <Row
+        rowRef={childTableRef}
         {...restRowProps}
         data-depth={depth}
         style={{
@@ -926,7 +946,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
 
     const scrollbars: React.ReactNode[] = [];
 
-    if (hasHorizontalScrollbar) {
+    if (hasHorizontalScrollbar && !(tableKey === 'parent' && isChildFocused)) {
       scrollbars.push(
         <Scrollbar
           key="scrollbar"
@@ -940,7 +960,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       );
     }
 
-    if (hasVerticalScrollbar) {
+    if (hasVerticalScrollbar && !(tableKey === 'parent' && isChildFocused)) {
       scrollbars.push(
         <Scrollbar
           vertical

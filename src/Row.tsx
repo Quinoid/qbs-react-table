@@ -49,6 +49,7 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
   };
   const INDEX = index as number;
   translateDOMPositionXY?.(styles as CSSStyleDeclaration, 0, top);
+
   return (
     <div
       role="row"

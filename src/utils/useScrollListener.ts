@@ -40,6 +40,7 @@ interface ScrollListenerProps {
   minScrollY: React.MutableRefObject<number>;
   minScrollX: React.MutableRefObject<number>;
   scrollX: React.MutableRefObject<number>;
+  tableKey?: string;
   setScrollX: (v: number) => void;
   setScrollY: (v: number) => void;
   virtualized?: boolean;
@@ -104,13 +105,15 @@ const useScrollListener = (props: ScrollListenerProps) => {
     getTableHeight,
     contentHeight,
     headerHeight,
-    rtl
+    rtl,
+    tableKey
   } = props;
 
   const wheelListener = useRef<ListenerCallback>();
   const touchStartListener = useRef<ListenerCallback>();
   const touchMoveListener = useRef<ListenerCallback>();
   const touchEndListener = useRef<ListenerCallback>();
+  const [isChildFocused, setIsChildFocused] = useState(false);
 
   const [isScrolling, setScrolling] = useState(false);
   const touchX = useRef(0);
@@ -126,7 +129,7 @@ const useScrollListener = (props: ScrollListenerProps) => {
 
   const shouldHandleWheelX = useCallback(
     (delta: number) => {
-      if (delta === 0 || disabledScroll || loading) {
+      if (delta === 0 || disabledScroll || loading || isChildFocused) {
         return false;
       }
 
@@ -137,7 +140,7 @@ const useScrollListener = (props: ScrollListenerProps) => {
 
   const shouldHandleWheelY = useCallback(
     (delta: number) => {
-      if (delta === 0 || disabledScroll || loading || autoHeight) {
+      if (delta === 0 || disabledScroll || loading || autoHeight || isChildFocused) {
         return false;
       }
 
@@ -171,10 +174,10 @@ const useScrollListener = (props: ScrollListenerProps) => {
       momentumOptions?: { duration: number; bezier: string },
       event?: React.MouseEvent
     ) => {
-      if (!tableRef.current) {
+      if (!tableRef.current || (tableKey === 'parent' && isChildFocused)) {
         return;
       }
-
+      // setIsChildFocused(false);
       const nextScrollX = contentWidth.current <= tableWidth.current ? 0 : scrollX.current - deltaX;
       const nextScrollY = scrollY.current - deltaY;
 
@@ -294,6 +297,8 @@ const useScrollListener = (props: ScrollListenerProps) => {
       if (!isTouching.current) {
         return;
       }
+      console.log('handleTouchMove');
+
       const { pageX, pageY } = event.touches[0];
       const deltaX = touchX.current - pageX;
       const deltaY = autoHeight ? 0 : touchY.current - pageY;
@@ -333,6 +338,7 @@ const useScrollListener = (props: ScrollListenerProps) => {
       if (!isTouching.current) {
         return;
       }
+      console.log('handleTouchEnd');
       isTouching.current = false;
       const touchDuration = new Date().getTime() - momentumStartTime.current;
       const absDeltaY = Math.abs(scrollY.current - momentumStartY.current);
@@ -521,12 +527,14 @@ const useScrollListener = (props: ScrollListenerProps) => {
 
   return {
     isScrolling,
+    isChildFocused,
     onScrollHorizontal,
     onScrollVertical,
     onScrollBody,
     onScrollTop,
     onScrollLeft,
-    onScrollTo
+    onScrollTo,
+    setIsChildFocused
   };
 };
 

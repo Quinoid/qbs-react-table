@@ -12,6 +12,9 @@ const App = () => {
     return { cell, tooltip };
   };
   const [expandedRowKeys,setExpandedRowKeys]=React.useState([])
+  const tableBodyRef = React.useRef(null);
+  const childRef = React.useRef(null);
+
   const [columns, setColumns] = React.useState([
     {
       title: 'Name',
@@ -67,7 +70,9 @@ const App = () => {
    const handleRowExpand=()=>{
     return(
       <QbsTable
+      tableKey={'child'}
         dataTheme="light"
+        tableBodyRef={childRef}
         columns={columns}
         headerHeight={40}
         isLoading={false}
@@ -382,8 +387,10 @@ const App = () => {
     <div>
       <QbsTable
         selection={true}
+        tableKey={'parent'}
         dataTheme="light"
         pagination={true}
+        tableBodyRef={tableBodyRef}
         columns={columns}
         rowExpand={true}
         expandedRowKeys={expandedRowKeys}

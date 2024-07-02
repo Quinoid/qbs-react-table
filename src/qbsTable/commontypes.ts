@@ -49,6 +49,8 @@ export interface ActionProps {
 }
 
 export interface QbsTableProps {
+  tableKey?: string;
+
   isLoading?: boolean;
   columns: QbsColumnProps[];
   data: readonly any[];
@@ -113,6 +115,7 @@ export interface QbsTableProps {
     getPath?: (data: any) => string;
   };
   rowExpandedHeight?: number;
+  renderSortIcon?: (sortType?: 'desc' | 'asc') => React.ReactNode;
 }
 
 export interface QbsTableToolbarProps {
