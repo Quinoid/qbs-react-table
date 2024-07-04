@@ -74,9 +74,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
   tableBodyHeight,
   customRowStatus,
   searchPlaceholder,
-  rowExpandedHeight = 517,
+  rowExpandedHeight = 317,
   renderSortIcon,
-  tableKey
+  tableKey = 'parent',
+  autoHeight
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -432,13 +433,14 @@ const QbsTable: React.FC<QbsTableProps> = ({
       {toolbar && <ToolBar {...toolbarProps} />}
       <div className="qbs-table-border-wrap">
         <Table
-          height={height}
+          height={autoHeight ? undefined : height}
           key={tableKey}
           tableKey={tableKey}
           data={data}
           tableBodyRef={tableBodyRef}
           dataTheme={dataTheme}
           wordWrap={wordWrap}
+          autoHeight={autoHeight}
           sortColumn={sortColumn}
           style={{ position: 'relative' }}
           sortType={sortType}

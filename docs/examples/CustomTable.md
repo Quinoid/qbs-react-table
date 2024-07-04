@@ -294,7 +294,8 @@ const App = () => {
           }
          ]} 
         
-        height={500}
+        height={300}
+        rowExpandedHeight={317}
         loading={true}
         columnToggle
         actionProps={[

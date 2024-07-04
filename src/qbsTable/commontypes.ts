@@ -50,7 +50,7 @@ export interface ActionProps {
 
 export interface QbsTableProps {
   tableKey?: string;
-
+  autoHeight?: boolean;
   isLoading?: boolean;
   columns: QbsColumnProps[];
   data: readonly any[];
