@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-
 import { getRowDisplayRange } from './qbsTable/utilities/tablecalc';
+import CustomSelect from './CustomSelect'; // Import the custom select component
 
 type PageProps = {
   paginationProps: {
@@ -13,11 +13,11 @@ type PageProps = {
     onPagination?: (row: number, page: number) => void;
   };
 };
+
 const PageIndex = ({ currentPage, handleFirst, pageCount }) => {
   const renderPageNumbers = () => {
     const pageNumbers: any = [];
 
-    // Add ellipsis if necessary
     if (currentPage > 3) {
       pageNumbers.push('...');
     }
@@ -26,35 +26,29 @@ const PageIndex = ({ currentPage, handleFirst, pageCount }) => {
       pageNumbers.push(i);
     }
 
-    // Add ellipsis if necessary
     if (currentPage < pageCount - 2) {
       pageNumbers.push('...');
     }
 
     return pageNumbers.map((pageNumber: any) => (
-      <>
+      <React.Fragment key={pageNumber}>
         {pageNumber !== '...' ? (
           <span
-            key={pageNumber}
             onClick={() => handleFirst(pageNumber)}
             className={`block-item ${pageNumber === currentPage ? 'selected' : ''}`}
           >
             {pageNumber}
           </span>
         ) : (
-          <span
-            key={pageNumber}
-            className={`block-item ${pageNumber === currentPage ? 'selected' : ''}`}
-          >
-            {pageNumber}
-          </span>
+          <span className="block-item">{pageNumber}</span>
         )}
-      </>
+      </React.Fragment>
     ));
   };
 
   return <>{renderPageNumbers()}</>;
 };
+
 const Pagination: FC<PageProps> = ({ paginationProps }) => {
   const {
     dropOptions = [10, 20, 50, 100, 200],
@@ -66,14 +60,14 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   } = paginationProps;
 
   const [rowsPerPageState, setRowsPerPageState] = useState(rowsPerPage);
-
   const dropData = dropOptions ?? [10, 20, 50, 100, 200];
   const [pageCount, setPageCount] = useState(1);
-  const handleRowsPerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = parseInt(e.target.value);
+
+  const handleRowsPerPage = (value: number) => {
     setRowsPerPageState(value);
     onRowsPerPage?.(value, currentPage);
   };
+
   const handleFirst = (index: number) => {
     onPagination?.(index, currentPage);
   };
@@ -91,26 +85,21 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   const handlePrevious = () => {
     onPagination?.(currentPage - 1, currentPage);
   };
+
   const handleNext = () => {
     onPagination?.(currentPage + 1, currentPage);
   };
 
   return (
     <div
-      className={'qbs-table-custom-pagination'}
+      className="qbs-table-custom-pagination"
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-      <div className="rows-count">
-        {getRowDisplayRange(
-          paginationProps.total ?? 0,
-          paginationProps.rowsPerPage ?? 0,
-          paginationProps.currentPage ?? 0
-        )}
-      </div>
+      <div className="rows-count">{getRowDisplayRange(total, rowsPerPageState, currentPage)}</div>
       <div className="qbs-table-pagination-right-block">
         <button
           className="qbs-table-icon-container"
-          disabled={currentPage == 1}
+          disabled={currentPage === 1}
           onClick={() => handleFirst(1)}
         >
           <svg
@@ -132,7 +121,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         <button
           className="qbs-table-icon-container"
           disabled={currentPage < 2}
-          onClick={() => handlePrevious()}
+          onClick={handlePrevious}
         >
           <svg
             width="20"
@@ -161,7 +150,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         <button
           className="qbs-table-icon-container"
           disabled={currentPage === pageCount || pageCount === 0}
-          onClick={() => handleNext()}
+          onClick={handleNext}
         >
           <svg
             width="20"
@@ -181,8 +170,8 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         </button>
         <button
           className="qbs-table-icon-container"
-          disabled={currentPage == pageCount || pageCount === 0}
-          onClick={() => handleLast()}
+          disabled={currentPage === pageCount || pageCount === 0}
+          onClick={handleLast}
         >
           <svg
             width="20"
@@ -203,19 +192,14 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
       </div>
       <div className="qbs-table-pagination-flexBox">
         <span className="qbs-table-pagination-text">Items per page</span>
-        <select
-          onChange={e => handleRowsPerPage(e)}
-          className="qbs-table-pagination-dropdown"
-          value={rowsPerPageState}
-        >
-          {dropData?.map(item => (
-            <option value={item} key={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+        <CustomSelect
+          options={dropData}
+          selectedValue={rowsPerPageState}
+          onChange={handleRowsPerPage}
+        />
       </div>
     </div>
   );
 };
+
 export default Pagination;
