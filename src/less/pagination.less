@@ -17,8 +17,8 @@
     }
   }
   .qbs-table-pagination-dropdown {
-    width: auto;
-    height: 24px;
+    width: 65px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -115,4 +115,63 @@
 
 .qbs-table-custom-pagination .qbs-table-pagination-dropdown:focus {
   outline: none;
+}
+
+.custom-select {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-select-trigger {
+  padding: 2px 8px;
+  cursor: pointer;
+  border: 1px solid #d6d8dc;
+  border-radius: 4px;
+  min-width: 65px;
+  position: relative;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.custom-select-options {
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px 0 #00000026;
+}
+
+ul.custom-select-options.top {
+  bottom: 100%;
+}
+
+.custom-select-option {
+  padding: 6px 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.custom-select-option:hover,
+.custom-select-option.selected {
+  background-color: #f0f0f0;
+}
+
+.custom-select-trigger:before {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  font-weight: bold;
+  border: solid black;
+  border-width: 0 1px 1px 0;
+  display: inline-block;
+  padding: 3px;
+  vertical-align: middle;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
 }
