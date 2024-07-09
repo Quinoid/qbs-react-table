@@ -8,19 +8,18 @@ type CustomSelectProps = {
 
 const CustomSelect: FC<CustomSelectProps> = ({ options, selectedValue, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState('bottom');
-  const inputRef = useRef<HTMLInputElement>(null);
-  const dropRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
 
   const adjustDropdownPosition = () => {
-    if (inputRef.current && dropRef.current) {
+    if (inputRef.current) {
       const inputBoxRect = inputRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
       const spaceAbove = inputBoxRect.top;
       const spaceBelow = viewportHeight - inputBoxRect.bottom;
-      console.log(spaceAbove, spaceBelow);
+
       if (spaceAbove > spaceBelow) {
         setDropdownPosition('top');
       } else {
@@ -29,7 +28,10 @@ const CustomSelect: FC<CustomSelectProps> = ({ options, selectedValue, onChange 
     }
   };
 
-  const handleToggle = () => setIsOpen(!isOpen);
+  const handleToggle = () => {
+    setIsOpen(prevIsOpen => !prevIsOpen);
+  };
+
   const handleSelect = (value: number) => {
     onChange(value);
     setIsOpen(false);
@@ -42,8 +44,12 @@ const CustomSelect: FC<CustomSelectProps> = ({ options, selectedValue, onChange 
   };
 
   useEffect(() => {
-    window.addEventListener('resize', adjustDropdownPosition);
-    adjustDropdownPosition();
+    if (isOpen) {
+      adjustDropdownPosition();
+      window.addEventListener('resize', adjustDropdownPosition);
+    } else {
+      window.removeEventListener('resize', adjustDropdownPosition);
+    }
 
     return () => {
       window.removeEventListener('resize', adjustDropdownPosition);
@@ -59,7 +65,7 @@ const CustomSelect: FC<CustomSelectProps> = ({ options, selectedValue, onChange 
 
   return (
     <div className="custom-select" ref={ref}>
-      <div className="custom-select-trigger" onClick={handleToggle}>
+      <div className="custom-select-trigger" onClick={handleToggle} ref={inputRef}>
         {selectedValue}
       </div>
       {isOpen && (
