@@ -116,6 +116,9 @@ export interface QbsTableProps {
   };
   rowExpandedHeight?: number;
   renderSortIcon?: (sortType?: 'desc' | 'asc') => React.ReactNode;
+  renderEmpty?: (info: React.ReactNode) => React.ReactNode;
+  emptySubTitle?: string;
+  emptyTitle?: string;
 }
 
 export interface QbsTableToolbarProps {

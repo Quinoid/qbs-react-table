@@ -23,6 +23,7 @@ import { SettingsIcon } from './utilities/icons';
 // import 'qbs-react-table/dist/css/qbs-react-grid.css';
 
 import '../../dist/css/qbs-react-grid.css';
+import NoData from './utilities/empty';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
@@ -77,7 +78,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
   rowExpandedHeight = 317,
   renderSortIcon,
   tableKey = 'parent',
-  autoHeight
+  renderEmpty,
+  autoHeight,
+  emptySubTitle,
+  emptyTitle
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -449,6 +453,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
           tableBodyHeight={tableBodyHeight}
           cellBordered={cellBordered}
           bordered={bordered}
+          renderEmpty={(info: React.ReactNode) =>
+            renderEmpty ? (
+              renderEmpty(info)
+            ) : (
+              <NoData title={emptyTitle ?? 'No Data Found'} subtitle={emptySubTitle} />
+            )
+          }
           columns={columns}
           minHeight={minHeight}
           headerHeight={headerHeight}

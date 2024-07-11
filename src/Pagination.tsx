@@ -1,6 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
+
+import CustomSelect from './customSelect';
 import { getRowDisplayRange } from './qbsTable/utilities/tablecalc';
-import CustomSelect from './CustomSelect'; // Import the custom select component
+
+// Import the custom select component
 
 type PageProps = {
   paginationProps: {
