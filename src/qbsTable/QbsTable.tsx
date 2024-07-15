@@ -7,23 +7,17 @@ import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
-import {
-  ActionCell,
-  CheckCell,
-  CustomRowStatus,
-  CustomTableCell,
-  ExpandCell
-} from './CustomTableCell';
+import { ActionCell, CheckCell, CustomRowStatus, CustomTableCell, ExpandCell } from './CustomTableCell';
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
 import { deepEqual } from './utilities/deepEqual';
+import NoData from './utilities/empty';
 import { SettingsIcon } from './utilities/icons';
 
 // import 'qbs-react-table/dist/css/qbs-react-grid.css';
 
 import '../../dist/css/qbs-react-grid.css';
-import NoData from './utilities/empty';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
@@ -115,6 +109,10 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleCheckAll = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const keys = event.target.checked ? data.map(item => item.id) : [];
+      //  let updatedKeys = [...keys];
+      //  if (checkedKeys) {
+      //    updatedKeys = [...checkedKeys, ...updatedKeys];
+      //  } TODO => previous bug fix removed this section
       let updatedKeys = [...keys];
       setCheckedKeys(updatedKeys);
       handleChecked(updatedKeys);
