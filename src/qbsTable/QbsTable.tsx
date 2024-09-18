@@ -113,7 +113,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       //  if (checkedKeys) {
       //    updatedKeys = [...checkedKeys, ...updatedKeys];
       //  } TODO => previous bug fix removed this section
-      let updatedKeys = [...keys];
+      const updatedKeys = [...keys];
       setCheckedKeys(updatedKeys);
       handleChecked(updatedKeys);
     },
@@ -124,7 +124,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       if (value !== undefined) {
-        let updatedKeys = event.target.checked
+        const updatedKeys = event.target.checked
           ? [...checkedKeys, value]
           : checkedKeys.filter(key => key !== value);
         setCheckedKeys(updatedKeys);
@@ -257,7 +257,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       const keyValue = dataRowKey as string;
       const key = rowData[keyValue];
 
-      let nextExpandedRowKeys = new Set(expandedRowKeys);
+      const nextExpandedRowKeys = new Set(expandedRowKeys);
 
       if (nextExpandedRowKeys.has(key)) {
         nextExpandedRowKeys.delete(key);
