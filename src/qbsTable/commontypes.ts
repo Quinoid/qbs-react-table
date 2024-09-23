@@ -46,6 +46,9 @@ export interface ActionProps {
   toolTip?: string;
   hidden?: boolean;
   hide?: (data: any, index?: number) => boolean;
+  isWarning?: boolean;
+  label?: string;
+  iconName?: string;
 }
 
 export interface QbsTableProps {
@@ -119,6 +122,8 @@ export interface QbsTableProps {
   renderEmpty?: (info: React.ReactNode) => React.ReactNode;
   emptySubTitle?: string;
   emptyTitle?: string;
+  enableTableToggle?: boolean;
+  tableView?: boolean;
 }
 
 export interface QbsTableToolbarProps {
@@ -144,6 +149,10 @@ export interface QbsTableToolbarProps {
   dataLength: number;
   headerHeight?: number;
   searchPlaceholder?: string;
+  tableView?: boolean;
+  enableTableToggle?: boolean;
+  tableViewToggle?: boolean;
+  setTableViewToggle?: (value: boolean) => void;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;

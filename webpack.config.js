@@ -43,18 +43,60 @@ module.exports = () => {
           use: ['babel-loader'],
           exclude: /node_modules/
         },
+
         // {
         //   test: /\.tsx$/,
         //   enforce: 'pre',
         //   use: ['source-map-loader'],
         //   exclude: /node_modules\/qbs-react-grid/
         // },
+        // {
+        //   test: /\.(less|css)$/,
+        //   use: [
+        //     MiniCssExtractPlugin.loader,
+        //     {
+        //       loader: 'css-loader'
+        //     },
+        //     {
+        //       loader: 'less-loader',
+        //       options: {
+        //         sourceMap: true,
+        //         lessOptions: {
+        //           javascriptEnabled: true
+        //         }
+        //       }
+        //     }
+        //   ]
+        // },
         {
-          test: /\.(less|css)$/,
+          test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
+            'css-loader',
             {
-              loader: 'css-loader'
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  config: path.resolve(__dirname, 'postcss.config.js')
+                },
+                sourceMap: true
+              }
+            }
+          ]
+        },
+        {
+          test: /\.less$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  config: path.resolve(__dirname, 'postcss.config.js')
+                },
+                sourceMap: true
+              }
             },
             {
               loader: 'less-loader',

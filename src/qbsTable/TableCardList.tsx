@@ -24,7 +24,6 @@ import { SettingsIcon } from './utilities/icons';
 // import 'qbs-react-table/dist/css/qbs-react-grid.css';
 
 import '../../dist/css/qbs-react-grid.css';
-import CardComponent from './utilities/CardComponent';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
@@ -82,9 +81,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   renderEmpty,
   autoHeight,
   emptySubTitle,
-  emptyTitle,
-  tableView = true,
-  enableTableToggle = false
+  emptyTitle
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -92,8 +89,6 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>();
-  const [tableViewToggle, setTableViewToggle] = useState(tableView);
-
   const tableBodyRef = useRef<HTMLDivElement>(null);
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
@@ -231,10 +226,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
     onSelect: handleClear,
     handleColumnToggle: handleColumnToggle,
     dataLength: data?.length,
-    searchPlaceholder: searchPlaceholder,
-    setTableViewToggle: setTableViewToggle,
-    tableViewToggle: tableViewToggle,
-    enableTableToggle : enableTableToggle
+    searchPlaceholder: searchPlaceholder
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
@@ -448,154 +440,129 @@ const QbsTable: React.FC<QbsTableProps> = ({
     <div className={`qbs-table ${classes.tableContainerClass}`} data-theme={dataTheme}>
       {toolbar && <ToolBar {...toolbarProps} />}
       <div className="qbs-table-border-wrap">
-        {tableViewToggle ? (
-          <Table
-            height={autoHeight ? undefined : height}
-            key={tableKey}
-            tableKey={tableKey}
-            data={data}
-            tableBodyRef={tableBodyRef}
-            dataTheme={dataTheme}
-            wordWrap={wordWrap}
-            autoHeight={autoHeight}
-            sortColumn={sortColumn}
-            style={{ position: 'relative' }}
-            sortType={sortType}
-            onSortColumn={handleSortColumn}
-            onRowClick={onRowClick}
-            tableBodyHeight={tableBodyHeight}
-            cellBordered={cellBordered}
-            bordered={bordered}
-            renderEmpty={(info: React.ReactNode) =>
-              renderEmpty ? (
-                renderEmpty(info)
-              ) : (
-                <NoData title={emptyTitle ?? 'No Data Found'} subtitle={emptySubTitle} />
-              )
-            }
-            columns={columns}
-            minHeight={minHeight}
-            headerHeight={headerHeight}
-            rowExpandedHeight={rowExpandedHeight}
-            loading={isLoading ?? loading}
-            showHeader
-            defaultChecked
-            expandedRowKeys={expandedRowKeys}
-            onExpandChange={onExpandChange}
-            rowKey={dataRowKey ?? 'id'}
-            defaultExpandAllRows={defaultExpandAllRows}
-            shouldUpdateScroll={shouldUpdateScroll}
-            renderRowExpanded={rowData => {
-              return handleRowExpanded?.(rowData);
-            }}
-          >
-            {rowExpand && (
-              <Column width={70} align="center" fixed="left">
-                <HeaderCell
-                  verticalAlign={findGrouped() ? 'middle' : undefined}
-                  className={` ${classes.headerlClass}`}
-                  renderSortIcon={renderSortIcon}
+        <Table
+          height={autoHeight ? undefined : height}
+          key={tableKey}
+          tableKey={tableKey}
+          data={data}
+          tableBodyRef={tableBodyRef}
+          dataTheme={dataTheme}
+          wordWrap={wordWrap}
+          autoHeight={autoHeight}
+          sortColumn={sortColumn}
+          style={{ position: 'relative' }}
+          sortType={sortType}
+          onSortColumn={handleSortColumn}
+          onRowClick={onRowClick}
+          tableBodyHeight={tableBodyHeight}
+          cellBordered={cellBordered}
+          bordered={bordered}
+          renderEmpty={(info: React.ReactNode) =>
+            renderEmpty ? (
+              renderEmpty(info)
+            ) : (
+              <NoData title={emptyTitle ?? 'No Data Found'} subtitle={emptySubTitle} />
+            )
+          }
+          columns={columns}
+          minHeight={minHeight}
+          headerHeight={headerHeight}
+          rowExpandedHeight={rowExpandedHeight}
+          loading={isLoading ?? loading}
+          showHeader
+          defaultChecked
+          expandedRowKeys={expandedRowKeys}
+          onExpandChange={onExpandChange}
+          rowKey={dataRowKey ?? 'id'}
+          defaultExpandAllRows={defaultExpandAllRows}
+          shouldUpdateScroll={shouldUpdateScroll}
+          renderRowExpanded={rowData => {
+            return handleRowExpanded?.(rowData);
+          }}
+        >
+          {rowExpand && (
+            <Column width={70} align="center" fixed="left">
+              <HeaderCell
+                verticalAlign={findGrouped() ? 'middle' : undefined}
+                className={` ${classes.headerlClass}`}
+                renderSortIcon={renderSortIcon}
+              >
+                #
+              </HeaderCell>
+              <ExpandCell
+                dataKey={dataRowKey}
+                expandedRowKeys={expandedRowKeys}
+                onChange={handleExpanded}
+              />
+            </Column>
+          )}
+          {selection && (
+            <Column width={50} align="center" fixed="left">
+              <HeaderCell
+                style={{ padding: 0 }}
+                verticalAlign={findGrouped() ? 'middle' : undefined}
+                dataTheme={dataTheme}
+                renderSortIcon={renderSortIcon}
+                className={`qbs-checkbox-border-none ${classes.headerlClass}`}
+              >
+                <div
+                  style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}
+                  className={`qbs-table-checkbox ${classes.selectionCell}`}
                 >
-                  #
-                </HeaderCell>
-                <ExpandCell
-                  dataKey={dataRowKey}
-                  expandedRowKeys={expandedRowKeys}
-                  onChange={handleExpanded}
-                />
-              </Column>
-            )}
-            {selection && (
-              <Column width={50} align="center" fixed="left">
-                <HeaderCell
-                  style={{ padding: 0 }}
-                  verticalAlign={findGrouped() ? 'middle' : undefined}
-                  dataTheme={dataTheme}
-                  renderSortIcon={renderSortIcon}
-                  className={`qbs-checkbox-border-none ${classes.headerlClass}`}
-                >
-                  <div
-                    style={{ lineHeight: CHECKBOX_LINE_HEIGHT }}
-                    className={`qbs-table-checkbox ${classes.selectionCell}`}
-                  >
-                    <input
-                      type="checkbox"
-                      onChange={handleCheckAll}
-                      id={'checkbox-all'}
-                      className={`qbs-table-checkbox-input ${classes.tableCheckBoxClass}`}
-                      checked={
-                        data?.length > 0 && data.every(item => checkedKeys?.includes(item.id))
-                      }
-                    />
-                    <label htmlFor={'checkbox-all'}>
-                      <svg
-                        width="8"
-                        height="6"
-                        viewBox="0 0 8 6"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 3.21739L2.89883 6L8 1.06994L6.89494 0L2.89883 3.86768L1.09728 2.14745L0 3.21739Z"
-                          fill="white"
-                        />
-                      </svg>
-                    </label>
-                  </div>
-                </HeaderCell>
-                <CheckCell
-                  dataKey="id"
-                  checkedKeys={checkedKeys}
-                  className={`${classes.tableCheckBoxClass}`}
-                  onChange={handleCheck}
-                  dataTheme={dataTheme}
-                />
-              </Column>
-            )}
-            {customRowStatus && Object.keys(customRowStatus)?.length > 0 && (
-              <Column width={50} align="center" fixed="left">
-                <HeaderCell
-                  verticalAlign={findGrouped() ? 'middle' : undefined}
-                  className={` ${classes.headerlClass}`}
-                  renderSortIcon={renderSortIcon}
-                >
-                  {' '}
-                </HeaderCell>
-                <CustomRowStatus
-                  getIcon={customRowStatus.getIcon}
-                  dataKey={customRowStatus.field}
-                  rowClick={customRowStatus.onClick}
-                  path={customRowStatus.getPath}
-                  link={customRowStatus.link}
-                  getToolTip={customRowStatus.getToolTip}
-                />
-              </Column>
-            )}
-            {columnsRendered}
-            {!actionProps ||
-              (actionProps?.length === 0 && columnToggle && (
-                <Column width={40} fixed="right">
-                  <HeaderCell
-                    verticalAlign={findGrouped() ? 'middle' : undefined}
-                    className={` ${classes.headerlClass}`}
-                    dataTheme={dataTheme}
-                    renderSortIcon={renderSortIcon}
-                  >
-                    <ColumToggle
-                      columns={columns}
-                      onToggle={handleToggle}
-                      onReorder={onReorder}
-                      isOpen={isOpen}
-                      tableHeight={height}
-                      setIsOpen={setIsOpen}
-                      handleResetColumns={handleResetColumns}
-                      handleColumnToggle={handleColumnToggle}
-                    />
-                  </HeaderCell>
-                  <Cell />
-                </Column>
-              ))}
-            {actionProps && actionProps?.length > 0 && (
+                  <input
+                    type="checkbox"
+                    onChange={handleCheckAll}
+                    id={'checkbox-all'}
+                    className={`qbs-table-checkbox-input ${classes.tableCheckBoxClass}`}
+                    checked={data?.length > 0 && data.every(item => checkedKeys?.includes(item.id))}
+                  />
+                  <label htmlFor={'checkbox-all'}>
+                    <svg
+                      width="8"
+                      height="6"
+                      viewBox="0 0 8 6"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 3.21739L2.89883 6L8 1.06994L6.89494 0L2.89883 3.86768L1.09728 2.14745L0 3.21739Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </label>
+                </div>
+              </HeaderCell>
+              <CheckCell
+                dataKey="id"
+                checkedKeys={checkedKeys}
+                className={`${classes.tableCheckBoxClass}`}
+                onChange={handleCheck}
+                dataTheme={dataTheme}
+              />
+            </Column>
+          )}
+          {customRowStatus && Object.keys(customRowStatus)?.length > 0 && (
+            <Column width={50} align="center" fixed="left">
+              <HeaderCell
+                verticalAlign={findGrouped() ? 'middle' : undefined}
+                className={` ${classes.headerlClass}`}
+                renderSortIcon={renderSortIcon}
+              >
+                {' '}
+              </HeaderCell>
+              <CustomRowStatus
+                getIcon={customRowStatus.getIcon}
+                dataKey={customRowStatus.field}
+                rowClick={customRowStatus.onClick}
+                path={customRowStatus.getPath}
+                link={customRowStatus.link}
+                getToolTip={customRowStatus.getToolTip}
+              />
+            </Column>
+          )}
+          {columnsRendered}
+          {!actionProps ||
+            (actionProps?.length === 0 && columnToggle && (
               <Column width={40} fixed="right">
                 <HeaderCell
                   verticalAlign={findGrouped() ? 'middle' : undefined}
@@ -603,45 +570,54 @@ const QbsTable: React.FC<QbsTableProps> = ({
                   dataTheme={dataTheme}
                   renderSortIcon={renderSortIcon}
                 >
-                  {!columnToggle ? (
-                    <SettingsIcon />
-                  ) : (
-                    <ColumToggle
-                      columns={columns}
-                      onToggle={handleToggle}
-                      tableHeight={height}
-                      onReorder={onReorder}
-                      isOpen={isOpen}
-                      setIsOpen={setIsOpen}
-                      handleResetColumns={handleResetColumns}
-                      handleColumnToggle={handleColumnToggle}
-                    />
-                  )}
+                  <ColumToggle
+                    columns={columns}
+                    onToggle={handleToggle}
+                    onReorder={onReorder}
+                    isOpen={isOpen}
+                    tableHeight={height}
+                    setIsOpen={setIsOpen}
+                    handleResetColumns={handleResetColumns}
+                    handleColumnToggle={handleColumnToggle}
+                  />
                 </HeaderCell>
-                <ActionCell
-                  tableBodyRef={tableBodyRef}
-                  actionProps={actionProps}
-                  className={`${classes.cellClass} ${classes.actionCellClass}`}
-                  handleMenuActions={handleMenuActions}
-                  dataTheme={dataTheme}
-                />
+                <Cell />
               </Column>
-            )}
-          </Table>
-        ) : (
-          <div className=" p-2">
-            {data.map((items: any) => (
-              <div className="flex flex-col gap-3 p-2" key={items?.id}>
-                <CardComponent
-                  data={items}
-                  columns={columns}
-                  tableBodyRef={tableBodyRef}
-                  actionProps={actionProps}
-                />
-              </div>
             ))}
-          </div>
-        )}
+          {actionProps && actionProps?.length > 0 && (
+            <Column width={40} fixed="right">
+              <HeaderCell
+                verticalAlign={findGrouped() ? 'middle' : undefined}
+                className={` ${classes.headerlClass}`}
+                dataTheme={dataTheme}
+                renderSortIcon={renderSortIcon}
+              >
+                {!columnToggle ? (
+                  <SettingsIcon />
+                ) : (
+                  <ColumToggle
+                    columns={columns}
+                    onToggle={handleToggle}
+                    tableHeight={height}
+                    onReorder={onReorder}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    handleResetColumns={handleResetColumns}
+                    handleColumnToggle={handleColumnToggle}
+                  />
+                )}
+              </HeaderCell>
+              <ActionCell
+                tableBodyRef={tableBodyRef}
+                actionProps={actionProps}
+                className={`${classes.cellClass} ${classes.actionCellClass}`}
+                handleMenuActions={handleMenuActions}
+                dataTheme={dataTheme}
+              />
+            </Column>
+          )}
+        </Table>
+
         <div>
           {pagination && data?.length > 0 && <Pagination paginationProps={paginationProps} />}
         </div>

@@ -83,8 +83,8 @@ const App = () => {
             email: 'johndoe@example.com',
             city: 'New York',
             country: 'United States',
-            date_of_birth: '11/28/2023',
-            age: 31,
+            date_of_birth: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
+            age: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             id: '1'
           },
           {
@@ -92,11 +92,29 @@ const App = () => {
             email: 'davidjohnson@example.com',
             city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             country: 'United Kingdom',
-            date_of_birth: '1/30/2021',
+            date_of_birth: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
             age: 29,
             id: '2'
           },
           {
+            name: 'Emily Brown',
+            email: 'emilybrown@example.com',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
+            country: 'Australia',
+            date_of_birth: '30/1/2023',
+            age: 33,
+            id: '3'
+          },
+            {
+            name: 'Emily Brown',
+            email: 'emilybrown@example.com',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
+            country: 'Australia',
+            date_of_birth: '30/1/2023',
+            age: 33,
+            id: '3'
+          },
+            {
             name: 'Emily Brown',
             email: 'emilybrown@example.com',
             city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
@@ -409,7 +427,7 @@ const App = () => {
             city: 'New York',
             country: 'United States',
             date_of_birth: '11/28/2023',
-            age: 31,
+            age: 'In publishing and graphic design , Lorem ipsum is a placeholder text commonly used to demonstrate the',
             id: '1'
           },
           {
@@ -420,6 +438,33 @@ const App = () => {
             date_of_birth: '1/30/2021',
             age: 29,
             id: '2'
+          },
+          {
+            name: 'Emily Brown',
+            email: 'emilybrown@example.com',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
+            country: 'Australia',
+            date_of_birth: '30/1/2023',
+            age: 33,
+            id: '3'
+          },
+          {
+            name: 'Emily Brown',
+            email: 'emilybrown@example.com',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
+            country: 'Australia',
+            date_of_birth: '30/1/2023',
+            age: 33,
+            id: '3'
+          },
+          {
+            name: 'Emily Brown',
+            email: 'emilybrown@example.com',
+            city: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the',
+            country: 'Australia',
+            date_of_birth: '30/1/2023',
+            age: 33,
+            id: '3'
           },
           {
             name: 'Emily Brown',

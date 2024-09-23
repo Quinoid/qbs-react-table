@@ -4,6 +4,8 @@ import { QbsTableToolbarProps } from './commontypes';
 import debounce from './utilities/debounce';
 import SearchInput from './utilities/SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
+import TooltipComponent from './utilities/ToolTip';
+import { CardIcon, TableIcon } from './utilities/icons';
 
 const ToolBar: React.FC<QbsTableToolbarProps> = ({
   pagination,
@@ -21,7 +23,10 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   checkedKeys,
   onSelect,
   dataLength,
-  searchPlaceholder
+  searchPlaceholder,
+  tableViewToggle,
+  setTableViewToggle,
+  enableTableToggle = false
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
   const [searchParam, setSearchParam] = useState<string | undefined>(searchValue);
@@ -71,7 +76,22 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           </div>
         </div>
 
-        <div className="end-container">{tableHeaderActions}</div>
+        <div className="end-container">
+          {tableHeaderActions}
+          <div
+            className=" pr-1 cursor-pointer"
+            onClick={() => setTableViewToggle?.(!tableViewToggle)}
+          >
+            {!enableTableToggle && (
+              <TooltipComponent
+                enabled
+                title={tableViewToggle ? 'Switch to Card View' : 'Switch to Table View'}
+              >
+                {!tableViewToggle ? <CardIcon /> : <TableIcon />}
+              </TooltipComponent>
+            )}
+          </div>
+        </div>
       </div>
       {advancefilter && <div className="sub-qbs-table-toolbar">{advancefilter}</div>}
       {((pagination && dataLength > 0) || (checkedKeys && checkedKeys?.length > 0)) && (
