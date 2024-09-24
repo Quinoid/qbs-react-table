@@ -9,6 +9,7 @@ export interface ColumnBase {
   field: string;
   sortable?: boolean;
   resizable?: boolean;
+  colSpan?: number;
   fixed?: boolean;
   align?: 'left' | 'right' | 'center';
   colWidth?: number;
@@ -124,6 +125,8 @@ export interface QbsTableProps {
   emptyTitle?: string;
   enableTableToggle?: boolean;
   tableView?: boolean;
+  cardColumLimit?: number;
+  childDetailHeading?: string;
 }
 
 export interface QbsTableToolbarProps {

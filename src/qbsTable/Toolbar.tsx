@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { QbsTableToolbarProps } from './commontypes';
 import debounce from './utilities/debounce';
+import { CardIcon, TableIcon } from './utilities/icons';
 import SearchInput from './utilities/SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
 import TooltipComponent from './utilities/ToolTip';
-import { CardIcon, TableIcon } from './utilities/icons';
 
 const ToolBar: React.FC<QbsTableToolbarProps> = ({
   pagination,
@@ -30,6 +30,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
   const [searchParam, setSearchParam] = useState<string | undefined>(searchValue);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const handleSearch = useCallback(
     (e?: string) => {
       if (debouncedOnSearch) {
@@ -60,7 +61,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
     }
   };
   return (
-    <div className="qbs-table-toolbar-container">
+    <div className="qbs-table-toolbar-container" ref={toolbarRef}>
       <div className={`qbs-table-toolbar ${className}`}>
         <div className="start-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <div className="qbs-table-primary-filter">
@@ -76,15 +77,15 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           </div>
         </div>
 
-        <div className="end-container">
+        <div className="end-container flex items-center">
           {tableHeaderActions}
           <div
-            className=" pr-1 cursor-pointer"
+            className=" pr-1 cursor-pointer relative"
             onClick={() => setTableViewToggle?.(!tableViewToggle)}
           >
-            {!enableTableToggle && (
+            {enableTableToggle && (
               <TooltipComponent
-                enabled
+                tableBodyRef={toolbarRef}
                 title={tableViewToggle ? 'Switch to Card View' : 'Switch to Table View'}
               >
                 {!tableViewToggle ? <CardIcon /> : <TableIcon />}

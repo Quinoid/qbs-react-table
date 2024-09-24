@@ -15,6 +15,7 @@ import {
   ExpandCell
 } from './CustomTableCell';
 import ToolBar from './Toolbar';
+import CardComponent from './utilities/CardComponent';
 import ColumToggle from './utilities/ColumShowHide';
 import debounce from './utilities/debounce';
 import { deepEqual } from './utilities/deepEqual';
@@ -24,7 +25,7 @@ import { SettingsIcon } from './utilities/icons';
 // import 'qbs-react-table/dist/css/qbs-react-grid.css';
 
 import '../../dist/css/qbs-react-grid.css';
-import CardComponent from './utilities/CardComponent';
+import CardLoader from './utilities/CardLoader';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
@@ -84,7 +85,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   emptySubTitle,
   emptyTitle,
   tableView = true,
-  enableTableToggle = false
+  enableTableToggle = true,
+  cardColumLimit = 5,
+  childDetailHeading = ''
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -234,7 +237,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
     searchPlaceholder: searchPlaceholder,
     setTableViewToggle: setTableViewToggle,
     tableViewToggle: tableViewToggle,
-    enableTableToggle : enableTableToggle
+    enableTableToggle: enableTableToggle
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
@@ -629,17 +632,32 @@ const QbsTable: React.FC<QbsTableProps> = ({
             )}
           </Table>
         ) : (
-          <div className=" p-2">
-            {data.map((items: any) => (
-              <div className="flex flex-col gap-3 p-2" key={items?.id}>
-                <CardComponent
-                  data={items}
-                  columns={columns}
-                  tableBodyRef={tableBodyRef}
-                  actionProps={actionProps}
-                />
+          <div
+            className=" p-2"
+            style={{
+              overflow: !tableViewToggle ? 'auto' : '',
+              maxHeight: !tableViewToggle ? height : '',
+              minHeight: !tableViewToggle ? height : ''
+            }}
+          >
+            {isLoading ? (
+              <div className="flex flex-col gap-2 p-2">
+                <CardLoader />
               </div>
-            ))}
+            ) : (
+              data.map((items: any) => (
+                <div className="flex flex-col gap-3 p-2" key={items?.id}>
+                  <CardComponent
+                    data={items}
+                    cardColumLimit={cardColumLimit}
+                    childDetailHeading={childDetailHeading}
+                    columns={columns}
+                    tableBodyRef={tableBodyRef}
+                    actionProps={actionProps}
+                  />
+                </div>
+              ))
+            )}
           </div>
         )}
         <div>

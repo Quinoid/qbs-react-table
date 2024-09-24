@@ -9,14 +9,14 @@ export const CustomTableCell: React.FC<any> = React.memo(
         {link && !path && !hideLink?.(rowData) ? (
           <a
             onClick={() => rowClick?.(rowData)}
-            className={`qbs-table-row-link ${!viewMore ? 'line-clamp-1' : ''}`}
+            className={`qbs-table-row-link no-underline   ${!viewMore ? 'line-clamp-1' : ''}`}
           >
             {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
           </a>
         ) : path && !hideLink?.(rowData) ? (
           <Link
             to={path?.(rowData) ?? ''}
-            className={`qbs-table-row-link ${!viewMore ? 'line-clamp-1' : ''}`}
+            className={`qbs-table-row-link no-underline ${!viewMore ? 'line-clamp-1' : ''}`}
           >
             {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
           </Link>

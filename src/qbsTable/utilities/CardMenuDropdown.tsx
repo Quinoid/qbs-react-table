@@ -3,6 +3,7 @@ import React from 'react';
 
 import { ActionProps } from '../commontypes';
 import { ThreeDotIcon } from './icons';
+import TooltipComponent from './ToolTip';
 
 type Props = {
   iconName: string;
@@ -72,25 +73,26 @@ const CardMenuDropdown: React.FC<Props> = ({ actionDropDown, handleMenuActions, 
     handleClose();
   };
 
-  console.log(menuPositionStyles);
   return (
     <div className="dropdown text-black dark:text-white dark:bg-[#424242] bg-white" ref={menuRef}>
       <button className="dropdown-toggle" onClick={toggleMenu} ref={menuButtonRef}>
-        <ThreeDotIcon />
+        <TooltipComponent title="Actions" enabled={false} ref={menuButtonRef}>
+          <ThreeDotIcon />
+        </TooltipComponent>
       </button>
       {openMenu && (
         <div
-          className=" qbs-card-dropdown rounded absolute right-0 mt-2 w-56 z-10 shadow-modalShadow bg-white dark:bg-[#424242] dark:text-white"
+          className=" qbs-card-dropdown rounded absolute right-0 mt-2 w-auto min-w-11 z-10 shadow-modalShadow bg-white dark:bg-[#424242] dark:text-white"
           style={menuPositionStyles}
         >
-          <div className="qbs-card-dropdown-menu px-2 bg-white rounded w-full border border-grey-border shadow-menudropdown dark:bg-[#424242] dark:text-white">
+          <div className="qbs-card-dropdown-menu px-2 bg-white rounded w-full border border-grey-border shadow-lg shadow-menudropdown dark:bg-[#424242] dark:text-white">
             {actionDropDown?.map(
               item =>
                 !item.hidden && (
                   <a
                     key={item.title}
                     href="#/"
-                    className={'px-2  hover:bg-background '}
+                    className={'px-1  hover:bg-background no-underline whitespace-nowrap '}
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -98,12 +100,12 @@ const CardMenuDropdown: React.FC<Props> = ({ actionDropDown, handleMenuActions, 
                     }}
                   >
                     <div
-                      className={` qbs-card-dropdown-menu-item ${
-                        item.isWarning ? 'text-error-light' : 'text-black dark:text-white'
+                      className={` qbs-card-dropdown-menu-item no-underline ${
+                        item.isWarning ? 'text-error-light' : ' text-black/70  dark:text-white'
                       } text-xxs flex items-center w-full tracking-[0.24px] font-medium `}
                     >
                       {item?.icon && <>{item.icon}</>}
-                      <span className="pl-1.5">{item.title}</span>
+                      <span className="pl-1.5 no-underline text-sm ">{item.title}</span>
                     </div>
                   </a>
                 )

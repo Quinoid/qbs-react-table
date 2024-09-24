@@ -7,14 +7,11 @@ const TooltipComponent: React.FC<any> = ({ title, children, tableBodyRef }) => {
   const adjustDropdownPosition = () => {
     if (menuButtonRef.current && tableBodyRef?.current) {
       const inputBoxRect = menuButtonRef.current?.getBoundingClientRect();
-      const viewportHeight = tableBodyRef?.current?.offsetHeight ?? window.innerHeight;
       const tableRect = tableBodyRef.current.getBoundingClientRect();
-
       // Calculate positions relative to the table
       const spaceAbove = inputBoxRect.top - tableRect.top;
       const spaceBelow = tableRect.bottom - inputBoxRect.bottom;
 
-      console.log(viewportHeight, spaceAbove, spaceBelow);
       if (spaceAbove > spaceBelow) {
         setDropdownPosition('top-position');
       } else {
@@ -32,7 +29,7 @@ const TooltipComponent: React.FC<any> = ({ title, children, tableBodyRef }) => {
       >
         {children}
       </span>
-      <span ref={dropRef} className={`tooltiptext `}>
+      <span ref={dropRef} className={'tooltiptext'}>
         {title}
       </span>
     </div>
