@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 
 import { QbsTableToolbarProps } from './commontypes';
 import debounce from './utilities/debounce';
-import { CardIcon, TableIcon } from './utilities/icons';
+import { CardView, TableView } from './utilities/icons';
 import SearchInput from './utilities/SearchInput';
 import { getRowDisplayRange } from './utilities/tablecalc';
 import TooltipComponent from './utilities/ToolTip';
@@ -79,17 +79,23 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
 
         <div className="end-container flex items-center">
           {tableHeaderActions}
-          <div
-            className=" pr-1 cursor-pointer relative"
-            onClick={() => setTableViewToggle?.(!tableViewToggle)}
-          >
-            {enableTableToggle && (
-              <TooltipComponent
-                tableBodyRef={toolbarRef}
-                title={tableViewToggle ? 'Switch to Card View' : 'Switch to Table View'}
-              >
-                {!tableViewToggle ? <CardIcon /> : <TableIcon />}
-              </TooltipComponent>
+          <div className=" pr-1 cursor-pointer relative  ">
+            {!enableTableToggle && (
+              <div className="qbs-table-top-icons flex gap-2">
+                <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Table View'}>
+                  <div onClick={() => setTableViewToggle?.(true)}>
+                    <TableView className={`${tableViewToggle ? 'active' : ''}`} />
+                  </div>
+                </TooltipComponent>
+
+                <div className="border-r h-4 w-1"></div>
+
+                <div onClick={() => setTableViewToggle?.(false)}>
+                  <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Card View'}>
+                    <CardView className={`${!tableViewToggle ? 'active' : ''}`} />
+                  </TooltipComponent>
+                </div>
+              </div>
             )}
           </div>
         </div>
