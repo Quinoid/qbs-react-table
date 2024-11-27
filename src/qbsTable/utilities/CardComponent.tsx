@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
+
 import { QbsColumnProps } from '../commontypes';
 import CardMenuDropdown from './CardMenuDropdown';
-import { CustomTableCell } from './SwitchCardColumns';
 import { handleCellFormat } from './handleFormatCell';
 import { ArrowUpIcon } from './icons';
 import { getGridColsClass, getGridColSpanClass } from './store';
+import { CustomTableCell } from './SwitchCardColumns';
 import TooltipComponent from './ToolTip';
 
 type Props = {
@@ -42,19 +43,23 @@ const CardComponent: React.FC<Props> = ({
       ref={useCardRef}
       className="p-3 gap-3 border-2 border-grey shadow-sm rounded-lg relative qbs-card-container"
     >
-      <div className={`grid ${getGridColsClass(initialDisplayCount)} qbs-card-columns`}>
+      <div className={`grid ${getGridColsClass(initialDisplayCount)} gap-2 qbs-card-columns`}>
         {displayedColumns.map((col: QbsColumnProps, index: number) => (
           <div
             key={index}
             className={`grid ${getGridColSpanClass(
               col.colSpan ?? 1
-            )} place-content-start text-sm qbs-card-column   ${
+            )}  place-content-start text-sm qbs-card-column   ${
               index === initialDisplayCount - 1 ? 'mr-4' : ''
             } `}
           >
-            <p className=" text-grey ">{col.title}</p>
+            <p className=" text-grey qbs-card-column-title ">{col.title}</p>
             {col.customCell || col.link ? (
-              <span className={`qbs-card-column-content mt-1   ${!viewMore ? 'line-clamp-1' : ''}`}>
+              <span
+                className={`qbs-card-column-content mt-1 font-semibold   ${
+                  !viewMore ? 'line-clamp-1' : ''
+                }`}
+              >
                 <CustomTableCell
                   dataKey={col.field}
                   rowData={data}
@@ -68,7 +73,9 @@ const CardComponent: React.FC<Props> = ({
               </span>
             ) : (
               <p
-                className={`mt-1  qbs-card-column-content ${!viewMore ? 'line-clamp-1' : ''}`}
+                className={`mt-1  qbs-card-column-content font-semibold ${
+                  !viewMore ? 'line-clamp-1' : ''
+                }`}
                 key={index}
               >
                 {handleCellFormat(data[col.field], col.type as string)}
