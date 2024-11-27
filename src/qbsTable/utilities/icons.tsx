@@ -87,3 +87,50 @@ export const CardIcon: React.FC<any> = ({ className }: any) => {
     </svg>
   );
 };
+
+export const CardView: React.FC<any> = ({ className }) => {
+  return (
+    <svg className={`h-5 w-5 ${className}`} viewBox="0 0 20 21" fill="none">
+      <path
+        d="M3.33594 5.24674C3.33594 4.32627 4.08213 3.58008 5.0026 3.58008H6.66927C7.58974 3.58008 8.33594 4.32627 8.33594 5.24674V6.91341C8.33594 7.83389 7.58974 8.58008 6.66927 8.58008H5.0026C4.08213 8.58008 3.33594 7.83389 3.33594 6.91341V5.24674Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.6693 5.24674C11.6693 4.32627 12.4155 3.58008 13.3359 3.58008H15.0026C15.9231 3.58008 16.6693 4.32627 16.6693 5.24674V6.91341C16.6693 7.83389 15.9231 8.58008 15.0026 8.58008H13.3359C12.4155 8.58008 11.6693 7.83389 11.6693 6.91341V5.24674Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3.33594 13.5801C3.33594 12.6596 4.08213 11.9134 5.0026 11.9134H6.66927C7.58974 11.9134 8.33594 12.6596 8.33594 13.5801V15.2467C8.33594 16.1672 7.58974 16.9134 6.66927 16.9134H5.0026C4.08213 16.9134 3.33594 16.1672 3.33594 15.2467V13.5801Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.6693 13.5801C11.6693 12.6596 12.4155 11.9134 13.3359 11.9134H15.0026C15.9231 11.9134 16.6693 12.6596 16.6693 13.5801V15.2467C16.6693 16.1672 15.9231 16.9134 15.0026 16.9134H13.3359C12.4155 16.9134 11.6693 16.1672 11.6693 15.2467V13.5801Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const TableView: React.FC<any> = ({ className }) => {
+  return (
+    <svg className={`h-5 w-5 ${className}`} viewBox="0 0 20 21" fill="none">
+      <path
+        d="M2.5 8.07572H17.5M2.5 12.4151H17.5M10 8.07572V16.7545M4.16667 16.7545H15.8333C16.7538 16.7545 17.5 15.7831 17.5 14.5848V5.90603C17.5 4.70774 16.7538 3.73633 15.8333 3.73633H4.16667C3.24619 3.73633 2.5 4.70774 2.5 5.90603V14.5848C2.5 15.7831 3.24619 16.7545 4.16667 16.7545Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+};
