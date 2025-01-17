@@ -129,6 +129,7 @@ export interface QbsTableProps {
   childDetailHeading?: string;
   handleTableCardView?: (data: any) => React.ReactNode;
   isCustomTableCardView?: boolean;
+  handleCustomCardLoader?: () => React.ReactNode;
 }
 
 export interface QbsTableToolbarProps {

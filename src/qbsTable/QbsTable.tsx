@@ -6,6 +6,7 @@ import ColumnGroup from '../ColumnGroup';
 import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
+import useResponsiveStore from '../utils/useResponsiveStore';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
 import {
   ActionCell,
@@ -89,7 +90,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   cardColumLimit = 5,
   childDetailHeading = '',
   isCustomTableCardView = false,
-  handleTableCardView
+  handleTableCardView,
+  handleCustomCardLoader
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -98,7 +100,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>();
   const [tableViewToggle, setTableViewToggle] = useState(tableView);
-
+  const isMobile = useResponsiveStore();
   const tableBodyRef = useRef<HTMLDivElement>(null);
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
@@ -324,6 +326,15 @@ const QbsTable: React.FC<QbsTableProps> = ({
     }
     prevColumns.current = columns;
   }, [columns, handleColumnsResizable]);
+
+  useEffect(() => {
+    if (tableView) {
+      setTableViewToggle(!isMobile);
+    } else {
+      setTableViewToggle(false);
+    }
+  }, [isMobile]);
+
   const findGrouped = () => {
     return columns?.find(item => item.grouped) ? true : false;
   };
@@ -635,7 +646,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
           </Table>
         ) : (
           <div
-            className={isCustomTableCardView ? 'qbs-card-wrapper' : ' p-2'}
+            className={
+              isCustomTableCardView && (data?.length === 0 || !data) && !isLoading
+                ? 'qbs-card-empty-wrapper'
+                : isCustomTableCardView
+                ? 'qbs-card-wrapper'
+                : ' p-2'
+            }
             style={{
               overflow: !tableViewToggle ? 'auto' : '',
               maxHeight: !tableViewToggle ? height : '',
@@ -648,9 +665,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
               </div>
             )}
             {isLoading ? (
-              <div className="flex flex-col gap-2 p-2">
-                <CardLoader />
-              </div>
+              handleCustomCardLoader ? (
+                <>{handleCustomCardLoader()}</>
+              ) : (
+                <div className="flex flex-col gap-2 p-2">
+                  <CardLoader />
+                </div>
+              )
             ) : (
               data.map((items: any) => (
                 <div
