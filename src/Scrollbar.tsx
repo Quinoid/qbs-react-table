@@ -51,7 +51,7 @@ const Scrollbar = React.forwardRef((props: ScrollbarProps, ref) => {
   const scrollRange = useRef(scrollLength);
   const barRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
-  const mouseMoveTracker = useRef<DOMMouseMoveTracker | null>();
+  const mouseMoveTracker = useRef<DOMMouseMoveTracker | null>(null);
 
   const { withClassPrefix, merge, prefix } = useClassNames(classPrefix);
   const classes = merge(

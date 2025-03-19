@@ -110,21 +110,21 @@ export const CustomTableCell: React.FC<any> = React.memo(
     ...props
   }) => {
     return (
-      <>
-        <Cell {...props} dataKey={dataKey}>
-          {link && !path && !hideLink?.(rowData) ? (
-            <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
-              {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
-            </a>
-          ) : path && !hideLink?.(rowData) ? (
-            <Link to={path?.(rowData) ?? ''} className="qbs-table-row-link">
-              {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
-            </Link>
-          ) : (
-            <>{renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}</>
-          )}
-        </Cell>
-      </>
+      <Cell {...props} dataKey={dataKey}>
+        {link && !path && !hideLink?.(rowData) ? (
+          <a onClick={() => rowClick?.(rowData)} className="qbs-table-row-link">
+            {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
+          </a>
+        ) : path && !hideLink?.(rowData) ? (
+          <Link to={path?.(rowData) ?? ''} className="qbs-table-row-link">
+            {renderCell ? renderCell(rowData)?.cell : handleCellFormat(rowData[dataKey], type)}
+          </Link>
+        ) : renderCell ? (
+          renderCell(rowData)?.cell
+        ) : (
+          handleCellFormat(rowData[dataKey], type)
+        )}
+      </Cell>
     );
   }
 );
@@ -149,41 +149,39 @@ export const CustomRowStatus: React.FC<any> = React.memo(
     };
 
     return (
-      <>
-        <Cell
-          {...props}
-          dataKey={dataKey}
-          style={{ padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-          onMouseEnter={() => adjustDropdownPosition()}
-        >
-          <div className="row-status">
-            {!path ? (
-              <span
-                ref={menuButtonRef}
-                style={{ height: 24, width: 24, display: 'flex' }}
-                onClick={() => rowClick?.(rowData)}
-              >
-                {getIcon?.(rowData)}
-              </span>
-            ) : (
-              <Link
-                style={{ height: 24, width: 24 }}
-                to={path?.(rowData) ?? ''}
-                className="qbs-table-row-link"
-              >
-                {getIcon?.(rowData)}
-              </Link>
-            )}
-            <div
-              ref={dropRef}
-              className={`row-status-tooltip ${dropdownPosition}`}
-              style={{ position: 'fixed' }}
+      <Cell
+        {...props}
+        dataKey={dataKey}
+        style={{ padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        onMouseEnter={() => adjustDropdownPosition()}
+      >
+        <div className="row-status">
+          {!path ? (
+            <span
+              ref={menuButtonRef}
+              style={{ height: 24, width: 24, display: 'flex' }}
+              onClick={() => rowClick?.(rowData)}
             >
-              {getToolTip?.(rowData)}
-            </div>
+              {getIcon?.(rowData)}
+            </span>
+          ) : (
+            <Link
+              style={{ height: 24, width: 24 }}
+              to={path?.(rowData) ?? ''}
+              className="qbs-table-row-link"
+            >
+              {getIcon?.(rowData)}
+            </Link>
+          )}
+          <div
+            ref={dropRef}
+            className={`row-status-tooltip ${dropdownPosition}`}
+            style={{ position: 'fixed' }}
+          >
+            {getToolTip?.(rowData)}
           </div>
-        </Cell>
-      </>
+        </div>
+      </Cell>
     );
   }
 );

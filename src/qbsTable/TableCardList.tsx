@@ -88,7 +88,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
   const [isOpen, setIsOpen] = useState(false);
-  const prevColumns = useRef<any | null>();
+  const prevColumns = useRef<any | null>(null);
   const tableBodyRef = useRef<HTMLDivElement>(null);
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
@@ -445,7 +445,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           key={tableKey}
           tableKey={tableKey}
           data={data}
-          tableBodyRef={tableBodyRef}
+          tableBodyRef={tableBodyRef as React.RefObject<HTMLDivElement>}
           dataTheme={dataTheme}
           wordWrap={wordWrap}
           autoHeight={autoHeight}

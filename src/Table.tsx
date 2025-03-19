@@ -49,12 +49,12 @@ import {
 } from './utils';
 
 import type {
-  StandardProps,
-  SortType,
+  RowDataType,
   RowKeyType,
+  SortType,
+  StandardProps,
   TableLocaleType,
-  TableSizeChangeEventName,
-  RowDataType
+  TableSizeChangeEventName
 } from './@types/common';
 /**
  * Filter those expanded nodes.

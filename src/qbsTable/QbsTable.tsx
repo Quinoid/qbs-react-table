@@ -98,7 +98,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
   const [isOpen, setIsOpen] = useState(false);
-  const prevColumns = useRef<any | null>();
+  const prevColumns = useRef<any | null>(null);
   const [tableViewToggle, setTableViewToggle] = useState(tableView);
   const isMobile = useResponsiveStore();
   const tableBodyRef = useRef<HTMLDivElement>(null);
@@ -338,125 +338,229 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const findGrouped = () => {
     return columns?.find(item => item.grouped) ? true : false;
   };
+  // const columnsRendered: React.ReactElement[] = useMemo(
+  //   () =>
+  //     (columns ?? []).map(
+  //       ({
+  //         title,
+  //         field,
+  //         resizable,
+  //         sortable,
+  //         colWidth,
+  //         align,
+  //         grouped,
+  //         groupHeader,
+  //         fixed,
+  //         children,
+  //         customCell,
+  //         renderCell,
+  //         isVisible,
+  //         link,
+  //         getPath,
+  //         rowClick,
+  //         sortKey,
+  //         type,
+  //         hideLink
+  //       }) =>
+  //         isVisible &&
+  //         (grouped ? (
+  //           <ColumnGroup
+  //             header={groupHeader}
+  //             fixed={fixed}
+  //             align={align}
+  //             verticalAlign="middle"
+  //             groupHeaderHeight={40}
+  //           >
+  //             {children?.map(child => (
+  //               <Column
+  //                 key={child.title}
+  //                 sortable={child.sortable}
+  //                 width={child.colWidth ?? COLUMN_WIDTH}
+  //                 resizable={child.resizable}
+  //                 align={child.align}
+  //                 onResize={handleColumnWidth}
+  //                 fixed={child.fixed}
+  //               >
+  //                 <HeaderCell
+  //                   dataTheme={dataTheme}
+  //                   verticalAlign={'middle'}
+  //                   className={` ${classes.headerClass}`}
+  //                   sortKey={child.sortKey}
+  //                   renderSortIcon={renderSortIcon}
+  //                 >
+  //                   {child.title}
+  //                 </HeaderCell>
+  //                 {child.customCell || child.link ? (
+  //                   <CustomTableCell
+  //                     renderCell={child.renderCell}
+  //                     dataKey={child.field}
+  //                     dataTheme={dataTheme}
+  //                     type={child.type}
+  //                     path={child.getPath}
+  //                     link={child.link}
+  //                   />
+  //                 ) : (
+  //                   <Cell
+  //                     className={` ${classes.cellClass}`}
+  //                     dataKey={child.field}
+  //                     dataTheme={dataTheme}
+  //                   />
+  //                 )}
+  //               </Column>
+  //             ))}
+  //           </ColumnGroup>
+  //         ) : (
+  //           <Column
+  //             key={title}
+  //             sortable={sortable}
+  //             width={colWidth ?? COLUMN_WIDTH}
+  //             resizable={resizable}
+  //             align={align}
+  //             fixed={fixed}
+  //             onResize={handleColumnWidth}
+  //           >
+  //             <HeaderCell
+  //               dataTheme={dataTheme}
+  //               verticalAlign={findGrouped() ? 'middle' : undefined}
+  //               className={` ${classes.headerClass}`}
+  //               sortKey={sortKey}
+  //               renderSortIcon={renderSortIcon}
+  //             >
+  //               {title}
+  //             </HeaderCell>
+  //             {customCell || link ? (
+  //               <CustomTableCell
+  //                 renderCell={renderCell}
+  //                 dataKey={field}
+  //                 rowClick={rowClick}
+  //                 type={type}
+  //                 hideLink={hideLink}
+  //                 path={getPath}
+  //                 dataTheme={dataTheme}
+  //                 link={link}
+  //               />
+  //             ) : (
+  //               <Cell dataKey={field} dataTheme={dataTheme} className={` ${classes.cellClass}`} />
+  //             )}
+  //           </Column>
+  //         ))
+  //     ),
+  //   [columns, dataTheme]
+  // );
   const columnsRendered: React.ReactElement[] = useMemo(
     () =>
-      (columns ?? []).map(
-        ({
-          title,
-          field,
-          resizable,
-          sortable,
-          colWidth,
-          align,
-          grouped,
-          groupHeader,
-          fixed,
-          children,
-          customCell,
-          renderCell,
-          isVisible,
-          link,
-          getPath,
-          rowClick,
-          sortKey,
-          type,
-          hideLink
-        }) => (
-          <>
-            {isVisible && (
-              <>
-                {grouped ? (
-                  <ColumnGroup
-                    header={groupHeader}
-                    fixed={fixed}
-                    align={align}
-                    verticalAlign="middle"
-                    groupHeaderHeight={40}
-                  >
-                    <>
-                      {children?.map(child => (
-                        <Column
-                          key={child.title}
-                          sortable={child.sortable}
-                          width={child.colWidth ?? COLUMN_WIDTH}
-                          resizable={child.resizable}
-                          align={child.align}
-                          onResize={handleColumnWidth}
-                          fixed={child.fixed}
-                        >
-                          <HeaderCell
-                            dataTheme={dataTheme}
-                            verticalAlign={'middle'}
-                            className={` ${classes.headerClass}`}
-                            sortKey={child.sortKey}
-                            renderSortIcon={renderSortIcon}
-                          >
-                            {child.title}
-                          </HeaderCell>
-                          {child.customCell || child.link ? (
-                            <CustomTableCell
-                              renderCell={child.renderCell}
-                              dataKey={child.field}
-                              dataTheme={dataTheme}
-                              type={child.type}
-                              path={child.getPath}
-                              link={child.link}
-                            />
-                          ) : (
-                            <Cell
-                              className={` ${classes.cellClass}`}
-                              dataKey={child.field}
-                              dataTheme={dataTheme}
-                            />
-                          )}
-                        </Column>
-                      ))}
-                    </>
-                  </ColumnGroup>
-                ) : (
-                  <Column
-                    key={title}
-                    sortable={sortable}
-                    width={colWidth ?? COLUMN_WIDTH}
-                    resizable={resizable}
-                    align={align}
-                    fixed={fixed}
-                    onResize={handleColumnWidth}
-                  >
-                    <HeaderCell
-                      dataTheme={dataTheme}
-                      verticalAlign={findGrouped() ? 'middle' : undefined}
-                      className={` ${classes.headerClass}`}
-                      sortKey={sortKey}
-                      renderSortIcon={renderSortIcon}
+      (columns ?? [])
+        .map(
+          ({
+            title,
+            field,
+            resizable,
+            sortable,
+            colWidth,
+            align,
+            grouped,
+            groupHeader,
+            fixed,
+            children,
+            customCell,
+            renderCell,
+            isVisible,
+            link,
+            getPath,
+            rowClick,
+            sortKey,
+            type,
+            hideLink
+          }) =>
+            isVisible ? (
+              grouped ? (
+                <ColumnGroup
+                  header={groupHeader}
+                  fixed={fixed}
+                  align={align}
+                  verticalAlign="middle"
+                  groupHeaderHeight={40}
+                >
+                  {children?.map(child => (
+                    <Column
+                      key={child.title}
+                      sortable={child.sortable}
+                      width={child.colWidth ?? COLUMN_WIDTH}
+                      resizable={child.resizable}
+                      align={child.align}
+                      onResize={handleColumnWidth}
+                      fixed={child.fixed}
                     >
-                      {title}
-                    </HeaderCell>
-                    {customCell || link ? (
-                      <CustomTableCell
-                        renderCell={renderCell}
-                        dataKey={field}
-                        rowClick={rowClick}
-                        type={type}
-                        hideLink={hideLink}
-                        path={getPath}
+                      <HeaderCell
                         dataTheme={dataTheme}
-                        link={link}
-                      />
-                    ) : (
-                      <Cell
-                        dataKey={field}
-                        dataTheme={dataTheme}
-                        className={` ${classes.cellClass}`}
-                      />
-                    )}
-                  </Column>
-                )}
-              </>
-            )}
-          </>
+                        verticalAlign="middle"
+                        className={` ${classes.headerClass}`}
+                        sortKey={child.sortKey}
+                        renderSortIcon={renderSortIcon}
+                      >
+                        {child.title}
+                      </HeaderCell>
+                      {child.customCell || child.link ? (
+                        <CustomTableCell
+                          renderCell={child.renderCell}
+                          dataKey={child.field}
+                          dataTheme={dataTheme}
+                          type={child.type}
+                          path={child.getPath}
+                          link={child.link}
+                        />
+                      ) : (
+                        <Cell
+                          className={` ${classes.cellClass}`}
+                          dataKey={child.field}
+                          dataTheme={dataTheme}
+                        />
+                      )}
+                    </Column>
+                  ))}
+                </ColumnGroup>
+              ) : (
+                <Column
+                  key={title}
+                  sortable={sortable}
+                  width={colWidth ?? COLUMN_WIDTH}
+                  resizable={resizable}
+                  align={align}
+                  fixed={fixed}
+                  onResize={handleColumnWidth}
+                >
+                  <HeaderCell
+                    dataTheme={dataTheme}
+                    verticalAlign={findGrouped() ? 'middle' : undefined}
+                    className={` ${classes.headerClass}`}
+                    sortKey={sortKey}
+                    renderSortIcon={renderSortIcon}
+                  >
+                    {title}
+                  </HeaderCell>
+                  {customCell || link ? (
+                    <CustomTableCell
+                      renderCell={renderCell}
+                      dataKey={field}
+                      rowClick={rowClick}
+                      type={type}
+                      hideLink={hideLink}
+                      path={getPath}
+                      dataTheme={dataTheme}
+                      link={link}
+                    />
+                  ) : (
+                    <Cell
+                      dataKey={field}
+                      dataTheme={dataTheme}
+                      className={` ${classes.cellClass}`}
+                    />
+                  )}
+                </Column>
+              )
+            ) : null // ✅ Fix: Return `null` instead of `false`
         )
-      ),
+        .filter(Boolean) as React.ReactElement[], // ✅ Fix: Type assertion to ReactElement[]
     [columns, dataTheme]
   );
 
@@ -470,7 +574,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             key={tableKey}
             tableKey={tableKey}
             data={data}
-            tableBodyRef={tableBodyRef}
+            tableBodyRef={tableBodyRef as React.RefObject<HTMLDivElement>}
             dataTheme={dataTheme}
             wordWrap={wordWrap}
             autoHeight={autoHeight}

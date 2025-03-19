@@ -16,8 +16,8 @@ interface TableDimensionProps<Row, Key> {
   rowHeight: number | ((rowData?: Row) => number);
   height: number;
   minHeight: number;
-  tableRef?: React.RefObject<HTMLDivElement>;
-  headerWrapperRef?: React.RefObject<HTMLDivElement>;
+  tableRef?: React.RefObject<HTMLDivElement | null>;
+  headerWrapperRef?: React.RefObject<HTMLDivElement | null>;
   width?: number;
   prefix: (str: string) => string;
   affixHeader?: boolean | number;
@@ -74,8 +74,8 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
   const tableWidth = useRef(widthProp || 0);
   const tableHeight = useRef(heightProp || 0);
   const columnCount = useRef(0);
-  const resizeObserver = useRef<ResizeObserver>();
-  const containerResizeObserver = useRef<ResizeObserver>();
+  const resizeObserver = useRef<ResizeObserver>(null);
+  const containerResizeObserver = useRef<ResizeObserver>(null);
   const headerOffset = useRef<ElementOffset | null>(null);
   const tableOffset = useRef<ElementOffset | null>(null);
 

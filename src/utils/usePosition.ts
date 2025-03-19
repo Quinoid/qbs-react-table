@@ -1,23 +1,23 @@
-import React, { useCallback, useRef } from 'react';
 import addStyle, { CSSProperty } from 'dom-lib/addStyle';
+import React, { useCallback, useRef } from 'react';
+import type { RowDataType } from '../@types/common';
 import { SCROLLBAR_WIDTH } from '../constants';
+import defer from './defer';
+import isSupportTouchEvent from './isSupportTouchEvent';
 import toggleClass from './toggleClass';
 import useUpdateEffect from './useUpdateEffect';
-import type { RowDataType } from '../@types/common';
-import isSupportTouchEvent from './isSupportTouchEvent';
-import defer from './defer';
 
 interface PositionProps {
   data: readonly RowDataType[];
   height: number;
   tableWidth: React.MutableRefObject<number>;
-  tableRef: React.RefObject<HTMLDivElement>;
+  tableRef: React.RefObject<HTMLDivElement | null>;
   prefix: (str: string) => string;
   translateDOMPositionXY: React.MutableRefObject<any>;
-  wheelWrapperRef: React.RefObject<HTMLDivElement>;
-  headerWrapperRef: React.RefObject<HTMLDivElement>;
-  affixHeaderWrapperRef: React.RefObject<HTMLDivElement>;
-  tableHeaderRef: React.RefObject<HTMLDivElement>;
+  wheelWrapperRef: React.RefObject<HTMLDivElement | null>;
+  headerWrapperRef: React.RefObject<HTMLDivElement | null>;
+  affixHeaderWrapperRef: React.RefObject<HTMLDivElement | null>;
+  tableHeaderRef: React.RefObject<HTMLDivElement | null>;
   scrollX: React.MutableRefObject<number>;
   scrollY: React.MutableRefObject<number>;
   contentWidth: React.MutableRefObject<number>;

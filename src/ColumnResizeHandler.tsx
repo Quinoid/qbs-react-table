@@ -46,8 +46,8 @@ const ColumnResizeHandler = React.forwardRef(
     const classes = merge(className, withClassPrefix());
 
     const columnWidth = useRef(defaultColumnWidth || 0);
-    const mouseMoveTracker = useRef<DOMMouseMoveTracker | null>();
-    const isKeyDown = useRef<boolean>();
+    const mouseMoveTracker = useRef<DOMMouseMoveTracker | null>(null);
+    const isKeyDown = useRef<boolean>(false);
     const cursorDelta = useRef<number>(0);
 
     const handleMove = useCallback(

@@ -1,24 +1,24 @@
-import React, { useRef, useCallback, useEffect } from 'react';
-import getHeight from 'dom-lib/getHeight';
 import addStyle from 'dom-lib/addStyle';
-import removeStyle from 'dom-lib/removeStyle';
+import getHeight from 'dom-lib/getHeight';
 import on from 'dom-lib/on';
-import toggleClass from './toggleClass';
-import isNumberOrTrue from './isNumberOrTrue';
-import useUpdateEffect from './useUpdateEffect';
-import type { ListenerCallback, ElementOffset } from '../@types/common';
+import removeStyle from 'dom-lib/removeStyle';
+import React, { useCallback, useEffect, useRef } from 'react';
+import type { ElementOffset, ListenerCallback } from '../@types/common';
 import type { ScrollbarInstance } from '../Scrollbar';
+import isNumberOrTrue from './isNumberOrTrue';
+import toggleClass from './toggleClass';
+import useUpdateEffect from './useUpdateEffect';
 
 interface AffixProps {
   getTableHeight: () => number;
   contentHeight: React.MutableRefObject<number>;
   affixHeader?: boolean | number;
   affixHorizontalScrollbar?: boolean | number;
-  tableOffset: React.RefObject<ElementOffset>;
-  headerOffset: React.RefObject<ElementOffset>;
+  tableOffset: React.RefObject<ElementOffset | null>;
+  headerOffset: React.RefObject<ElementOffset | null>;
   headerHeight: number;
-  scrollbarXRef: React.RefObject<ScrollbarInstance>;
-  affixHeaderWrapperRef: React.RefObject<HTMLDivElement>;
+  scrollbarXRef: React.RefObject<ScrollbarInstance | null>;
+  affixHeaderWrapperRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const useAffix = (props: AffixProps) => {
@@ -34,7 +34,7 @@ const useAffix = (props: AffixProps) => {
     affixHeaderWrapperRef
   } = props;
 
-  const scrollListener = useRef<ListenerCallback>();
+  const scrollListener = useRef<ListenerCallback>(null);
   const handleAffixHorizontalScrollbar = useCallback(() => {
     const scrollY = window.scrollY || window.pageYOffset;
     const windowHeight = getHeight(window);

@@ -1,18 +1,18 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
-import WheelHandler from 'dom-lib/WheelHandler';
-import scrollLeft from 'dom-lib/scrollLeft';
-import scrollTop from 'dom-lib/scrollTop';
 import on from 'dom-lib/on';
 import removeStyle from 'dom-lib/removeStyle';
-import { requestAnimationTimeout, cancelAnimationTimeout } from './requestAnimationTimeout';
-import useUpdateEffect from './useUpdateEffect';
-import useMount from './useMount';
-import { SCROLLBAR_WIDTH, TRANSITION_DURATION, BEZIER } from '../constants';
-import type { ScrollbarInstance } from '../Scrollbar';
+import scrollLeft from 'dom-lib/scrollLeft';
+import scrollTop from 'dom-lib/scrollTop';
+import WheelHandler from 'dom-lib/WheelHandler';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ListenerCallback, RowDataType } from '../@types/common';
-import isSupportTouchEvent from './isSupportTouchEvent';
-import flushSync from './flushSync';
+import { BEZIER, SCROLLBAR_WIDTH, TRANSITION_DURATION } from '../constants';
+import type { ScrollbarInstance } from '../Scrollbar';
 import defer from './defer';
+import flushSync from './flushSync';
+import isSupportTouchEvent from './isSupportTouchEvent';
+import { cancelAnimationTimeout, requestAnimationTimeout } from './requestAnimationTimeout';
+import useMount from './useMount';
+import useUpdateEffect from './useUpdateEffect';
 
 // Inertial sliding start time threshold
 const momentumTimeThreshold = 300;
@@ -29,11 +29,11 @@ interface ScrollListenerProps {
   headerHeight: number;
   autoHeight?: boolean;
   tableBodyRef: React.RefObject<HTMLDivElement>;
-  scrollbarXRef: React.RefObject<ScrollbarInstance>;
-  scrollbarYRef: React.RefObject<ScrollbarInstance>;
+  scrollbarXRef: React.RefObject<ScrollbarInstance | null>;
+  scrollbarYRef: React.RefObject<ScrollbarInstance | null>;
   disabledScroll?: boolean;
   loading?: boolean;
-  tableRef: React.RefObject<HTMLDivElement>;
+  tableRef: React.RefObject<HTMLDivElement | null>;
   contentWidth: React.MutableRefObject<number>;
   tableWidth: React.MutableRefObject<number>;
   scrollY: React.MutableRefObject<number>;
@@ -109,10 +109,10 @@ const useScrollListener = (props: ScrollListenerProps) => {
     tableKey
   } = props;
 
-  const wheelListener = useRef<ListenerCallback>();
-  const touchStartListener = useRef<ListenerCallback>();
-  const touchMoveListener = useRef<ListenerCallback>();
-  const touchEndListener = useRef<ListenerCallback>();
+  const wheelListener = useRef<ListenerCallback>(null);
+  const touchStartListener = useRef<ListenerCallback>(null);
+  const touchMoveListener = useRef<ListenerCallback>(null);
+  const touchEndListener = useRef<ListenerCallback>(null);
   const [isChildFocused, setIsChildFocused] = useState(false);
 
   const [isScrolling, setScrolling] = useState(false);
@@ -247,7 +247,7 @@ const useScrollListener = (props: ScrollListenerProps) => {
     [handleWheel, scrollbarXRef, scrollbarYRef]
   );
 
-  const wheelHandler = useRef<WheelHandler | null>();
+  const wheelHandler = useRef<WheelHandler | null>(null);
 
   // Stop unending scrolling and remove transition
   const stopScroll = useCallback(() => {

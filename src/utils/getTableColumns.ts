@@ -1,6 +1,6 @@
+import flatten from 'lodash/flatten';
 import React from 'react';
 import * as ReactIs from 'react-is';
-import flatten from 'lodash/flatten';
 import ColumnGroup from '../ColumnGroup';
 
 /**
@@ -11,7 +11,7 @@ import ColumnGroup from '../ColumnGroup';
 function getTableColumns(children) {
   const childrenArray = Array.isArray(children) ? children : [children];
 
-  const flattenColumns = flatten(childrenArray).map((column: React.ReactElement) => {
+  const flattenColumns = flatten(childrenArray).map((column: any) => {
     // If the column is a group, we need to get the columns from the children.
     if (column?.type === ColumnGroup) {
       const {
@@ -21,7 +21,7 @@ function getTableColumns(children) {
         fixed,
         verticalAlign,
         groupHeaderHeight
-      } = column?.props;
+      } = column?.props as any;
 
       const childColumns = getTableColumns(groupChildren);
 
@@ -56,7 +56,7 @@ function getTableColumns(children) {
       });
     } else if (ReactIs.isFragment(column)) {
       // If the column is a fragment, we need to get the columns from the children.
-      return getTableColumns(column.props?.children);
+      return getTableColumns(column.props?.children as any);
     } else if (Array.isArray(column)) {
       // If the column is an array, need check item in the array.
       return getTableColumns(column);

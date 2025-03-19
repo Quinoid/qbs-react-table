@@ -32,8 +32,8 @@ interface CellDescriptorProps<Row> {
   onSortColumn?: (dataKey: string, sortType?: SortType) => void;
   onHeaderCellResize?: (width: number, dataKey: string) => void;
   rowHeight?: number | ((rowData?: Row) => number);
-  mouseAreaRef: React.RefObject<HTMLDivElement>;
-  tableRef: React.RefObject<HTMLDivElement>;
+  mouseAreaRef: React.RefObject<HTMLDivElement | null>;
+  tableRef: React.RefObject<HTMLDivElement | null>;
 }
 
 interface CellDescriptor {
@@ -68,7 +68,7 @@ const useCellDescriptor = <Row extends RowDataType>(
     rowHeight,
     onSortColumn,
     onHeaderCellResize,
-    prefix,
+    prefix
   } = props;
 
   const [sortType, setSortType] = useControlled(sortTypeProp, defaultSortType);
@@ -196,16 +196,16 @@ const useCellDescriptor = <Row extends RowDataType>(
   const count = columns.length;
   const { totalFlexGrow, totalWidth } = getTotalByColumns(columns);
 
-  React.Children.forEach(columns, (column: React.ReactElement<ColumnProps>, index) => {
+  React.Children.forEach(columns as any, (column: React.ReactElement<ColumnProps>, index) => {
     if (React.isValidElement(column)) {
       const columnChildren = column.props.children as React.ReactNode[];
       const columnProps = getColumnProps(column);
 
       const { width, resizable, flexGrow, minWidth, onResize, treeCol } = columnProps;
-
       if (treeCol) {
         hasCustomTreeCol = true;
       }
+      console.log(columns);
 
       if (columnChildren?.length !== 2) {
         throw new Error(`Component <HeaderCell> and <Cell> is required, column index: ${index} `);
