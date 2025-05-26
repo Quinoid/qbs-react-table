@@ -4,6 +4,7 @@ import scrollLeft from 'dom-lib/scrollLeft';
 import scrollTop from 'dom-lib/scrollTop';
 import WheelHandler from 'dom-lib/WheelHandler';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import type { ListenerCallback, RowDataType } from '../@types/common';
 import { BEZIER, SCROLLBAR_WIDTH, TRANSITION_DURATION } from '../constants';
 import type { ScrollbarInstance } from '../Scrollbar';
@@ -50,6 +51,7 @@ interface ScrollListenerProps {
   onTouchStart?: (event: React.TouchEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;
   onTouchEnd?: (event: React.TouchEvent) => void;
+  handleInfiniteScroll?: (value: number) => void;
 }
 
 /**
@@ -106,7 +108,8 @@ const useScrollListener = (props: ScrollListenerProps) => {
     contentHeight,
     headerHeight,
     rtl,
-    tableKey
+    tableKey,
+    handleInfiniteScroll
   } = props;
 
   const wheelListener = useRef<ListenerCallback>(null);
@@ -186,6 +189,15 @@ const useScrollListener = (props: ScrollListenerProps) => {
 
       setScrollX(x);
       setScrollY(y);
+
+      if (
+        typeof handleInfiniteScroll === 'function' &&
+        deltaY !== 0 &&
+        !loading &&
+        Math.abs(y) + getTableHeight() >= contentHeight.current - 12
+      ) {
+        handleInfiniteScroll(scrollY.current);
+      }
 
       onScroll?.(Math.abs(x), Math.abs(y));
 
@@ -297,7 +309,6 @@ const useScrollListener = (props: ScrollListenerProps) => {
       if (!isTouching.current) {
         return;
       }
-      console.log('handleTouchMove');
 
       const { pageX, pageY } = event.touches[0];
       const deltaX = touchX.current - pageX;
@@ -338,7 +349,6 @@ const useScrollListener = (props: ScrollListenerProps) => {
       if (!isTouching.current) {
         return;
       }
-      console.log('handleTouchEnd');
       isTouching.current = false;
       const touchDuration = new Date().getTime() - momentumStartTime.current;
       const absDeltaY = Math.abs(scrollY.current - momentumStartY.current);

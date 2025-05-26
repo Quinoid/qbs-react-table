@@ -12,6 +12,8 @@ interface ColumnToggleProps {
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   handleResetColumns?: () => void;
   tableHeight?: number;
+  viewMode?: string;
+  setViewMode?: (value: string) => void;
 }
 
 const ColumnToggle: React.FC<ColumnToggleProps> = ({
@@ -239,6 +241,27 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
                 </div>
               </>
             )}
+            {/* <div className="qbs-table-popup-item">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="compact"
+                  checked={viewMode === 'compact'}
+                  onChange={() => setViewMode?.('compact')}
+                />
+                Compact View
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="expanded"
+                  checked={viewMode === 'expanded'}
+                  onChange={() => setViewMode?.('expanded')}
+                />
+                Default View
+              </label>
+            </div> */}
           </div>
         </div>
       )}

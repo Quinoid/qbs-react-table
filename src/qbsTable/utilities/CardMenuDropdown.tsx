@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-import React from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 import { ActionProps } from '../commontypes';
 import { ThreeDotIcon } from './icons';
 import TooltipComponent from './ToolTip';
@@ -46,7 +44,6 @@ const CardMenuDropdown: React.FC<Props> = ({ actionDropDown, handleMenuActions, 
         const dropdownHeight = 200; // Adjust this if your dropdown height varies
         const spaceBelow = window.innerHeight - buttonRect.bottom;
         const spaceAbove = buttonRect.top;
-        console.log(spaceAbove, spaceBelow, dropdownHeight);
         if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
           setMenuPositionStyles({
             bottom: '30px',

@@ -30,6 +30,7 @@ import '../../dist/css/qbs-react-grid.css';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 const COLUMN_WIDTH = 250;
+let REFRESH_KEY = 0;
 const QbsTable: React.FC<QbsTableProps> = ({
   handleColumnSort,
   data,
@@ -51,7 +52,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   minHeight,
   height = 630,
   onExpandChange,
-  wordWrap,
+  wordWrap: propsWordWrap,
   dataRowKey = 'id',
   defaultExpandAllRows,
   handleRowExpanded,
@@ -91,7 +92,17 @@ const QbsTable: React.FC<QbsTableProps> = ({
   childDetailHeading = '',
   isCustomTableCardView = false,
   handleTableCardView,
-  handleCustomCardLoader
+  handleCustomCardLoader,
+  hasMoreData,
+  loadMoreData,
+  infiniteLoading,
+  infiniteScroll = false,
+  viewMode: propsViewMode,
+  rowViewToggle = false,
+  defaultRowView = true,
+  fullWidthView = false,
+  setTableFullView,
+  setRowViewToggle
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -102,6 +113,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const [tableViewToggle, setTableViewToggle] = useState(tableView);
   const isMobile = useResponsiveStore();
   const tableBodyRef = useRef<HTMLDivElement>(null);
+  const wheelWrapperRef = useRef<HTMLDivElement>(null);
+  const [viewMode, setViewMode] = useState(propsViewMode ?? 'expanded');
+  const [wordWrap, setWordWrap] = useState(propsWordWrap ?? false);
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
       setLoading(true);
@@ -188,6 +202,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
   const handleColumnWidth = useCallback((newWidth?: number, dataKey?: any) => {
     if (newWidth === undefined || dataKey === undefined) return;
+    REFRESH_KEY = REFRESH_KEY + 1;
     setColumns(prevColumns =>
       prevColumns.map(column =>
         column.field === dataKey ? { ...column, colWidth: newWidth } : column
@@ -204,6 +219,14 @@ const QbsTable: React.FC<QbsTableProps> = ({
       );
     }
   }, [wordWrap]);
+  useEffect(() => {
+    if (!defaultRowView) {
+      setWordWrap('break-word');
+    } else {
+      setWordWrap(false);
+    }
+    REFRESH_KEY = REFRESH_KEY + 1;
+  }, [defaultRowView]);
 
   const onReorder = useCallback((columns: QbsColumnProps[]) => {
     setColumns(columns);
@@ -211,7 +234,6 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
   // useEffect(() => {
   // }, [columns]);
-
   const handleClear = ([]) => {
     setCheckedKeys([]);
     handleChecked([]);
@@ -241,7 +263,12 @@ const QbsTable: React.FC<QbsTableProps> = ({
     searchPlaceholder: searchPlaceholder,
     setTableViewToggle: setTableViewToggle,
     tableViewToggle: tableViewToggle,
-    enableTableToggle: enableTableToggle
+    enableTableToggle: enableTableToggle,
+    rowViewToggle: rowViewToggle,
+    defaultRowView: defaultRowView,
+    fullWidthView: fullWidthView,
+    setTableFullView: setTableFullView,
+    setRowViewToggle: setRowViewToggle
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
@@ -274,7 +301,6 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
   const handleExpanded = useCallback(
     (rowData: any) => {
-      console.log(rowData);
       const keyValue = dataRowKey as string;
       const key = rowData[keyValue];
 
@@ -564,6 +590,20 @@ const QbsTable: React.FC<QbsTableProps> = ({
     [columns, dataTheme]
   );
 
+  const handleInfiniteScroll = (scroll: number) => {
+    if (!infiniteScroll) return;
+    const wrapper = wheelWrapperRef.current;
+    if (!wrapper || !hasMoreData || infiniteLoading) return;
+
+    const { scrollTop, clientHeight } = wrapper;
+    const scrollHeight = Math.abs(scroll) + (height - headerHeight);
+
+    // Trigger fetch when user scrolls within 100px of bottom
+    if (scrollTop + clientHeight >= scrollHeight - 70) {
+      loadMoreData?.(); // fetch next page here
+    }
+  };
+
   return (
     <div className={`qbs-table ${classes.tableContainerClass}`} data-theme={dataTheme}>
       {toolbar && <ToolBar {...toolbarProps} />}
@@ -571,17 +611,20 @@ const QbsTable: React.FC<QbsTableProps> = ({
         {tableViewToggle ? (
           <Table
             height={autoHeight ? undefined : height}
-            key={tableKey}
+            key={tableKey + REFRESH_KEY}
             tableKey={tableKey}
             data={data}
             tableBodyRef={tableBodyRef as React.RefObject<HTMLDivElement>}
             dataTheme={dataTheme}
             wordWrap={wordWrap}
+            wheelWrapperRef={wheelWrapperRef}
             autoHeight={autoHeight}
+            handleInfiniteScroll={handleInfiniteScroll}
             sortColumn={sortColumn}
             style={{ position: 'relative' }}
             sortType={sortType}
             onSortColumn={handleSortColumn}
+            infiniteLoading={infiniteLoading}
             onRowClick={onRowClick}
             tableBodyHeight={tableBodyHeight}
             cellBordered={cellBordered}
@@ -707,6 +750,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       onReorder={onReorder}
                       isOpen={isOpen}
                       tableHeight={height}
+                      viewMode={viewMode}
+                      setViewMode={setViewMode}
                       setIsOpen={setIsOpen}
                       handleResetColumns={handleResetColumns}
                       handleColumnToggle={handleColumnToggle}
@@ -731,6 +776,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       onToggle={handleToggle}
                       tableHeight={height}
                       onReorder={onReorder}
+                      viewMode={viewMode}
+                      setViewMode={setViewMode}
                       isOpen={isOpen}
                       setIsOpen={setIsOpen}
                       handleResetColumns={handleResetColumns}

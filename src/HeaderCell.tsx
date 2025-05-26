@@ -97,7 +97,6 @@ const HeaderCell = React.forwardRef((props: HeaderCellProps, ref: React.Ref<HTML
       onSortColumn?.(sortKey ?? dataKey);
     }
   }, [dataKey, onSortColumn, sortable, sortKey]);
-
   const handleColumnResizeStart = useCallback(() => {
     onColumnResizeStart?.(columnWidth, left, !!fixed);
   }, [columnWidth, fixed, left, onColumnResizeStart]);

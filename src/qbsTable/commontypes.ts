@@ -130,6 +130,16 @@ export interface QbsTableProps {
   handleTableCardView?: (data: any) => React.ReactNode;
   isCustomTableCardView?: boolean;
   handleCustomCardLoader?: () => React.ReactNode;
+  hasMoreData?: boolean;
+  loadMoreData?: () => void;
+  infiniteScroll?: boolean;
+  infiniteLoading?: boolean;
+  viewMode?: string;
+  rowViewToggle?: boolean;
+  defaultRowView?: boolean;
+  fullWidthView?: boolean;
+  setTableFullView?: (value: boolean) => void;
+  setRowViewToggle?: (value: boolean) => void;
 }
 
 export interface QbsTableToolbarProps {
@@ -166,4 +176,9 @@ export interface QbsTableToolbarProps {
     hidden?: boolean;
     customHide?: string;
   }[];
+  rowViewToggle?: boolean;
+  defaultRowView?: boolean;
+  fullWidthView?: boolean;
+  setTableFullView?: (value: boolean) => void;
+  setRowViewToggle?: (value: boolean) => void;
 }

@@ -90,6 +90,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>(null);
   const tableBodyRef = useRef<HTMLDivElement>(null);
+  const wheelWrapperRef = useRef<HTMLDivElement>(null);
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
       setLoading(true);
@@ -259,7 +260,6 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
   const handleExpanded = useCallback(
     (rowData: any) => {
-      console.log(rowData);
       const keyValue = dataRowKey as string;
       const key = rowData[keyValue];
 
@@ -450,6 +450,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           wordWrap={wordWrap}
           autoHeight={autoHeight}
           sortColumn={sortColumn}
+          wheelWrapperRef={wheelWrapperRef}
           style={{ position: 'relative' }}
           sortType={sortType}
           onSortColumn={handleSortColumn}

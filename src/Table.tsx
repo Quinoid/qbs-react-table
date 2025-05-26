@@ -224,6 +224,7 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
     expanded?: boolean
   ) => React.ReactNode;
   tableKey?: string;
+  infiniteLoading?: boolean;
   /** Customize what you can do to expand a zone */
   renderRowExpanded?: (rowData?: Row) => React.ReactNode;
 
@@ -259,13 +260,16 @@ export interface TableProps<Row, Key> extends Omit<StandardProps, 'onScroll'> {
 
   /** Callback for the `touchend` event. */
   onTouchEnd?: (event: React.TouchEvent) => void;
-
+  handleInfiniteScroll?: (value: number) => void;
   /**
    * Callback after table data update.
    * @deprecated use `shouldUpdateScroll` instead
    **/
   onDataUpdated?: (nextData: Row[], scrollTo: (coord: { x: number; y: number }) => void) => void;
   tableBodyRef: React.RefObject<HTMLDivElement>;
+
+  wheelWrapperRef: React.RefObject<HTMLDivElement | null>;
+
   bodyRef?: (ref: HTMLElement) => void;
 }
 
@@ -302,8 +306,7 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
       loading: 'Loading...'
     },
     showHeader = true,
-    pagination = true,
-    paginationProps = {},
+
     sortColumn,
     rowHeight = ROW_HEIGHT,
     sortType: sortTypeProp,
@@ -335,11 +338,13 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     onTouchStart,
     onTouchMove,
     onTouchEnd,
-    dataTheme,
     tableBodyHeight,
     columns,
     tableBodyRef,
     tableKey,
+    handleInfiniteScroll,
+    infiniteLoading,
+    wheelWrapperRef,
     ...rest
   } = props;
 
@@ -349,7 +354,6 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     prefix
   } = useClassNames(classPrefix, typeof classPrefix !== 'undefined');
   const childTableRef = useRef<HTMLDivElement>(null);
-
   // Use `forceUpdate` to force the component to re-render after manipulating the DOM.
   const [, forceUpdate] = useReducer(x => x + 1, 0);
   const [expandedRowKeys, setExpandedRowKeys] = useControlled(
@@ -408,7 +412,6 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
   const affixHeaderWrapperRef = useRef<HTMLDivElement>(null);
   const headerWrapperRef = useRef<HTMLDivElement>(null);
   // const tableBodyRef = useRef<HTMLDivElement>(null);
-  const wheelWrapperRef = useRef<HTMLDivElement>(null);
   const scrollbarXRef = useRef<ScrollbarInstance>(null);
   const scrollbarYRef = useRef<ScrollbarInstance>(null);
 
@@ -533,7 +536,8 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     onScroll,
     onTouchStart,
     onTouchMove,
-    onTouchEnd
+    onTouchEnd,
+    handleInfiniteScroll
   });
 
   const { headerCells, bodyCells, allColumnsWidth, hasCustomTreeCol } = useCellDescriptor({
@@ -953,7 +957,9 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
           tableId={id}
           style={{ width: tableWidth.current }}
           length={tableWidth.current}
-          onScroll={onScrollHorizontal}
+          onScroll={delta => {
+            onScrollHorizontal(delta);
+          }}
           scrollLength={contentWidth.current}
           ref={scrollbarXRef}
         />
@@ -1132,13 +1138,21 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
         role="rowgroup"
         className={prefix('body-row-wrapper')}
         style={bodyStyles}
-        onScroll={onScrollBody}
+        onScroll={e => {
+          onScrollBody?.(e); // existing handler
+        }}
       >
         {!loading && (
           <div style={wheelStyles} className={prefix('body-wheel-area')} ref={wheelWrapperRef}>
             {topHideHeight ? <Row style={topRowStyles} className="virtualized" /> : null}
             {visibleRows.current}
             {bottomHideHeight ? <Row style={bottomRowStyles} className="virtualized" /> : null}
+
+            {infiniteLoading && (
+              <div style={{ padding: 12, textAlign: 'center' }}>
+                <span>Loading more rows…</span>
+              </div>
+            )}
           </div>
         )}
 

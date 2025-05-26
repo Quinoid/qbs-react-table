@@ -411,10 +411,12 @@ const App = () => {
         pagination={true}
         tableBodyRef={tableBodyRef}
         columns={columns}
+        wordWrap={'break-word'} infiniteScroll={true}
         rowExpand={true}
         expandedRowKeys={expandedRowKeys}
         setExpandedRowKeys={setExpandedRowKeys}
         headerHeight={40}
+        height={600}
         tableBodyHeight={`calc(100vh - 300px)`}
         isLoading={false}
         dataRowKey="id"
@@ -753,7 +755,6 @@ const App = () => {
           }
         ]}
         search
-        height={550}
         toolbar
         loading={true}
         columnToggle
