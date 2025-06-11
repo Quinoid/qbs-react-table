@@ -102,7 +102,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   defaultRowView = true,
   fullWidthView = false,
   setTableFullView,
-  setRowViewToggle
+  setRowViewToggle,
+  dropType = 'horizondal',
+  rowHeight
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -618,6 +620,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             dataTheme={dataTheme}
             wordWrap={wordWrap}
             wheelWrapperRef={wheelWrapperRef}
+            rowHeight={rowHeight}
             autoHeight={autoHeight}
             handleInfiniteScroll={handleInfiniteScroll}
             sortColumn={sortColumn}
@@ -787,6 +790,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 </HeaderCell>
                 <ActionCell
                   tableBodyRef={tableBodyRef}
+                  dropType={dropType}
                   actionProps={actionProps}
                   className={`${classes.cellClass} ${classes.actionCellClass}`}
                   handleMenuActions={handleMenuActions}

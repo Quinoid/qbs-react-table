@@ -81,7 +81,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   renderEmpty,
   autoHeight,
   emptySubTitle,
-  emptyTitle
+  emptyTitle,
+  dropType = 'horizontal'
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -611,6 +612,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
               <ActionCell
                 tableBodyRef={tableBodyRef}
                 actionProps={actionProps}
+                dropType={dropType}
                 className={`${classes.cellClass} ${classes.actionCellClass}`}
                 handleMenuActions={handleMenuActions}
                 dataTheme={dataTheme}

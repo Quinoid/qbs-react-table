@@ -76,6 +76,7 @@ const App = () => {
         columns={columns}
         headerHeight={40}
         isLoading={false}
+        rowHeight={100}
         dataRowKey="id"
         data={[
           {

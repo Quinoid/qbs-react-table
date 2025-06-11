@@ -43,7 +43,7 @@ export interface PaginationProps {
 export interface ActionProps {
   title?: string;
   action?: (row: any) => void;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   toolTip?: string;
   hidden?: boolean;
   hide?: (data: any, index?: number) => boolean;
@@ -140,6 +140,8 @@ export interface QbsTableProps {
   fullWidthView?: boolean;
   setTableFullView?: (value: boolean) => void;
   setRowViewToggle?: (value: boolean) => void;
+  dropType?: 'horizondal' | 'vertical';
+  rowHeight?: number;
 }
 
 export interface QbsTableToolbarProps {

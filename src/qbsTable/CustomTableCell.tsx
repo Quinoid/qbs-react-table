@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Cell from '../Cell';
 import { handleCellFormat } from './utilities/handleFormatCell';
 import MenuDropDown from './utilities/menuDropDown';
+import VerticalMenuDropdown from './utilities/VerticalDropDownMenu';
 
 const CHECKBOX_LINE_HEIGHT = '36px';
 export const CheckCell: React.FC<any> = React.memo(
@@ -37,17 +38,28 @@ export const CheckCell: React.FC<any> = React.memo(
   )
 );
 export const ActionCell: React.FC<any> = React.memo(
-  ({ rowData, handleMenuActions, dataTheme, actionProps, tableBodyRef, rowIndex }) => {
+  ({ rowData, handleMenuActions, dataTheme, actionProps, tableBodyRef, rowIndex, dropType }) => {
     return (
       <div>
-        <MenuDropDown
-          tableBodyRef={tableBodyRef}
-          actionDropDown={actionProps}
-          rowData={rowData}
-          dataTheme={dataTheme}
-          rowIndex={rowIndex}
-          handleMenuActions={handleMenuActions}
-        />
+        {dropType == 'vertical' ? (
+          <VerticalMenuDropdown
+            tableBodyRef={tableBodyRef}
+            actionDropDown={actionProps}
+            rowData={rowData}
+            dataTheme={dataTheme}
+            rowIndex={rowIndex}
+            handleMenuActions={handleMenuActions}
+          />
+        ) : (
+          <MenuDropDown
+            tableBodyRef={tableBodyRef}
+            actionDropDown={actionProps}
+            rowData={rowData}
+            dataTheme={dataTheme}
+            rowIndex={rowIndex}
+            handleMenuActions={handleMenuActions}
+          />
+        )}
       </div>
     );
   }

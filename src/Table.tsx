@@ -347,7 +347,6 @@ const Table = React.forwardRef(<Row extends RowDataType, Key>(props: TableProps<
     wheelWrapperRef,
     ...rest
   } = props;
-
   const {
     withClassPrefix,
     merge: mergeCls,
