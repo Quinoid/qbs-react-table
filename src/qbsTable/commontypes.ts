@@ -142,6 +142,7 @@ export interface QbsTableProps {
   setRowViewToggle?: (value: boolean) => void;
   dropType?: 'horizondal' | 'vertical';
   rowHeight?: number;
+  isFullScreen?: boolean
 }
 
 export interface QbsTableToolbarProps {
@@ -183,4 +184,5 @@ export interface QbsTableToolbarProps {
   fullWidthView?: boolean;
   setTableFullView?: (value: boolean) => void;
   setRowViewToggle?: (value: boolean) => void;
+  isFullScreen?: boolean
 }

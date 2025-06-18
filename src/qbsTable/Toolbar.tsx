@@ -32,7 +32,8 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   defaultRowView = true,
   fullWidthView = false,
   setTableFullView,
-  setRowViewToggle
+  setRowViewToggle,
+  isFullScreen = false
 }) => {
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
   const [searchParam, setSearchParam] = useState<string | undefined>(searchValue);
@@ -109,27 +110,31 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           )}
           {tableHeaderActions}
           <div className=" pr-1 cursor-pointer relative table_custom_ctions   ">
-            {rowViewToggle && (
+            {(rowViewToggle || isFullScreen) && (
               <div className="flex gap-2 qbs-row-switch-cntainer">
-                <div className="flex gap-2 table_cell_style">
-                  <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Default View'}>
-                    <div onClick={() => setRowViewToggle?.(true)}>
-                      <DefaultView className={`${defaultRowView ? 'active' : ''}`} />
-                    </div>
-                  </TooltipComponent>
-                  <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Compact View'}>
-                    <div onClick={() => setRowViewToggle?.(false)}>
-                      <ContentView className={`${!defaultRowView ? 'active' : ''}`} />
-                    </div>
-                  </TooltipComponent>
-                </div>
-                <div className=" table_full_width">
-                  <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Full Screen'}>
-                    <div onClick={() => setTableFullView?.(!fullWidthView)}>
-                      <ExpandIcon className={`${fullWidthView ? 'active' : ''}`} />
-                    </div>
-                  </TooltipComponent>
-                </div>
+                {rowViewToggle && (
+                  <div className="flex gap-2 table_cell_style">
+                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Default View'}>
+                      <div onClick={() => setRowViewToggle?.(true)}>
+                        <DefaultView className={`${defaultRowView ? 'active' : ''}`} />
+                      </div>
+                    </TooltipComponent>
+                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Compact View'}>
+                      <div onClick={() => setRowViewToggle?.(false)}>
+                        <ContentView className={`${!defaultRowView ? 'active' : ''}`} />
+                      </div>
+                    </TooltipComponent>
+                  </div>
+                )}
+                {isFullScreen && (
+                  <div className=" table_full_width">
+                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Full Screen'}>
+                      <div onClick={() => setTableFullView?.(!fullWidthView)}>
+                        <ExpandIcon className={`${fullWidthView ? 'active' : ''}`} />
+                      </div>
+                    </TooltipComponent>
+                  </div>
+                )}
               </div>
             )}
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+
 import { ActionProps } from '../commontypes';
 import { ThreeDotIcon } from './icons';
 import TooltipComponent from './ToolTip';
@@ -11,6 +12,7 @@ type Props = {
   dataTheme?: string;
   tableBodyRef: React.RefObject<HTMLDivElement>;
   rowIndex?: number;
+  wheelWrapperRef?: React.RefObject<HTMLDivElement>;
 };
 
 const VerticalMenuDropdown: React.FC<Props> = ({
@@ -31,12 +33,44 @@ const VerticalMenuDropdown: React.FC<Props> = ({
         setOpenMenu(false);
       }
     };
+    const handleScroll = () => {
+      setOpenMenu(false);
+    };
 
     document.addEventListener('click', handleClickOutside);
+    window.addEventListener('scroll', handleScroll, true);
+    // Use capture phase to catch all scrolls
+
     return () => {
       document.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll, true);
     };
   }, []);
+  useEffect(() => {
+    const handleStyleChange = () => {
+      setOpenMenu(false); // Close the dropdown
+    };
+
+    const scrollbarHandle = document.querySelector('.rs-table-scrollbar-handle');
+    if (!scrollbarHandle) return;
+
+    const observer = new MutationObserver(mutations => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          handleStyleChange();
+        }
+      }
+    });
+
+    observer.observe(scrollbarHandle, {
+      attributes: true,
+      attributeFilter: ['style']
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [openMenu]);
 
   const handleMenuItemClick = (slug: ActionProps) => {
     handleMenuActions?.(slug, rowData);
@@ -53,7 +87,27 @@ const VerticalMenuDropdown: React.FC<Props> = ({
   const toggleMenu = () => {
     if (!openMenu && menuButtonRef.current) {
       const rect = menuButtonRef.current.getBoundingClientRect();
-      setPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
+      const windowHeight = window.innerHeight;
+      const menuHeight =
+        actionDropDown?.filter(item => !item.hidden && !item?.hide?.(rowData, rowIndex)).length *
+        40; // 40px per menu item
+
+      // Check if there's enough space below
+      const spaceBelow = windowHeight - rect.bottom;
+
+      if (spaceBelow >= menuHeight) {
+        // Open below
+        setPosition({
+          top: rect.bottom + window.scrollY - rect.height,
+          left: rect.left - 200
+        });
+      } else {
+        // Open above
+        setPosition({
+          top: rect.top + window.scrollY - menuHeight,
+          left: rect.left - 200
+        });
+      }
     }
     setTimeout(() => {
       setOpenMenu(prev => !prev);
@@ -63,9 +117,9 @@ const VerticalMenuDropdown: React.FC<Props> = ({
   const portalTarget = document.getElementById('portal-root');
   const dropdownContent = (
     <div
-      className="absolute z-50 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 vertical-menu-dropdown-content"
+      className="absolute z-50 min-w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 vertical-menu-dropdown-content"
       ref={menuRef}
-      style={{ top: position.top, left: position.left, position: 'absolute' }}
+      style={{ width: 200, top: position.top, left: position.left, position: 'absolute' }}
     >
       <div className="py-1">
         {actionDropDown?.map(item =>

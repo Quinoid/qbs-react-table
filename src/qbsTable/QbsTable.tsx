@@ -104,7 +104,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   setTableFullView,
   setRowViewToggle,
   dropType = 'horizondal',
-  rowHeight
+  rowHeight,
+  isFullScreen
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -270,7 +271,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
     defaultRowView: defaultRowView,
     fullWidthView: fullWidthView,
     setTableFullView: setTableFullView,
-    setRowViewToggle: setRowViewToggle
+    setRowViewToggle: setRowViewToggle,
+    isFullScreen: isFullScreen
   };
   const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
@@ -599,7 +601,6 @@ const QbsTable: React.FC<QbsTableProps> = ({
 
     const { scrollTop, clientHeight } = wrapper;
     const scrollHeight = Math.abs(scroll) + (height - headerHeight);
-
     // Trigger fetch when user scrolls within 100px of bottom
     if (scrollTop + clientHeight >= scrollHeight - 70) {
       loadMoreData?.(); // fetch next page here
@@ -791,6 +792,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                 <ActionCell
                   tableBodyRef={tableBodyRef}
                   dropType={dropType}
+                  wheelWrapperRef={wheelWrapperRef}
                   actionProps={actionProps}
                   className={`${classes.cellClass} ${classes.actionCellClass}`}
                   handleMenuActions={handleMenuActions}

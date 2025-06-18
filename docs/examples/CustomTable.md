@@ -417,6 +417,7 @@ const App = () => {
         expandedRowKeys={expandedRowKeys}
         setExpandedRowKeys={setExpandedRowKeys}
         headerHeight={40}
+        dropType='vertical'
         height={600}
         tableBodyHeight={`calc(100vh - 300px)`}
         isLoading={false}
@@ -676,7 +677,7 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
-            hidden:true,
+            hidden:false,
             icon: (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -696,7 +697,7 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
-            hidden:true,
+            hidden:false,
             icon: (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -716,7 +717,7 @@ const App = () => {
           {
             title: 'Delete',
             action: rowData => console.log(rowData),
-            hidden:true,
+            hidden:false,
             icon: (
               <svg
                 xmlns="http://www.w3.org/2000/svg"

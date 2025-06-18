@@ -38,7 +38,16 @@ export const CheckCell: React.FC<any> = React.memo(
   )
 );
 export const ActionCell: React.FC<any> = React.memo(
-  ({ rowData, handleMenuActions, dataTheme, actionProps, tableBodyRef, rowIndex, dropType }) => {
+  ({
+    rowData,
+    handleMenuActions,
+    dataTheme,
+    actionProps,
+    tableBodyRef,
+    rowIndex,
+    dropType,
+    wheelWrapperRef
+  }) => {
     return (
       <div>
         {dropType == 'vertical' ? (
@@ -49,6 +58,7 @@ export const ActionCell: React.FC<any> = React.memo(
             dataTheme={dataTheme}
             rowIndex={rowIndex}
             handleMenuActions={handleMenuActions}
+            wheelWrapperRef={wheelWrapperRef}
           />
         ) : (
           <MenuDropDown
