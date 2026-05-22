@@ -11,7 +11,15 @@ export type { ColumnProps } from './Column';
 export type { CellProps } from './Cell';
 export type { HeaderCellProps } from './HeaderCell';
 export type { ColumnGroupProps } from './ColumnGroup';
-export type { QbsTableProps, QbsTableLabels } from './qbsTable/commontypes';
+export type { QbsTableProps } from './qbsTable/commontypes';
+export type { QbsTableLabels } from './qbsTable/labels';
+export {
+  mergeQbsTableLabels,
+  mergeLabels,
+  defaultQbsTableLabels,
+  DEFAULT_QBS_TABLE_LABELS,
+  formatSelectedItems,
+} from './qbsTable/labels';
 export type {
   StandardProps,
   SortType,

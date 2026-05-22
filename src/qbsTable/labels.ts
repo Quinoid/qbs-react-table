@@ -21,15 +21,11 @@ export interface QbsTableLabels {
   actions?: string;
 }
 
-export const DEFAULT_QBS_TABLE_LABELS: Required<
-  Omit<QbsTableLabels, 'showingRange'>
-> & {
-  showingRange: (start: number, end: number, total: number) => string;
-} = {
+export const defaultQbsTableLabels: QbsTableLabels = {
   search: 'Search',
   searchAriaLabel: 'Search',
   clear: 'Clear',
-  selectedItems: 'Selected Items',
+  selectedItems: 'Selected items',
   switchToDefaultView: 'Switch to Default View',
   switchToRelaxedView: 'Switch to Relaxed View',
   switchToFullScreen: 'Switch to Full Screen',
@@ -45,14 +41,22 @@ export const DEFAULT_QBS_TABLE_LABELS: Required<
   save: 'Save',
   viewMore: 'View More',
   viewLess: 'View Less',
-  actions: 'Actions'
+  actions: 'Actions',
 };
 
-export const mergeLabels = (labels?: QbsTableLabels) => ({
-  ...DEFAULT_QBS_TABLE_LABELS,
-  ...labels,
-  showingRange: labels?.showingRange ?? DEFAULT_QBS_TABLE_LABELS.showingRange
+/** @deprecated Use defaultQbsTableLabels */
+export const DEFAULT_QBS_TABLE_LABELS = defaultQbsTableLabels;
+
+export const mergeQbsTableLabels = (overrides?: QbsTableLabels): QbsTableLabels => ({
+  ...defaultQbsTableLabels,
+  ...overrides,
+  showingRange: overrides?.showingRange ?? defaultQbsTableLabels.showingRange,
 });
 
-export const formatSelectedItems = (selectedItemsLabel: string, count: number) =>
-  `${selectedItemsLabel}(${count}) `;
+/** @deprecated Use mergeQbsTableLabels */
+export const mergeLabels = mergeQbsTableLabels;
+
+export const formatSelectedItems = (count: number, labels?: QbsTableLabels): string => {
+  const merged = mergeQbsTableLabels(labels);
+  return `${merged.selectedItems} (${count})`;
+};

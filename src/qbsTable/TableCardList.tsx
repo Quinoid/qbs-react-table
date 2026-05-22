@@ -7,7 +7,7 @@ import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
-import { mergeLabels } from './labels';
+import { mergeQbsTableLabels } from './labels';
 import {
   ActionCell,
   CheckCell,
@@ -83,21 +83,29 @@ const QbsTable: React.FC<QbsTableProps> = ({
   autoHeight,
   emptySubTitle,
   emptyTitle,
-  dropType = 'horizontal',
-  labels: labelsProp
+  dropType,
+  labels: labelsProp,
+  rtl = false,
+  rowViewToggle = false,
+  defaultRowView = true,
+  fullWidthView = false,
+  setTableFullView,
+  setRowViewToggle,
+  isFullScreen = false,
+  showHeader = true,
 }) => {
-  const labels = useMemo(() => mergeLabels(labelsProp), [labelsProp]);
+  const labels = useMemo(() => mergeQbsTableLabels(labelsProp), [labelsProp]);
+  const effectiveWordWrap = useMemo(() => {
+    if (!rowViewToggle) return wordWrap;
+    return defaultRowView ? false : 'break-word';
+  }, [rowViewToggle, defaultRowView, wordWrap]);
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
-  const dataTheme = useMemo(
-    () => theme ?? (typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null) ?? 'light',
-    [theme]
-  );
+  const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>(null);
   const tableBodyRef = useRef<HTMLDivElement>(null);
-  const wheelWrapperRef = useRef<HTMLDivElement>(null);
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
       setLoading(true);
@@ -147,6 +155,16 @@ const QbsTable: React.FC<QbsTableProps> = ({
     },
 
     [checkedKeys]
+  );
+
+  const rowKeyField = dataRowKey ?? 'id';
+  const getRowClassName = useCallback(
+    (rowData: Record<string, unknown>) => {
+      if (!selection) return '';
+      const key = rowData?.[rowKeyField] as string | number | undefined;
+      return key !== undefined && checkedKeys?.includes(key) ? 'qbs-table-row-checked' : '';
+    },
+    [selection, checkedKeys, rowKeyField]
   );
 
   const handleToggle = useCallback(
@@ -235,24 +253,18 @@ const QbsTable: React.FC<QbsTableProps> = ({
     handleColumnToggle: handleColumnToggle,
     dataLength: data?.length,
     searchPlaceholder: searchPlaceholder,
-    labels
+    rowViewToggle,
+    defaultRowView,
+    fullWidthView,
+    setTableFullView,
+    setRowViewToggle,
+    isFullScreen,
+    labels,
+    rtl,
   };
+  const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
   useEffect(() => {
-    if (!dataTheme || typeof document === 'undefined') return;
-
-    document.body.setAttribute('data-theme', dataTheme === 'dark' ? 'dark' : 'light');
-    document.documentElement.dataset.theme = dataTheme;
-  }, [dataTheme]);
-
-  const themeToggle = useMemo(
-    () => (typeof document !== 'undefined' ? document.getElementById('themeToggle') : null),
-    []
-  ) as HTMLInputElement | null;
-
-  useEffect(() => {
-    if (theme || typeof document === 'undefined') return;
-
     const handleThemeToggle = () => {
       if (themeToggle?.checked) {
         document.body.setAttribute('data-theme', 'dark');
@@ -277,10 +289,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
       themeToggle?.removeEventListener('change', handleThemeToggle);
       document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
     };
-  }, [theme, themeToggle]);
+  }, [themeToggle]);
 
   const handleExpanded = useCallback(
     (rowData: any) => {
+      console.log(rowData);
       const keyValue = dataRowKey as string;
       const key = rowData[keyValue];
 
@@ -465,13 +478,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
           height={autoHeight ? undefined : height}
           key={tableKey}
           tableKey={tableKey}
+          rtl={rtl}
           data={data}
           tableBodyRef={tableBodyRef as React.RefObject<HTMLDivElement>}
           dataTheme={dataTheme}
-          wordWrap={wordWrap}
+          wordWrap={effectiveWordWrap}
           autoHeight={autoHeight}
           sortColumn={sortColumn}
-          wheelWrapperRef={wheelWrapperRef}
           style={{ position: 'relative' }}
           sortType={sortType}
           onSortColumn={handleSortColumn}
@@ -483,7 +496,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             renderEmpty ? (
               renderEmpty(info)
             ) : (
-              <NoData title={emptyTitle ?? labels.noDataFound} subtitle={emptySubTitle} />
+              <NoData title={emptyTitle ?? 'No Data Found'} subtitle={emptySubTitle} />
             )
           }
           columns={columns}
@@ -491,11 +504,12 @@ const QbsTable: React.FC<QbsTableProps> = ({
           headerHeight={headerHeight}
           rowExpandedHeight={rowExpandedHeight}
           loading={isLoading ?? loading}
-          showHeader
+          showHeader={showHeader}
           defaultChecked
           expandedRowKeys={expandedRowKeys}
           onExpandChange={onExpandChange}
           rowKey={dataRowKey ?? 'id'}
+          rowClassName={selection ? getRowClassName : undefined}
           defaultExpandAllRows={defaultExpandAllRows}
           shouldUpdateScroll={shouldUpdateScroll}
           renderRowExpanded={rowData => {
@@ -602,6 +616,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     handleResetColumns={handleResetColumns}
                     handleColumnToggle={handleColumnToggle}
                     labels={labels}
+                    rtl={rtl}
                   />
                 </HeaderCell>
                 <Cell />
@@ -628,25 +643,24 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     handleResetColumns={handleResetColumns}
                     handleColumnToggle={handleColumnToggle}
                     labels={labels}
+                    rtl={rtl}
                   />
                 )}
               </HeaderCell>
               <ActionCell
                 tableBodyRef={tableBodyRef}
                 actionProps={actionProps}
-                dropType={dropType}
                 className={`${classes.cellClass} ${classes.actionCellClass}`}
                 handleMenuActions={handleMenuActions}
                 dataTheme={dataTheme}
+                dropType={dropType}
               />
             </Column>
           )}
         </Table>
 
         <div>
-          {pagination && data?.length > 0 && (
-            <Pagination paginationProps={paginationProps} labels={labels} dataTheme={dataTheme} />
-          )}
+          {pagination && data?.length > 0 && <Pagination paginationProps={paginationProps} />}
         </div>
       </div>
     </div>

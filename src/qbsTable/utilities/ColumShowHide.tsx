@@ -1,7 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 
 import { QbsColumnProps } from '../commontypes';
-import { mergeLabels, type QbsTableLabels } from '../labels';
+import type { QbsTableLabels } from '../labels';
+import { mergeQbsTableLabels } from '../labels';
+import {
+  closeOtherColumnToggles,
+  COLUMN_TOGGLE_CLOSE_OTHERS,
+  type ColumnToggleCloseDetail,
+} from './columnToggleCoordinator';
 import { SettingsIcon } from './icons';
 
 interface ColumnToggleProps {
@@ -13,9 +20,8 @@ interface ColumnToggleProps {
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   handleResetColumns?: () => void;
   tableHeight?: number;
-  viewMode?: string;
-  setViewMode?: (value: string) => void;
   labels?: QbsTableLabels;
+  rtl?: boolean;
 }
 
 const ColumnToggle: React.FC<ColumnToggleProps> = ({
@@ -27,18 +33,56 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
   handleResetColumns,
   handleColumnToggle,
   tableHeight = 450,
-  labels: labelsProp
+  labels: labelsProp,
+  rtl = false,
 }) => {
-  const labels = mergeLabels(labelsProp);
+  const labels = mergeQbsTableLabels(labelsProp);
+  const toggleId = useId();
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
+  const settingsBtnRef = useRef<HTMLButtonElement | null>(null);
   const [dragOverPosition, setDragOverPosition] = useState<number | null>();
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+
+  const updatePopupPosition = useCallback(() => {
+    if (!settingsBtnRef.current) return;
+    const rect = settingsBtnRef.current.getBoundingClientRect();
+    const viewportPadding = 8;
+    const popupWidth = popupRef.current?.offsetWidth || 360;
+    const popupHeight = popupRef.current?.offsetHeight || 320;
+
+    let left = rtl ? rect.left : rect.right - popupWidth;
+    if (left + popupWidth > window.innerWidth - viewportPadding) {
+      left = Math.max(viewportPadding, window.innerWidth - popupWidth - viewportPadding);
+    }
+    if (left < viewportPadding) {
+      left = viewportPadding;
+    }
+
+    let top = rect.bottom + 4;
+    if (top + popupHeight > window.innerHeight - viewportPadding) {
+      top = Math.max(viewportPadding, rect.top - popupHeight - 4);
+    }
+
+    setPosition({ top, left });
+  }, [rtl]);
+
+  useEffect(() => {
+    const handleCloseOthers = (event: Event) => {
+      const detail = (event as CustomEvent<ColumnToggleCloseDetail>).detail;
+      if (detail?.exceptId !== toggleId) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener(COLUMN_TOGGLE_CLOSE_OTHERS, handleCloseOthers);
+    return () => document.removeEventListener(COLUMN_TOGGLE_CLOSE_OTHERS, handleCloseOthers);
+  }, [setIsOpen, toggleId]);
 
   const handleToggle = useCallback(
     (columnName: string) => {
       onToggle(columnName);
     },
-    [onToggle]
+    [onToggle],
   );
 
   const onDragStart = useCallback((e: React.DragEvent, index: number) => {
@@ -65,22 +109,37 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
       }
       setDraggedItem(null);
     },
-    [columns, draggedItem]
+    [columns, draggedItem, onReorder],
   );
+
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+      const target = event.target as Node;
+      if (
+        popupRef.current?.contains(target) ||
+        settingsBtnRef.current?.contains(target)
+      ) {
+        return;
       }
+      setIsOpen(false);
     },
-    [setIsOpen]
+    [setIsOpen],
   );
+
   useEffect(() => {
+    if (!isOpen) return;
+    updatePopupPosition();
+    const frame = requestAnimationFrame(() => updatePopupPosition());
     document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('resize', updatePopupPosition);
+    window.addEventListener('scroll', updatePopupPosition, true);
     return () => {
+      cancelAnimationFrame(frame);
       document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', updatePopupPosition);
+      window.removeEventListener('scroll', updatePopupPosition, true);
     };
-  }, [handleClickOutside]);
+  }, [handleClickOutside, isOpen, updatePopupPosition]);
 
   const renderFixedColumn = (column: QbsColumnProps, index: number) => (
     <div
@@ -94,9 +153,9 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
           checked={column.isVisible}
           onChange={() => handleToggle(column.title)}
           className="qbs-table-checkbox-input"
-          id={column.title}
+          id={`${toggleId}-${column.title}`}
         />
-        <label htmlFor={column.title}>
+        <label htmlFor={`${toggleId}-${column.title}`}>
           <svg
             width="8"
             height="6"
@@ -107,13 +166,14 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
             <path
               d="M0 3.21739L2.89883 6L8 1.06994L6.89494 0L2.89883 3.86768L1.09728 2.14745L0 3.21739Z"
               fill="white"
-            ></path>
+            />
           </svg>
         </label>
       </div>
       <div className="qbs-table-popup-value">{column.title}</div>
     </div>
   );
+
   const renderColumn = (column: QbsColumnProps, index: number) => (
     <div
       key={column.title}
@@ -130,9 +190,9 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
           checked={column.isVisible}
           onChange={() => handleToggle(column.title)}
           className="qbs-table-checkbox-input"
-          id={column.title}
+          id={`${toggleId}-${column.title}`}
         />
-        <label htmlFor={column.title}>
+        <label htmlFor={`${toggleId}-${column.title}`}>
           <svg
             width="8"
             height="6"
@@ -143,7 +203,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
             <path
               d="M0 3.21739L2.89883 6L8 1.06994L6.89494 0L2.89883 3.86768L1.09728 2.14745L0 3.21739Z"
               fill="white"
-            ></path>
+            />
           </svg>
         </label>
       </div>
@@ -168,107 +228,107 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
       )}
     </div>
   );
-  const handleAvailableColumns = () => {
-    return columns.filter(item => !item.isVisible)?.length > 0 ? true : false;
-  };
+
+  const handleAvailableColumns = () =>
+    columns.filter(item => !item.isVisible)?.length > 0;
+
   const handleColToggle = () => {
     setIsOpen(false);
     handleColumnToggle?.(columns);
   };
-  return (
-    <div>
-      <button onClick={() => setIsOpen(!isOpen)}>
-        <SettingsIcon />
-      </button>
-      {isOpen && (
-        <div>
-          <div
-            className="qbs-table-column-popup"
-            style={{ maxHeight: tableHeight - 40 }}
-            ref={popupRef}
-          >
-            <div className="qbs-table-popup-container">
-              <div className="qbs-table-popup-item">
-                <div className="qbs-table-popup-label">{labels.fixedColumns}</div>
-                <div className="qbs-table-columns-container">
-                  <div className="qbs-table-column">
-                    {columns.map((column, index) =>
-                      column.fixed ? renderFixedColumn(column, index) : ''
-                    )}
-                  </div>
+
+  const portalTarget = document.getElementById('portal-root') ?? document.body;
+
+  const popupContent = (
+    <div
+      className={`qbs-table-column-popup${rtl ? ' qbs-table-column-popup--rtl' : ''}`}
+      style={{
+        position: 'fixed',
+        top: position.top,
+        left: position.left,
+        maxHeight: Math.min(tableHeight - 40, window.innerHeight - position.top - 16),
+        zIndex: 10060,
+      }}
+      ref={popupRef}
+      dir={rtl ? 'rtl' : 'ltr'}
+    >
+      <div className="qbs-table-popup-container">
+            <div className="qbs-table-popup-item">
+              <div className="qbs-table-popup-label">{labels.fixedColumns}</div>
+              <div className="qbs-table-columns-container">
+                <div className="qbs-table-column">
+                  {columns.map((column, index) =>
+                    column.fixed ? renderFixedColumn(column, index) : null,
+                  )}
                 </div>
               </div>
-              <div className="qbs-table-divider"></div>
-              <div className="qbs-table-popup-item">
-                <div className="qbs-table-popup-label">{labels.visibleColumns}</div>
-                <div className="qbs-table-columns-container">
-                  <div className="qbs-table-column">
-                    {columns.map((column, index) =>
-                      column.isVisible && !column.fixed ? renderColumn(column, index) : ''
-                    )}
-                  </div>
+            </div>
+            <div className="qbs-table-divider" />
+            <div className="qbs-table-popup-item">
+              <div className="qbs-table-popup-label">{labels.visibleColumns}</div>
+              <div className="qbs-table-columns-container">
+                <div className="qbs-table-column">
+                  {columns.map((column, index) =>
+                    column.isVisible && !column.fixed ? renderColumn(column, index) : null,
+                  )}
                 </div>
               </div>
-              {handleAvailableColumns() && (
-                <>
-                  <div className="qbs-table-divider"></div>
-                  <div className="qbs-table-popup-item">
-                    <div className="qbs-table-popup-label">{labels.availableColumns}</div>
-                    <div className="qbs-table-columns-container">
-                      <div className="qbs-table-column">
-                        {columns.map((column, index) =>
-                          !column.isVisible && !column.fixed ? renderFixedColumn(column, index) : ''
-                        )}
-                      </div>
+            </div>
+            {handleAvailableColumns() && (
+              <>
+                <div className="qbs-table-divider" />
+                <div className="qbs-table-popup-item">
+                  <div className="qbs-table-popup-label">{labels.availableColumns}</div>
+                  <div className="qbs-table-columns-container">
+                    <div className="qbs-table-column">
+                      {columns.map((column, index) =>
+                        !column.isVisible && !column.fixed ? renderFixedColumn(column, index) : null,
+                      )}
                     </div>
                   </div>
-                </>
-              )}
-            </div>
-            {handleResetColumns && (
-              <>
-                <div className="qbs-table-divider"></div>
-                <div
-                  className="qbs-table-popup-item"
-                  style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
-                >
-                  <a
-                    className="qbs-table-reset-link"
-                    href="#"
-                    onClick={() => handleResetColumns?.()}
-                  >
-                    {labels.resetToDefault}
-                  </a>
-                  <a className="qbs-table-reset-link" href="#" onClick={() => handleColToggle()}>
-                    {labels.save}
-                  </a>
                 </div>
               </>
             )}
-            {/* <div className="qbs-table-popup-item">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  value="compact"
-                  checked={viewMode === 'compact'}
-                  onChange={() => setViewMode?.('compact')}
-                />
-                Compact View
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  value="expanded"
-                  checked={viewMode === 'expanded'}
-                  onChange={() => setViewMode?.('expanded')}
-                />
-                Default View
-              </label>
-            </div> */}
           </div>
-        </div>
-      )}
+          {handleResetColumns && (
+            <>
+              <div className="qbs-table-divider" />
+              <div className="qbs-table-popup-footer">
+                <button
+                  type="button"
+                  className="qbs-table-reset-link"
+                  onClick={() => handleResetColumns?.()}
+                >
+                  {labels.resetToDefault}
+                </button>
+                <button type="button" className="qbs-table-reset-link" onClick={() => handleColToggle()}>
+                  {labels.save}
+                </button>
+              </div>
+            </>
+          )}
+    </div>
+  );
+
+  return (
+    <div className="qbs-table-settings-wrapper">
+      <button
+        type="button"
+        ref={settingsBtnRef}
+        onClick={event => {
+          event.stopPropagation();
+          if (isOpen) {
+            setIsOpen(false);
+            return;
+          }
+          closeOtherColumnToggles(toggleId);
+          updatePopupPosition();
+          setIsOpen(true);
+        }}
+      >
+        <SettingsIcon />
+      </button>
+      {isOpen && portalTarget && ReactDOM.createPortal(popupContent, portalTarget)}
     </div>
   );
 };

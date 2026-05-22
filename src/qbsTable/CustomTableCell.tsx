@@ -46,38 +46,36 @@ export const ActionCell: React.FC<any> = React.memo(
     tableBodyRef,
     rowIndex,
     dropType,
-    wheelWrapperRef
-  }) => {
-    return (
-      <div>
-        {dropType == 'vertical' ? (
-          <VerticalMenuDropdown
-            tableBodyRef={tableBodyRef}
-            actionDropDown={actionProps}
-            rowData={rowData}
-            dataTheme={dataTheme}
-            rowIndex={rowIndex}
-            handleMenuActions={handleMenuActions}
-            wheelWrapperRef={wheelWrapperRef}
-          />
-        ) : (
-          <MenuDropDown
-            tableBodyRef={tableBodyRef}
-            actionDropDown={actionProps}
-            rowData={rowData}
-            dataTheme={dataTheme}
-            rowIndex={rowIndex}
-            handleMenuActions={handleMenuActions}
-          />
-        )}
-      </div>
-    );
-  }
+    ...props
+  }) => (
+    <Cell {...props} dataTheme={dataTheme} style={{ padding: 0 }}>
+      {dropType === 'vertical' ? (
+        <VerticalMenuDropdown
+          tableBodyRef={tableBodyRef}
+          actionDropDown={actionProps}
+          rowData={rowData}
+          rowIndex={rowIndex}
+          handleMenuActions={handleMenuActions}
+        />
+      ) : (
+        <MenuDropDown
+          tableBodyRef={tableBodyRef}
+          actionDropDown={actionProps}
+          rowData={rowData}
+          dataTheme={dataTheme}
+          rowIndex={rowIndex}
+          handleMenuActions={handleMenuActions}
+        />
+      )}
+    </Cell>
+  )
 );
 export const ExpandCell: React.FC<any> = React.memo(
   ({ rowData, dataKey, expandedRowKeys, onChange, ...props }) => (
     <Cell {...props}>
       <button
+        type="button"
+        className="qbs-table-expand-btn"
         onClick={() => {
           onChange(rowData);
         }}
@@ -94,7 +92,7 @@ export const ExpandCell: React.FC<any> = React.memo(
               fillRule="evenodd"
               clipRule="evenodd"
               d="M0.792893 0.292893C1.18342 -0.097631 1.81658 -0.097631 2.20711 0.292893L5.5 3.58579L8.79289 0.292893C9.18342 -0.0976311 9.81658 -0.0976311 10.2071 0.292893C10.5976 0.683417 10.5976 1.31658 10.2071 1.70711L6.20711 5.70711C5.81658 6.09763 5.18342 6.09763 4.79289 5.70711L0.792893 1.70711C0.402369 1.31658 0.402369 0.683417 0.792893 0.292893Z"
-              fill="#313131"
+              fill="currentColor"
             />
           </svg>
         ) : (
@@ -109,7 +107,7 @@ export const ExpandCell: React.FC<any> = React.memo(
               fillRule="evenodd"
               clipRule="evenodd"
               d="M0.792894 9.70711C0.402369 9.31658 0.402369 8.68342 0.792894 8.29289L4.08579 5L0.792893 1.70711C0.402369 1.31658 0.402369 0.683418 0.792893 0.292894C1.18342 -0.0976312 1.81658 -0.0976312 2.20711 0.292894L6.20711 4.29289C6.59763 4.68342 6.59763 5.31658 6.20711 5.70711L2.20711 9.70711C1.81658 10.0976 1.18342 10.0976 0.792894 9.70711Z"
-              fill="#313131"
+              fill="currentColor"
             />
           </svg>
         )}

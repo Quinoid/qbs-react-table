@@ -9,7 +9,7 @@ import Table from '../Table';
 import isRTL from '../utils/isRTL';
 import useResponsiveStore from '../utils/useResponsiveStore';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
-import { mergeLabels } from './labels';
+import { mergeQbsTableLabels } from './labels';
 import {
   ActionCell,
   CheckCell,
@@ -112,7 +112,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   showHeader = true,
   labels: labelsProp
 }) => {
-  const labels = useMemo(() => mergeLabels(labelsProp), [labelsProp]);
+  const labels = useMemo(() => mergeQbsTableLabels(labelsProp), [labelsProp]);
+  const [rowViewRefreshKey, setRowViewRefreshKey] = useState(0);
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
@@ -129,6 +130,17 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const wheelWrapperRef = useRef<HTMLDivElement>(null);
   const [viewMode, setViewMode] = useState(propsViewMode ?? 'expanded');
   const [wordWrap, setWordWrap] = useState(propsWordWrap ?? false);
+  const effectiveWordWrap = useMemo(() => {
+    if (!rowViewToggle) return wordWrap;
+    return defaultRowView ? false : 'break-word';
+  }, [rowViewToggle, defaultRowView, wordWrap]);
+
+  useEffect(() => {
+    if (rowViewToggle) {
+      setRowViewRefreshKey(key => key + 1);
+    }
+  }, [defaultRowView, rowViewToggle]);
+
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
       setLoading(true);
@@ -283,7 +295,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
     setTableFullView: setTableFullView,
     setRowViewToggle: setRowViewToggle,
     isFullScreen: isFullScreen,
-    labels
+    labels,
+    rtl,
   };
 
   useEffect(() => {
@@ -642,13 +655,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
         {tableViewToggle ? (
           <Table
             height={autoHeight ? undefined : height}
-            key={tableKey + REFRESH_KEY}
+            key={`${tableKey}-${rowViewRefreshKey}`}
             tableKey={tableKey}
             data={data}
             rtl={rtl}
             tableBodyRef={tableBodyRef as React.RefObject<HTMLDivElement>}
             dataTheme={dataTheme}
-            wordWrap={wordWrap}
+            wordWrap={effectiveWordWrap}
             wheelWrapperRef={wheelWrapperRef}
             rowHeight={rowHeight}
             autoHeight={autoHeight}
@@ -789,6 +802,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       handleResetColumns={handleResetColumns}
                       handleColumnToggle={handleColumnToggle}
                       labels={labels}
+                      rtl={rtl}
                     />
                   </HeaderCell>
                   <Cell />
@@ -817,6 +831,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       handleResetColumns={handleResetColumns}
                       handleColumnToggle={handleColumnToggle}
                       labels={labels}
+                      rtl={rtl}
                     />
                   )}
                 </HeaderCell>

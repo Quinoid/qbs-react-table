@@ -2,8 +2,6 @@ import React, { ReactElement, ReactNode } from 'react';
 
 import type { QbsTableLabels } from './labels';
 
-export type { QbsTableLabels };
-
 interface Content {
   cell: ReactNode | string;
   toolTip?: string;
@@ -92,6 +90,8 @@ export interface QbsTableProps {
   expandedRowKeys?: readonly number[];
   setExpandedRowKeys?: (value: readonly number[]) => void;
   handleMenuActions?: (actions: ActionProps, rowData: any) => void;
+  dropType?: 'horizondal' | 'vertical' | string;
+  labels?: QbsTableLabels;
   handleRowExpanded?: (rowData: any) => React.ReactNode;
   shouldUpdateScroll?: boolean;
   rowExpand?: boolean;
@@ -99,7 +99,6 @@ export interface QbsTableProps {
   advancefilter?: ReactElement | ReactNode;
   tableHeaderActions?: ReactElement | ReactNode;
   searchPlaceholder?: string;
-  labels?: QbsTableLabels;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;
@@ -148,7 +147,6 @@ export interface QbsTableProps {
   fullWidthView?: boolean;
   setTableFullView?: (value: boolean) => void;
   setRowViewToggle?: (value: boolean) => void;
-  dropType?: 'horizondal' | 'vertical';
   rowHeight?: number;
   isFullScreen?: boolean;
   showHeader?: boolean;
@@ -178,6 +176,7 @@ export interface QbsTableToolbarProps {
   headerHeight?: number;
   searchPlaceholder?: string;
   labels?: QbsTableLabels;
+  rtl?: boolean;
   tableView?: boolean;
   enableTableToggle?: boolean;
   tableViewToggle?: boolean;
