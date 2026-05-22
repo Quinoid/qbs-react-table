@@ -11,7 +11,7 @@ export type { ColumnProps } from './Column';
 export type { CellProps } from './Cell';
 export type { HeaderCellProps } from './HeaderCell';
 export type { ColumnGroupProps } from './ColumnGroup';
-export type { QbsTableProps } from './qbsTable/commontypes';
+export type { QbsTableProps, QbsTableLabels } from './qbsTable/commontypes';
 export type {
   StandardProps,
   SortType,

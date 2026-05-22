@@ -144,11 +144,13 @@ const Cell = React.forwardRef((props: InnerCellProps, ref: React.Ref<HTMLDivElem
   };
 
   const paddingKey = rtl ? 'paddingRight' : 'paddingLeft';
+  const resolvedAlign =
+    rtl && align === 'left' ? 'right' : rtl && align === 'right' ? 'left' : align;
   const contentStyles: React.CSSProperties = {
     ...style,
     width: fullText ? width - 1 : width,
     height: nextHeight,
-    textAlign: align,
+    textAlign: resolvedAlign,
     [paddingKey]: isTreeCol ? depth * LAYER_WIDTH + 10 : style?.[paddingKey] || style?.padding
   };
 

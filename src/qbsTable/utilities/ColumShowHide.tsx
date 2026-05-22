@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { QbsColumnProps } from '../commontypes';
+import { mergeLabels, type QbsTableLabels } from '../labels';
 import { SettingsIcon } from './icons';
 
 interface ColumnToggleProps {
@@ -14,6 +15,7 @@ interface ColumnToggleProps {
   tableHeight?: number;
   viewMode?: string;
   setViewMode?: (value: string) => void;
+  labels?: QbsTableLabels;
 }
 
 const ColumnToggle: React.FC<ColumnToggleProps> = ({
@@ -24,8 +26,10 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
   setIsOpen,
   handleResetColumns,
   handleColumnToggle,
-  tableHeight = 450
+  tableHeight = 450,
+  labels: labelsProp
 }) => {
+  const labels = mergeLabels(labelsProp);
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const [dragOverPosition, setDragOverPosition] = useState<number | null>();
@@ -185,7 +189,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
           >
             <div className="qbs-table-popup-container">
               <div className="qbs-table-popup-item">
-                <div className="qbs-table-popup-label">FIXED COLUMNS</div>
+                <div className="qbs-table-popup-label">{labels.fixedColumns}</div>
                 <div className="qbs-table-columns-container">
                   <div className="qbs-table-column">
                     {columns.map((column, index) =>
@@ -196,7 +200,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
               </div>
               <div className="qbs-table-divider"></div>
               <div className="qbs-table-popup-item">
-                <div className="qbs-table-popup-label">VISIBLE COLUMNS</div>
+                <div className="qbs-table-popup-label">{labels.visibleColumns}</div>
                 <div className="qbs-table-columns-container">
                   <div className="qbs-table-column">
                     {columns.map((column, index) =>
@@ -209,7 +213,7 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
                 <>
                   <div className="qbs-table-divider"></div>
                   <div className="qbs-table-popup-item">
-                    <div className="qbs-table-popup-label">AVAILABLE COLUMNS</div>
+                    <div className="qbs-table-popup-label">{labels.availableColumns}</div>
                     <div className="qbs-table-columns-container">
                       <div className="qbs-table-column">
                         {columns.map((column, index) =>
@@ -233,10 +237,10 @@ const ColumnToggle: React.FC<ColumnToggleProps> = ({
                     href="#"
                     onClick={() => handleResetColumns?.()}
                   >
-                    Reset to default
+                    {labels.resetToDefault}
                   </a>
                   <a className="qbs-table-reset-link" href="#" onClick={() => handleColToggle()}>
-                    Save
+                    {labels.save}
                   </a>
                 </div>
               </>

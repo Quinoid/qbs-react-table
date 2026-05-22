@@ -10,7 +10,7 @@ type Props = {
   handleMenuActions?: (slug: ActionProps, rowData?: any) => void;
   rowData?: any;
   dataTheme?: string;
-  tableBodyRef: React.RefObject<HTMLDivElement>;
+  tableBodyRef: React.RefObject<HTMLDivElement | null>;
   rowIndex?: number;
   wheelWrapperRef?: React.RefObject<HTMLDivElement>;
 };
@@ -87,42 +87,33 @@ const VerticalMenuDropdown: React.FC<Props> = ({
   const toggleMenu = () => {
     if (!openMenu && menuButtonRef.current) {
       const rect = menuButtonRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const menuHeight =
-        actionDropDown?.filter(item => !item.hidden && !item?.hide?.(rowData, rowIndex)).length *
-        40; // 40px per menu item
-
-      // Get table boundaries for RTL positioning
-      const tableRect = tableBodyRef.current?.getBoundingClientRect();
+      const viewportPadding = 8;
+      const menuGap = 4;
       const dropdownWidth = 200;
+      const visibleItems =
+        actionDropDown?.filter(item => !item.hidden && !item?.hide?.(rowData, rowIndex)) ?? [];
+      const menuHeight = visibleItems.length * 40;
 
-      // Check if there's enough space below
-      const spaceBelow = windowHeight - rect.bottom;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const openBelow = spaceBelow >= menuHeight + menuGap;
 
-      let leftPosition = rect.left - dropdownWidth;
+      // Anchor to trigger; prefer opening toward inline-start (left in LTR).
+      let left = rect.right - dropdownWidth;
 
-      // For RTL, adjust positioning to stay within table bounds
-      if (document.documentElement.dir === 'rtl' && tableRect) {
-        // Calculate the right edge position for RTL
-        const rightEdge = rect.right;
-        leftPosition = Math.min(rightEdge, tableRect.right - dropdownWidth);
-        // Ensure it doesn't go beyond the left edge of the table
-        leftPosition = Math.max(leftPosition, tableRect.left);
+      if (left < viewportPadding) {
+        left = rect.left;
+      }
+      if (left + dropdownWidth > window.innerWidth - viewportPadding) {
+        left = Math.max(viewportPadding, rect.left - dropdownWidth);
+      }
+      if (left + dropdownWidth > window.innerWidth - viewportPadding) {
+        left = window.innerWidth - viewportPadding - dropdownWidth;
       }
 
-      if (spaceBelow >= menuHeight) {
-        // Open below
-        setPosition({
-          top: rect.bottom + window.scrollY - rect.height,
-          left: leftPosition
-        });
-      } else {
-        // Open above
-        setPosition({
-          top: rect.top + window.scrollY - menuHeight,
-          left: leftPosition
-        });
-      }
+      setPosition({
+        top: openBelow ? rect.bottom + menuGap : rect.top - menuHeight - menuGap,
+        left,
+      });
     }
     setTimeout(() => {
       setOpenMenu(prev => !prev);
@@ -132,13 +123,13 @@ const VerticalMenuDropdown: React.FC<Props> = ({
   const portalTarget = document.getElementById('portal-root');
   const dropdownContent = (
     <div
-      className="absolute z-50 min-w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 vertical-menu-dropdown-content"
+      className="absolute z-[60] min-w-48 rounded-md vertical-menu-dropdown-content"
       ref={menuRef}
       style={{
         width: 200,
         top: position.top,
         left: position.left,
-        position: 'absolute'
+        position: 'fixed',
       }}
     >
       <div className="py-1">
@@ -146,7 +137,7 @@ const VerticalMenuDropdown: React.FC<Props> = ({
           !item?.hidden && !item?.hide?.(rowData, rowIndex) ? (
             <div
               key={item.title}
-              className="vertical-menu-item px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-2 transition-colors"
+              className="vertical-menu-item px-4 py-2 text-sm text-base-black hover:bg-gray-light-1 cursor-pointer flex items-center gap-2 transition-colors"
               onClick={e => {
                 e.preventDefault();
                 item.action?.(item);
@@ -171,7 +162,7 @@ const VerticalMenuDropdown: React.FC<Props> = ({
       <div className="inline-block vertical-menu-dropdown-wrapper">
         {handleShowHideMenu() > 0 && (
           <button
-            className="vertical-menu-trigger-button p-2 rounded hover:bg-gray-100 transition-colors"
+            className="vertical-menu-trigger-button p-2 rounded text-base-gray hover:bg-gray-light-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={toggleMenu}
             ref={menuButtonRef}
           >

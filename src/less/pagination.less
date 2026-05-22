@@ -5,8 +5,8 @@
   min-height: 40px;
   align-items: center;
   border-radius: 0 0 4px 4px;
-  border-top: 1px solid #d6d8dc;
-  background: #fff;
+  border-top: 1px solid var(--base-gray-border, #d6d8dc);
+  background: var(--table-bg, #fff);
   &-header {
     border-bottom: 1px solid #eee;
     position: absolute;
@@ -27,8 +27,8 @@
     font-weight: 500;
     line-height: 20px;
     border-radius: 6px;
-    border: 1px solid #d6d8dc;
-    background: #fff;
+    border: 1px solid var(--base-gray-border, #d6d8dc);
+    background: var(--gray-light-1, #fff);
   }
   .qbs-table-icon-container {
     padding: 0;
@@ -109,7 +109,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
-    color: #313131;
+    color: var(--gray-dark-3, #313131);
   }
 }
 
@@ -125,7 +125,7 @@
 .custom-select-trigger {
   padding: 2px 8px;
   cursor: pointer;
-  border: 1px solid #d6d8dc;
+  border: 1px solid var(--base-gray-border, #d6d8dc);
   border-radius: 4px;
   min-width: 65px;
   position: relative;
@@ -140,7 +140,7 @@
   list-style: none;
   margin: 2px 0 0;
   padding: 0;
-  background: #fff;
+  background: var(--gray-light-1, #fff);
   border-radius: 8px;
   box-shadow: 0 8px 20px 0 #00000026;
 }
@@ -158,7 +158,7 @@ ul.custom-select-options.top {
 
 .custom-select-option:hover,
 .custom-select-option.selected {
-  background-color: #f0f0f0;
+  background-color: var(--table-row-hover-bg, #f0f0f0);
 }
 
 .custom-select-trigger:before {
@@ -167,7 +167,7 @@ ul.custom-select-options.top {
   right: 10px;
   top: 6px;
   font-weight: bold;
-  border: solid black;
+  border: solid var(--gray-dark-3, black);
   border-width: 0 1px 1px 0;
   display: inline-block;
   padding: 3px;

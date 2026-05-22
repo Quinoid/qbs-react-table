@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { QbsColumnProps } from '../commontypes';
+import { mergeLabels, type QbsTableLabels } from '../labels';
 import CardMenuDropdown from './CardMenuDropdown';
 import { handleCellFormat } from './handleFormatCell';
 import { ArrowUpIcon } from './icons';
@@ -17,6 +18,7 @@ type Props = {
   handleMenuActions?: () => void;
   cardColumLimit?: number;
   childDetailHeading?: string;
+  labels?: QbsTableLabels;
 };
 
 const CardComponent: React.FC<Props> = ({
@@ -27,8 +29,10 @@ const CardComponent: React.FC<Props> = ({
   index,
   cardColumLimit = 5,
   handleMenuActions,
-  childDetailHeading = ''
+  childDetailHeading = '',
+  labels: labelsProp
 }) => {
+  const labels = mergeLabels(labelsProp);
   const [viewMore, setViewMore] = useState(false);
   const initialDisplayCount = cardColumLimit;
 
@@ -102,13 +106,14 @@ const CardComponent: React.FC<Props> = ({
                 iconName="more"
                 rowIndex={index}
                 handleMenuActions={handleMenuActions}
+                labels={labels}
               />
             </div>
 
             {columns.length > initialDisplayCount && (
               <TooltipComponent
                 tableBodyRef={useCardRef}
-                title={viewMore ? ' View Less' : 'View More'}
+                title={viewMore ? labels.viewLess : labels.viewMore}
                 enabled={false}
               >
                 <button

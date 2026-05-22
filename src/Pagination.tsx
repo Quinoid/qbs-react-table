@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 
 import CustomSelect from './customSelect';
+import { mergeLabels, type QbsTableLabels } from './qbsTable/labels';
 import { getRowDisplayRange } from './qbsTable/utilities/tablecalc';
 
 // Import the custom select component
@@ -15,6 +16,8 @@ type PageProps = {
     onRowsPerPage?: (row: number, page: number) => void;
     onPagination?: (row: number, page: number) => void;
   };
+  labels?: QbsTableLabels;
+  dataTheme?: string;
 };
 
 const PageIndex = ({ currentPage, handleFirst, pageCount }) => {
@@ -52,7 +55,8 @@ const PageIndex = ({ currentPage, handleFirst, pageCount }) => {
   return <>{renderPageNumbers()}</>;
 };
 
-const Pagination: FC<PageProps> = ({ paginationProps }) => {
+const Pagination: FC<PageProps> = ({ paginationProps, labels: labelsProp, dataTheme }) => {
+  const labels = mergeLabels(labelsProp);
   const {
     dropOptions = [10, 20, 50, 100, 200],
     currentPage = 1,
@@ -96,9 +100,12 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
   return (
     <div
       className="qbs-table-custom-pagination"
+      data-theme={dataTheme}
       style={{ display: 'flex', justifyContent: 'space-between' }}
     >
-      <div className="rows-count">{getRowDisplayRange(total, rowsPerPageState, currentPage)}</div>
+      <div className="rows-count">
+        {getRowDisplayRange(total, rowsPerPageState, currentPage, labels.showingRange)}
+      </div>
       <div className="qbs-table-pagination-right-block">
         <button
           className="qbs-table-icon-container"
@@ -194,7 +201,7 @@ const Pagination: FC<PageProps> = ({ paginationProps }) => {
         </button>
       </div>
       <div className="qbs-table-pagination-flexBox">
-        <span className="qbs-table-pagination-text">Items per page</span>
+        <span className="qbs-table-pagination-text">{labels.itemsPerPage}</span>
         <CustomSelect
           options={dropData}
           selectedValue={rowsPerPageState}

@@ -1,5 +1,9 @@
 import React, { ReactElement, ReactNode } from 'react';
 
+import type { QbsTableLabels } from './labels';
+
+export type { QbsTableLabels };
+
 interface Content {
   cell: ReactNode | string;
   toolTip?: string;
@@ -74,6 +78,7 @@ export interface QbsTableProps {
   searchValue?: string;
   handleSearchValue?: (value?: string) => void;
   theme?: string;
+  rtl?: boolean;
   onRowClick?: (data: any) => void;
   cellBordered?: boolean;
   bordered?: boolean;
@@ -94,6 +99,7 @@ export interface QbsTableProps {
   advancefilter?: ReactElement | ReactNode;
   tableHeaderActions?: ReactElement | ReactNode;
   searchPlaceholder?: string;
+  labels?: QbsTableLabels;
   selectedRowActions?: {
     actionTitle?: string;
     action: (checked: (number | string)[]) => void;
@@ -171,6 +177,7 @@ export interface QbsTableToolbarProps {
   dataLength: number;
   headerHeight?: number;
   searchPlaceholder?: string;
+  labels?: QbsTableLabels;
   tableView?: boolean;
   enableTableToggle?: boolean;
   tableViewToggle?: boolean;

@@ -5,6 +5,7 @@ import { QbsTableToolbarProps } from './commontypes';
 import debounce from './utilities/debounce';
 import { CardView, ContentView, DefaultView, ExpandIcon, TableView } from './utilities/icons';
 import SearchInput from './utilities/SearchInput';
+import { formatSelectedItems, mergeLabels } from './labels';
 import { getRowDisplayRange } from './utilities/tablecalc';
 import TooltipComponent from './utilities/ToolTip';
 
@@ -33,8 +34,10 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
   fullWidthView = false,
   setTableFullView,
   setRowViewToggle,
-  isFullScreen = false
+  isFullScreen = false,
+  labels: labelsProp
 }) => {
+  const labels = mergeLabels(labelsProp);
   const debouncedOnSearch = useCallback(debounce(onSearch ?? (() => {}), 1000), [onSearch]);
   const [searchParam, setSearchParam] = useState<string | undefined>(searchValue);
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -79,7 +82,8 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
           <div className="qbs-table-primary-filter">
             {search && (
               <SearchInput
-                placeholder={searchPlaceholder ?? 'Search'}
+                placeholder={searchPlaceholder ?? labels.search}
+                searchAriaLabel={labels.searchAriaLabel}
                 handleChange={handleChange}
                 handleSearch={handleSearch}
                 searchValue={searchParam}
@@ -114,12 +118,12 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
               <div className="flex gap-2 qbs-row-switch-cntainer">
                 {rowViewToggle && (
                   <div className="flex gap-2 table_cell_style">
-                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Default View'}>
+                    <TooltipComponent tableBodyRef={toolbarRef} title={labels.switchToDefaultView}>
                       <div onClick={() => setRowViewToggle?.(true)}>
                         <DefaultView className={`${defaultRowView ? 'active' : ''}`} />
                       </div>
                     </TooltipComponent>
-                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Relaxed View'}>
+                    <TooltipComponent tableBodyRef={toolbarRef} title={labels.switchToRelaxedView}>
                       <div onClick={() => setRowViewToggle?.(false)}>
                         <ContentView className={`${!defaultRowView ? 'active' : ''}`} />
                       </div>
@@ -128,7 +132,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
                 )}
                 {isFullScreen && (
                   <div className=" table_full_width">
-                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Full Screen'}>
+                    <TooltipComponent tableBodyRef={toolbarRef} title={labels.switchToFullScreen}>
                       <div onClick={() => setTableFullView?.(!fullWidthView)}>
                         <ExpandIcon className={`${fullWidthView ? 'active' : ''}`} />
                       </div>
@@ -140,7 +144,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
 
             {enableTableToggle && !isMobile && (
               <div className="qbs-table-top-icons flex gap-2">
-                <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Table View'}>
+                <TooltipComponent tableBodyRef={toolbarRef} title={labels.switchToTableView}>
                   <div onClick={() => setTableViewToggle?.(true)}>
                     <TableView className={`${tableViewToggle ? 'active' : ''}`} />
                   </div>
@@ -149,7 +153,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
                 <div className="border-r h-4 w-1"></div>
 
                 <div onClick={() => setTableViewToggle?.(false)}>
-                  <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Card View'}>
+                  <TooltipComponent tableBodyRef={toolbarRef} title={labels.switchToCardView}>
                     <CardView className={`${!tableViewToggle ? 'active' : ''}`} />
                   </TooltipComponent>
                 </div>
@@ -175,10 +179,12 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
         >
           {checkedKeys && checkedKeys?.length > 0 ? (
             <div className="qbs-table-toolbar-sub-container-start">
-              <div className="selected-row">{`Selected Items(${checkedKeys?.length}) `}</div>
+              <div className="selected-row">
+                {formatSelectedItems(labels.selectedItems, checkedKeys?.length ?? 0)}
+              </div>
               <div className="selected-row-action">
                 <button className="btn" onClick={() => onSelect?.([])}>
-                  Clear
+                  {labels.clear}
                 </button>
                 {selectedRowActions?.map((actions, index: number) => (
                   <>
@@ -204,7 +210,8 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
                   {getRowDisplayRange(
                     paginationProps.total ?? 0,
                     paginationProps.rowsPerPage ?? 0,
-                    paginationProps.currentPage ?? 0
+                    paginationProps.currentPage ?? 0,
+                    labels.showingRange
                   )}
                 </div>
               )}

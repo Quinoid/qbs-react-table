@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActionProps } from '../commontypes';
+import { mergeLabels, type QbsTableLabels } from '../labels';
 import { ThreeDotIcon } from './icons';
 import TooltipComponent from './ToolTip';
 
@@ -11,9 +12,16 @@ type Props = {
   dataTheme?: string;
   tableBodyRef: React.RefObject<HTMLDivElement>;
   rowIndex?: number;
+  labels?: QbsTableLabels;
 };
 
-const CardMenuDropdown: React.FC<Props> = ({ actionDropDown, handleMenuActions, rowData }) => {
+const CardMenuDropdown: React.FC<Props> = ({
+  actionDropDown,
+  handleMenuActions,
+  rowData,
+  labels: labelsProp
+}) => {
+  const labels = mergeLabels(labelsProp);
   const [openMenu, setOpenMenu] = useState(false);
   const [menuPositionStyles, setMenuPositionStyles] = useState<{
     top?: string;
@@ -73,7 +81,7 @@ const CardMenuDropdown: React.FC<Props> = ({ actionDropDown, handleMenuActions, 
   return (
     <div className="dropdown text-black dark:text-white dark:bg-[#424242] bg-white" ref={menuRef}>
       <button className="dropdown-toggle" onClick={toggleMenu} ref={menuButtonRef}>
-        <TooltipComponent title="Actions" enabled={false} ref={menuButtonRef}>
+        <TooltipComponent title={labels.actions} enabled={false}>
           <ThreeDotIcon />
         </TooltipComponent>
       </button>

@@ -7,6 +7,7 @@ import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
+import { mergeLabels } from './labels';
 import {
   ActionCell,
   CheckCell,
@@ -82,12 +83,17 @@ const QbsTable: React.FC<QbsTableProps> = ({
   autoHeight,
   emptySubTitle,
   emptyTitle,
-  dropType = 'horizontal'
+  dropType = 'horizontal',
+  labels: labelsProp
 }) => {
+  const labels = useMemo(() => mergeLabels(labelsProp), [labelsProp]);
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
-  const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
+  const dataTheme = useMemo(
+    () => theme ?? (typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null) ?? 'light',
+    [theme]
+  );
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>(null);
   const tableBodyRef = useRef<HTMLDivElement>(null);
@@ -228,11 +234,25 @@ const QbsTable: React.FC<QbsTableProps> = ({
     onSelect: handleClear,
     handleColumnToggle: handleColumnToggle,
     dataLength: data?.length,
-    searchPlaceholder: searchPlaceholder
+    searchPlaceholder: searchPlaceholder,
+    labels
   };
-  const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
   useEffect(() => {
+    if (!dataTheme || typeof document === 'undefined') return;
+
+    document.body.setAttribute('data-theme', dataTheme === 'dark' ? 'dark' : 'light');
+    document.documentElement.dataset.theme = dataTheme;
+  }, [dataTheme]);
+
+  const themeToggle = useMemo(
+    () => (typeof document !== 'undefined' ? document.getElementById('themeToggle') : null),
+    []
+  ) as HTMLInputElement | null;
+
+  useEffect(() => {
+    if (theme || typeof document === 'undefined') return;
+
     const handleThemeToggle = () => {
       if (themeToggle?.checked) {
         document.body.setAttribute('data-theme', 'dark');
@@ -257,7 +277,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       themeToggle?.removeEventListener('change', handleThemeToggle);
       document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
     };
-  }, [themeToggle]);
+  }, [theme, themeToggle]);
 
   const handleExpanded = useCallback(
     (rowData: any) => {
@@ -463,7 +483,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             renderEmpty ? (
               renderEmpty(info)
             ) : (
-              <NoData title={emptyTitle ?? 'No Data Found'} subtitle={emptySubTitle} />
+              <NoData title={emptyTitle ?? labels.noDataFound} subtitle={emptySubTitle} />
             )
           }
           columns={columns}
@@ -581,6 +601,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     setIsOpen={setIsOpen}
                     handleResetColumns={handleResetColumns}
                     handleColumnToggle={handleColumnToggle}
+                    labels={labels}
                   />
                 </HeaderCell>
                 <Cell />
@@ -606,6 +627,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     setIsOpen={setIsOpen}
                     handleResetColumns={handleResetColumns}
                     handleColumnToggle={handleColumnToggle}
+                    labels={labels}
                   />
                 )}
               </HeaderCell>
@@ -622,7 +644,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
         </Table>
 
         <div>
-          {pagination && data?.length > 0 && <Pagination paginationProps={paginationProps} />}
+          {pagination && data?.length > 0 && (
+            <Pagination paginationProps={paginationProps} labels={labels} dataTheme={dataTheme} />
+          )}
         </div>
       </div>
     </div>

@@ -2,12 +2,14 @@ import React, { memo, useCallback } from 'react';
 
 export interface SearchProps {
   placeholder: string;
+  searchAriaLabel?: string;
   handleChange: (value: string) => void;
   searchValue: string | undefined;
   handleSearch: (value?: string) => void;
 }
 const SearchInput: React.FC<SearchProps> = ({
   placeholder,
+  searchAriaLabel = 'Search',
   handleChange,
   searchValue,
   handleSearch
@@ -37,7 +39,7 @@ const SearchInput: React.FC<SearchProps> = ({
           placeholder={placeholder}
           value={searchValue ?? ''}
           onChange={handleInputChange}
-          aria-label="Search"
+          aria-label={searchAriaLabel}
         />
         <button
           className="search-button absolute left-1 bottom-1.5 bg-white text-grey-dark"

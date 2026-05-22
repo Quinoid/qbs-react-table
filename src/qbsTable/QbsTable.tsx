@@ -6,8 +6,10 @@ import ColumnGroup from '../ColumnGroup';
 import HeaderCell from '../HeaderCell';
 import Pagination from '../Pagination';
 import Table from '../Table';
+import isRTL from '../utils/isRTL';
 import useResponsiveStore from '../utils/useResponsiveStore';
 import { QbsColumnProps, QbsTableProps } from './commontypes';
+import { mergeLabels } from './labels';
 import {
   ActionCell,
   CheckCell,
@@ -60,6 +62,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   rowExpand = false,
   actionProps = [],
   theme,
+  rtl: rtlProp,
   handleMenuActions,
   onRowClick,
   expandedRowKeys,
@@ -106,12 +109,18 @@ const QbsTable: React.FC<QbsTableProps> = ({
   dropType = 'horizondal',
   rowHeight,
   isFullScreen,
-  showHeader = true
+  showHeader = true,
+  labels: labelsProp
 }) => {
+  const labels = useMemo(() => mergeLabels(labelsProp), [labelsProp]);
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
   const [checkedKeys, setCheckedKeys] = useState<(number | string)[]>([]);
-  const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
+  const dataTheme = useMemo(
+    () => theme ?? (typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null) ?? 'light',
+    [theme]
+  );
+  const rtl = rtlProp ?? isRTL();
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>(null);
   const [tableViewToggle, setTableViewToggle] = useState(tableView);
@@ -273,11 +282,25 @@ const QbsTable: React.FC<QbsTableProps> = ({
     fullWidthView: fullWidthView,
     setTableFullView: setTableFullView,
     setRowViewToggle: setRowViewToggle,
-    isFullScreen: isFullScreen
+    isFullScreen: isFullScreen,
+    labels
   };
-  const themeToggle = useMemo(() => document.getElementById('themeToggle') as HTMLInputElement, []);
 
   useEffect(() => {
+    if (!dataTheme || typeof document === 'undefined') return;
+
+    document.body.setAttribute('data-theme', dataTheme === 'dark' ? 'dark' : 'light');
+    document.documentElement.dataset.theme = dataTheme;
+  }, [dataTheme]);
+
+  const themeToggle = useMemo(
+    () => (typeof document !== 'undefined' ? document.getElementById('themeToggle') : null),
+    []
+  ) as HTMLInputElement | null;
+
+  useEffect(() => {
+    if (theme || typeof document === 'undefined') return;
+
     const handleThemeToggle = () => {
       if (themeToggle?.checked) {
         document.body.setAttribute('data-theme', 'dark');
@@ -302,7 +325,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       themeToggle?.removeEventListener('change', handleThemeToggle);
       document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
     };
-  }, [themeToggle]);
+  }, [theme, themeToggle]);
 
   const handleExpanded = useCallback(
     (rowData: any) => {
@@ -609,7 +632,11 @@ const QbsTable: React.FC<QbsTableProps> = ({
   };
 
   return (
-    <div className={`qbs-table ${classes.tableContainerClass}`} data-theme={dataTheme}>
+    <div
+      className={`qbs-table ${classes.tableContainerClass}`}
+      data-theme={dataTheme}
+      dir={rtl ? 'rtl' : 'ltr'}
+    >
       {toolbar && <ToolBar {...toolbarProps} />}
       <div className="qbs-table-border-wrap">
         {tableViewToggle ? (
@@ -618,6 +645,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             key={tableKey + REFRESH_KEY}
             tableKey={tableKey}
             data={data}
+            rtl={rtl}
             tableBodyRef={tableBodyRef as React.RefObject<HTMLDivElement>}
             dataTheme={dataTheme}
             wordWrap={wordWrap}
@@ -638,7 +666,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
               renderEmpty ? (
                 renderEmpty(info)
               ) : (
-                <NoData title={emptyTitle ?? 'No Data Found'} subtitle={emptySubTitle} />
+                <NoData title={emptyTitle ?? labels.noDataFound} subtitle={emptySubTitle} />
               )
             }
             columns={columns}
@@ -760,6 +788,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       setIsOpen={setIsOpen}
                       handleResetColumns={handleResetColumns}
                       handleColumnToggle={handleColumnToggle}
+                      labels={labels}
                     />
                   </HeaderCell>
                   <Cell />
@@ -787,6 +816,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       setIsOpen={setIsOpen}
                       handleResetColumns={handleResetColumns}
                       handleColumnToggle={handleColumnToggle}
+                      labels={labels}
                     />
                   )}
                 </HeaderCell>
@@ -819,7 +849,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           >
             {(data?.length === 0 || !data) && !isLoading && (
               <div className="flex flex-col gap-2 p-2 mt-6 card-empty-container">
-                <NoData title={emptyTitle ?? 'No Data Found'} subtitle={emptySubTitle} />
+                <NoData title={emptyTitle ?? labels.noDataFound} subtitle={emptySubTitle} />
               </div>
             )}
             {isLoading ? (
@@ -846,6 +876,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                       columns={columns}
                       tableBodyRef={tableBodyRef}
                       actionProps={actionProps}
+                      labels={labels}
                     />
                   )}
                 </div>
@@ -854,7 +885,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
           </div>
         )}
         <div>
-          {pagination && data?.length > 0 && <Pagination paginationProps={paginationProps} />}
+          {pagination && data?.length > 0 && (
+            <Pagination paginationProps={paginationProps} labels={labels} dataTheme={dataTheme} />
+          )}
         </div>
       </div>
     </div>
