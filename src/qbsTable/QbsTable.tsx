@@ -105,7 +105,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   setRowViewToggle,
   dropType = 'horizondal',
   rowHeight,
-  isFullScreen
+  isFullScreen,
+  showHeader = true
 }) => {
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState(propColumn);
@@ -645,7 +646,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
             headerHeight={headerHeight}
             rowExpandedHeight={rowExpandedHeight}
             loading={isLoading ?? loading}
-            showHeader
+            showHeader={showHeader}
             defaultChecked
             expandedRowKeys={expandedRowKeys}
             onExpandChange={onExpandChange}

@@ -100,6 +100,8 @@ export interface QbsTableProps {
     disabled?: boolean;
     hidden?: boolean;
     customHide?: string;
+    buttonClassName?: string;
+    icon?: ReactElement | ReactNode;
   }[];
   selectedRows?: (number | string)[];
   classes?: { [key: string]: any };
@@ -142,7 +144,8 @@ export interface QbsTableProps {
   setRowViewToggle?: (value: boolean) => void;
   dropType?: 'horizondal' | 'vertical';
   rowHeight?: number;
-  isFullScreen?: boolean
+  isFullScreen?: boolean;
+  showHeader?: boolean;
 }
 
 export interface QbsTableToolbarProps {
@@ -178,11 +181,13 @@ export interface QbsTableToolbarProps {
     disabled?: boolean;
     hidden?: boolean;
     customHide?: string;
+    buttonClassName?: string;
+    icon?: ReactElement | ReactNode;
   }[];
   rowViewToggle?: boolean;
   defaultRowView?: boolean;
   fullWidthView?: boolean;
   setTableFullView?: (value: boolean) => void;
   setRowViewToggle?: (value: boolean) => void;
-  isFullScreen?: boolean
+  isFullScreen?: boolean;
 }

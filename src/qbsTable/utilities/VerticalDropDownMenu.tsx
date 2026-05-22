@@ -92,20 +92,35 @@ const VerticalMenuDropdown: React.FC<Props> = ({
         actionDropDown?.filter(item => !item.hidden && !item?.hide?.(rowData, rowIndex)).length *
         40; // 40px per menu item
 
+      // Get table boundaries for RTL positioning
+      const tableRect = tableBodyRef.current?.getBoundingClientRect();
+      const dropdownWidth = 200;
+
       // Check if there's enough space below
       const spaceBelow = windowHeight - rect.bottom;
+
+      let leftPosition = rect.left - dropdownWidth;
+
+      // For RTL, adjust positioning to stay within table bounds
+      if (document.documentElement.dir === 'rtl' && tableRect) {
+        // Calculate the right edge position for RTL
+        const rightEdge = rect.right;
+        leftPosition = Math.min(rightEdge, tableRect.right - dropdownWidth);
+        // Ensure it doesn't go beyond the left edge of the table
+        leftPosition = Math.max(leftPosition, tableRect.left);
+      }
 
       if (spaceBelow >= menuHeight) {
         // Open below
         setPosition({
           top: rect.bottom + window.scrollY - rect.height,
-          left: rect.left - 200
+          left: leftPosition
         });
       } else {
         // Open above
         setPosition({
           top: rect.top + window.scrollY - menuHeight,
-          left: rect.left - 200
+          left: leftPosition
         });
       }
     }
@@ -119,7 +134,12 @@ const VerticalMenuDropdown: React.FC<Props> = ({
     <div
       className="absolute z-50 min-w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 vertical-menu-dropdown-content"
       ref={menuRef}
-      style={{ width: 200, top: position.top, left: position.left, position: 'absolute' }}
+      style={{
+        width: 200,
+        top: position.top,
+        left: position.left,
+        position: 'absolute'
+      }}
     >
       <div className="py-1">
         {actionDropDown?.map(item =>

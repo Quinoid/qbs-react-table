@@ -119,7 +119,7 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
                         <DefaultView className={`${defaultRowView ? 'active' : ''}`} />
                       </div>
                     </TooltipComponent>
-                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Compact View'}>
+                    <TooltipComponent tableBodyRef={toolbarRef} title={'Switch to Relaxed View'}>
                       <div onClick={() => setRowViewToggle?.(false)}>
                         <ContentView className={`${!defaultRowView ? 'active' : ''}`} />
                       </div>
@@ -185,11 +185,12 @@ const ToolBar: React.FC<QbsTableToolbarProps> = ({
                     {handleHide(actions) && (
                       <button
                         key={index.toString()}
-                        className="btn"
+                        className={`btn ${actions?.buttonClassName}`}
                         disabled={actions.disabled}
                         onClick={() => actions?.action(checkedKeys)}
                       >
-                        {actions.actionTitle}
+                        {actions?.icon && <span className="mr-2">{actions?.icon}</span>}
+                        <span>{actions.actionTitle}</span>
                       </button>
                     )}
                   </>
