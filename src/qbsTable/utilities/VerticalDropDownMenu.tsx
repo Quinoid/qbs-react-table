@@ -1,9 +1,9 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 
+import type { ActionProps } from '../commontypes';
 import { ThreeDotIcon } from './icons';
 import TooltipComponent from './ToolTip';
-import type { ActionProps } from '../commontypes';
 import {
   closeOtherVerticalMenus,
   VERTICAL_MENU_CLOSE_OTHERS,
@@ -17,6 +17,12 @@ type VerticalMenuDropdownProps = {
   tableBodyRef?: React.RefObject<HTMLDivElement>;
   rowIndex?: number;
 };
+
+const isActionVisible = (
+  item: ActionProps,
+  rowData: any,
+  rowIndex?: number,
+): boolean => !item.hidden && !(item.hide?.(rowData, rowIndex) ?? false);
 
 const VerticalMenuDropdown: React.FC<VerticalMenuDropdownProps> = ({
   actionDropDown,
@@ -49,16 +55,12 @@ const VerticalMenuDropdown: React.FC<VerticalMenuDropdownProps> = ({
     const rect = menuButtonRef.current.getBoundingClientRect();
     const viewportPadding = 8;
     const menuGap = 4;
-    const visibleItems =
-      actionDropDown?.filter(
-        item =>
-          !item.hidden && !(item.hide?.call(item, rowData, rowIndex) ?? false),
-      ) ?? [];
+    const visibleItems = actionDropDown?.filter(item => isActionVisible(item, rowData, rowIndex)) ?? [];
     const menuWidth =
       menuRef.current && menuRef.current.offsetWidth > 0
         ? menuRef.current.offsetWidth
         : Math.max(120, visibleItems.length * 48);
-    const menuHeight = visibleItems.length * 40;
+    const menuHeight = Math.max(visibleItems.length, 1) * 40;
     const spaceBelow = window.innerHeight - rect.bottom;
     const openBelow = spaceBelow >= menuHeight + menuGap;
 
@@ -83,6 +85,7 @@ const VerticalMenuDropdown: React.FC<VerticalMenuDropdownProps> = ({
 
   useEffect(() => {
     if (!openMenu) return;
+
     updateMenuPosition();
     const frame = requestAnimationFrame(() => updateMenuPosition());
     const resizeObserver =
@@ -96,33 +99,37 @@ const VerticalMenuDropdown: React.FC<VerticalMenuDropdownProps> = ({
       cancelAnimationFrame(frame);
       resizeObserver?.disconnect();
     };
-  }, [openMenu]);
+  }, [openMenu, actionDropDown, rowData, rowIndex]);
 
   useEffect(() => {
     if (!openMenu) return;
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handlePointerDown = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (
-        menuRef.current?.contains(target) ||
-        menuButtonRef.current?.contains(target)
-      ) {
+      if (menuRef.current?.contains(target) || menuButtonRef.current?.contains(target)) {
         return;
       }
       setOpenMenu(false);
     };
     const handleScroll = () => setOpenMenu(false);
 
-    document.addEventListener('click', handleClickOutside);
+    // Defer so the opening click does not immediately close the menu.
+    const timeoutId = window.setTimeout(() => {
+      document.addEventListener('mousedown', handlePointerDown);
+    }, 0);
+
     window.addEventListener('scroll', handleScroll, true);
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      window.clearTimeout(timeoutId);
+      document.removeEventListener('mousedown', handlePointerDown);
       window.removeEventListener('scroll', handleScroll, true);
     };
   }, [openMenu]);
 
   useEffect(() => {
+    if (!openMenu) return;
+
     const scrollbarHandle = document.querySelector('.rs-table-scrollbar-handle');
     if (!scrollbarHandle) return;
 
@@ -149,12 +156,22 @@ const VerticalMenuDropdown: React.FC<VerticalMenuDropdownProps> = ({
   };
 
   const visibleCount =
-    actionDropDown?.filter(
-      item => !item.hidden && !(item.hide?.call(item, rowData, rowIndex) ?? false),
-    ).length ?? 0;
+    actionDropDown?.filter(item => isActionVisible(item, rowData, rowIndex)).length ?? 0;
 
-  const portalTarget =
-    document.getElementById('portal-root') ?? document.body;
+  const portalTarget = document.getElementById('portal-root');
+
+  const toggleMenu = () => {
+    if (openMenu) {
+      setOpenMenu(false);
+      return;
+    }
+    closeOtherVerticalMenus(menuId);
+    updateMenuPosition();
+    // Delay open so table/document click handlers do not close it immediately.
+    window.setTimeout(() => {
+      setOpenMenu(true);
+    }, 0);
+  };
 
   const dropdownContent = (
     <div
@@ -170,13 +187,13 @@ const VerticalMenuDropdown: React.FC<VerticalMenuDropdownProps> = ({
     >
       <div className="py-1">
         {actionDropDown?.map(item =>
-          !item.hidden && !(item.hide?.call(item, rowData, rowIndex) ?? false) ? (
+          isActionVisible(item, rowData, rowIndex) ? (
             <div
               key={item.title}
               className="vertical-menu-item px-4 py-2 text-sm text-base-black hover:bg-gray-light-1 cursor-pointer flex items-center gap-2 transition-colors"
               onClick={e => {
                 e.preventDefault();
-                item.action?.(item);
+                e.stopPropagation();
                 handleMenuItemClick(item);
               }}
             >
@@ -199,16 +216,11 @@ const VerticalMenuDropdown: React.FC<VerticalMenuDropdownProps> = ({
         {visibleCount > 0 && (
           <button
             type="button"
-            className="vertical-menu-trigger-button"
+            className="vertical-menu-trigger-button p-2 rounded text-base-gray hover:bg-gray-light-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={event => {
               event.stopPropagation();
-              if (openMenu) {
-                setOpenMenu(false);
-                return;
-              }
-              closeOtherVerticalMenus(menuId);
-              updateMenuPosition();
-              setOpenMenu(true);
+              event.preventDefault();
+              toggleMenu();
             }}
             ref={menuButtonRef}
           >

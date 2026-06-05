@@ -71,6 +71,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   isLoading,
   selectedRowActions,
   handleResetColumns,
+  onColumnResize,
   selectedRows,
   headerHeight = 40,
   tableBodyHeight,
@@ -106,6 +107,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>(null);
   const tableBodyRef = useRef<HTMLDivElement>(null);
+  const wheelWrapperRef = useRef<HTMLDivElement>(null);
   const handleSortColumn = useCallback(
     (sortColumn: any, sortType: any) => {
       setLoading(true);
@@ -200,14 +202,39 @@ const QbsTable: React.FC<QbsTableProps> = ({
     [columns]
   );
 
-  const handleColumnWidth = useCallback((newWidth?: number, dataKey?: any) => {
-    if (newWidth === undefined || dataKey === undefined) return;
-    setColumns(prevColumns =>
-      prevColumns.map(column =>
-        column.field === dataKey ? { ...column, colWidth: newWidth } : column
-      )
-    );
-  }, []);
+  const handleColumnWidth = useCallback(
+    (newWidth?: number, dataKey?: any, columnIndex?: number) => {
+      if (newWidth === undefined || dataKey === undefined) return;
+      setColumns(prevColumns => {
+        let updatedColumns = prevColumns;
+
+        if (columnIndex !== undefined) {
+          const visibleIndices = prevColumns.reduce<number[]>((indices, column, index) => {
+            if (column.isVisible !== false) {
+              indices.push(index);
+            }
+            return indices;
+          }, []);
+          const targetIndex = visibleIndices[columnIndex];
+          if (targetIndex !== undefined) {
+            updatedColumns = prevColumns.map((column, index) =>
+              index === targetIndex ? { ...column, colWidth: newWidth } : column
+            );
+          }
+        }
+
+        if (updatedColumns === prevColumns) {
+          updatedColumns = prevColumns.map(column =>
+            column.field === dataKey ? { ...column, colWidth: newWidth } : column
+          );
+        }
+
+        onColumnResize?.(updatedColumns);
+        return updatedColumns;
+      });
+    },
+    [onColumnResize]
+  );
 
   useEffect(() => {
     if (wordWrap === 'fit-content') {
@@ -389,7 +416,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                           key={child.title}
                           sortable={child.sortable}
                           width={child.colWidth ?? COLUMN_WIDTH}
-                          resizable={child.resizable}
+                          resizable={child.resizable && !child.fixed}
                           align={child.align}
                           onResize={handleColumnWidth}
                           fixed={child.fixed}
@@ -428,7 +455,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
                     key={title}
                     sortable={sortable}
                     width={colWidth ?? COLUMN_WIDTH}
-                    resizable={resizable}
+                    resizable={resizable && !fixed}
                     align={align}
                     fixed={fixed}
                     onResize={handleColumnWidth}
@@ -481,6 +508,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
           rtl={rtl}
           data={data}
           tableBodyRef={tableBodyRef as React.RefObject<HTMLDivElement>}
+          wheelWrapperRef={wheelWrapperRef}
           dataTheme={dataTheme}
           wordWrap={effectiveWordWrap}
           autoHeight={autoHeight}

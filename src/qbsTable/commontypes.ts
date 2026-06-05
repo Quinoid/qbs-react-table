@@ -114,6 +114,7 @@ export interface QbsTableProps {
   columnToggle?: boolean;
   handleColumnToggle?: (columns: QbsColumnProps[]) => void;
   handleResetColumns?: () => void;
+  onColumnResize?: (columns: QbsColumnProps[]) => void;
   headerHeight?: number;
   tableBodyHeight?: string;
   customRowStatus?: {
