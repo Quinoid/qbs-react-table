@@ -21,6 +21,11 @@ import ToolBar from './Toolbar';
 import CardComponent from './utilities/CardComponent';
 import CardLoader from './utilities/CardLoader';
 import ColumToggle from './utilities/ColumShowHide';
+import {
+  markColumnResizeCooldown,
+  shouldUpdateResizableFlags,
+  syncColumnsFromProps,
+} from './utilities/columnSync';
 import debounce from './utilities/debounce';
 import { deepEqual } from './utilities/deepEqual';
 import NoData from './utilities/empty';
@@ -124,6 +129,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const rtl = rtlProp ?? isRTL();
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>(null);
+  const columnResizeCooldownUntilRef = useRef(0);
   const [tableViewToggle, setTableViewToggle] = useState(tableView);
   const isMobile = useResponsiveStore();
   const tableBodyRef = useRef<HTMLDivElement>(null);
@@ -227,7 +233,9 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleColumnWidth = useCallback(
     (newWidth?: number, dataKey?: any, columnIndex?: number) => {
       if (newWidth === undefined || dataKey === undefined) return;
+      markColumnResizeCooldown(columnResizeCooldownUntilRef);
       REFRESH_KEY = REFRESH_KEY + 1;
+      setRowViewRefreshKey(key => key + 1);
       setColumns(prevColumns => {
         let updatedColumns = prevColumns;
 
@@ -404,11 +412,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
     const reColumns = columns?.map(item =>
       item?.field === lastVisibleColumn?.field ? { ...item, resizable: false } : item
     );
-    setColumns(reColumns);
+    if (shouldUpdateResizableFlags(columns, reColumns)) {
+      setColumns(reColumns);
+    }
   }, [columns]);
 
   useEffect(() => {
-    setColumns(propColumn);
+    setColumns(prev => syncColumnsFromProps(prev, propColumn, columnResizeCooldownUntilRef.current));
   }, [propColumn]);
 
   useEffect(() => {

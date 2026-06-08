@@ -17,6 +17,11 @@ import {
 } from './CustomTableCell';
 import ToolBar from './Toolbar';
 import ColumToggle from './utilities/ColumShowHide';
+import {
+  markColumnResizeCooldown,
+  shouldUpdateResizableFlags,
+  syncColumnsFromProps,
+} from './utilities/columnSync';
 import debounce from './utilities/debounce';
 import { deepEqual } from './utilities/deepEqual';
 import NoData from './utilities/empty';
@@ -106,6 +111,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const dataTheme = useMemo(() => localStorage.getItem('theme') ?? theme, [theme]);
   const [isOpen, setIsOpen] = useState(false);
   const prevColumns = useRef<any | null>(null);
+  const columnResizeCooldownUntilRef = useRef(0);
+  const [columnLayoutRefreshKey, setColumnLayoutRefreshKey] = useState(0);
   const tableBodyRef = useRef<HTMLDivElement>(null);
   const wheelWrapperRef = useRef<HTMLDivElement>(null);
   const handleSortColumn = useCallback(
@@ -205,6 +212,8 @@ const QbsTable: React.FC<QbsTableProps> = ({
   const handleColumnWidth = useCallback(
     (newWidth?: number, dataKey?: any, columnIndex?: number) => {
       if (newWidth === undefined || dataKey === undefined) return;
+      markColumnResizeCooldown(columnResizeCooldownUntilRef);
+      setColumnLayoutRefreshKey(key => key + 1);
       setColumns(prevColumns => {
         let updatedColumns = prevColumns;
 
@@ -359,11 +368,13 @@ const QbsTable: React.FC<QbsTableProps> = ({
     const reColumns = columns?.map(item =>
       item?.field === lastVisibleColumn?.field ? { ...item, resizable: false } : item
     );
-    setColumns(reColumns);
+    if (shouldUpdateResizableFlags(columns, reColumns)) {
+      setColumns(reColumns);
+    }
   }, [columns]);
 
   useEffect(() => {
-    setColumns(propColumn);
+    setColumns(prev => syncColumnsFromProps(prev, propColumn, columnResizeCooldownUntilRef.current));
   }, [propColumn]);
 
   useEffect(() => {
@@ -503,7 +514,7 @@ const QbsTable: React.FC<QbsTableProps> = ({
       <div className="qbs-table-border-wrap">
         <Table
           height={autoHeight ? undefined : height}
-          key={tableKey}
+          key={`${tableKey}-${columnLayoutRefreshKey}`}
           tableKey={tableKey}
           rtl={rtl}
           data={data}
